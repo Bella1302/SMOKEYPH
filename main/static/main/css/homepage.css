@@ -451,6 +451,14 @@ body {
   color: #f2b46a;
 }
 
+.review-time {
+  display: block;
+  margin-top: 0.45rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  color: #9d978b;
+}
+
 .review-form-wrapper {
   max-width: 540px;
   margin: 0 auto;

@@ -8,11 +8,38 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from .models import AdminActivity, Reservation
+from django.utils import timezone
+from .models import AdminActivity, CustomerReview, Reservation
 
 
 def home(request):
-    return render(request, 'main/homepage.html')
+    reviews = CustomerReview.objects.all()[:6]
+    return render(request, 'main/homepage.html', {"reviews": reviews})
+
+
+@require_POST
+def submit_review(request):
+    email = request.POST.get("email", "").strip()
+    comment = request.POST.get("comment", "").strip()
+
+    if not email or not comment:
+        return JsonResponse({"ok": False, "error": "Email and comment are required."}, status=400)
+
+    review = CustomerReview.objects.create(email=email, comment=comment)
+
+    display_name = email.split("@", 1)[0].strip() or "Guest"
+    display_name = display_name[:1].upper() + display_name[1:]
+
+    return JsonResponse(
+        {
+            "ok": True,
+            "review": {
+                "comment": review.comment,
+                "display_name": display_name,
+                "created_at": timezone.localtime(review.created_at).strftime("%b %d, %Y %I:%M %p"),
+            },
+        }
+    )
 
 
 def menu(request):

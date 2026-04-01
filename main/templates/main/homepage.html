@@ -195,32 +195,43 @@
           </header>
 
           <div class="reviews-grid">
-            <article class="review-card">
-              <p data-i18n="review1">
-                "Smokey Peeks is our go-to spot for weekend nights. Amazing BBQ,
-                cold drinks, and the vibe is always on point."
-              </p>
-              <span class="review-name">– Alex M.</span>
-            </article>
-            <article class="review-card">
-              <p data-i18n="review2">
-                "We celebrated my birthday here and the team made everything
-                feel special. Great service and live music!"
-              </p>
-              <span class="review-name">– Jamie R.</span>
-            </article>
-            <article class="review-card">
-              <p data-i18n="review3">
-                "Love the Chicago-style flavors with Cebu vibes. Highly
-                recommend the brisket and signature cocktails."
-              </p>
-              <span class="review-name">– Carlo S.</span>
-            </article>
+            {% if reviews %}
+              {% for review in reviews %}
+                <article class="review-card">
+                  <p>"{{ review.comment }}"</p>
+                  <span class="review-name">- {{ review.email|cut:"@gmail.com" }}</span>
+                  <time class="review-time">{{ review.created_at|date:"M d, Y h:i A" }}</time>
+                </article>
+              {% endfor %}
+            {% else %}
+              <article class="review-card">
+                <p data-i18n="review1">
+                  "Smokey Peeks is our go-to spot for weekend nights. Amazing BBQ,
+                  cold drinks, and the vibe is always on point."
+                </p>
+                <span class="review-name">- Alex M.</span>
+              </article>
+              <article class="review-card">
+                <p data-i18n="review2">
+                  "We celebrated my birthday here and the team made everything
+                  feel special. Great service and live music!"
+                </p>
+                <span class="review-name">- Jamie R.</span>
+              </article>
+              <article class="review-card">
+                <p data-i18n="review3">
+                  "Love the Chicago-style flavors with Cebu vibes. Highly
+                  recommend the brisket and signature cocktails."
+                </p>
+                <span class="review-name">- Carlo S.</span>
+              </article>
+            {% endif %}
           </div>
 
           <div class="review-form-wrapper">
             <h3 data-i18n="share_experience">Share your experience</h3>
-            <form class="review-form">
+            <form class="review-form" id="review-form" method="post" action="{% url 'main:submit_review' %}">
+              {% csrf_token %}
               <div class="form-row">
                 <label for="review-email" data-i18n="email">Email</label>
                 <input
@@ -346,6 +357,42 @@
         nextBtn.addEventListener("click", () => { index = Math.min(maxIndex(), index + 1); update(); });
         window.addEventListener("resize", update);
         update();
+      }
+
+      const reviewForm = document.getElementById("review-form");
+      const reviewsGrid = document.querySelector(".reviews-grid");
+      if (reviewForm && reviewsGrid) {
+        reviewForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const formData = new FormData(reviewForm);
+          const submitButton = reviewForm.querySelector("button[type='submit']");
+          if (submitButton) submitButton.disabled = true;
+
+          try {
+            const response = await fetch(reviewForm.action, {
+              method: "POST",
+              body: formData,
+            });
+            const result = await response.json();
+            if (!response.ok || !result.ok) {
+              throw new Error(result.error || "Unable to submit review.");
+            }
+
+            const card = document.createElement("article");
+            card.className = "review-card";
+            card.innerHTML = `
+              <p>"${result.review.comment}"</p>
+              <span class="review-name">- ${result.review.display_name}</span>
+              <time class="review-time">${result.review.created_at}</time>
+            `;
+            reviewsGrid.prepend(card);
+            reviewForm.reset();
+          } catch (error) {
+            alert(error.message || "Unable to submit review right now.");
+          } finally {
+            if (submitButton) submitButton.disabled = false;
+          }
+        });
       }
     </script>
   </body>

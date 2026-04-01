@@ -8,6 +8,7 @@ app_name = 'main'
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('reviews/submit/', views.submit_review, name='submit_review'),
     path('menu/', views.menu, name='menu'),
     path('location/', views.location, name='location'),
     path('reservation/', views.reservation, name='reservation'),
