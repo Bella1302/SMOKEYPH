@@ -359,14 +359,9 @@
               throw new Error(result.error || "Unable to submit review.");
             }
 
-            const card = document.createElement("article");
-            card.className = "review-card";
-            card.innerHTML = `
-              <p>"${result.review.comment}"</p>
-              <span class="review-name">- ${result.review.display_name}</span>
-              <time class="review-time">${result.review.created_at}</time>
-            `;
-            reviewsGrid.prepend(card);
+            if (result.pending && result.message) {
+              alert(result.message);
+            }
             reviewForm.reset();
           } catch (error) {
             alert(error.message || "Unable to submit review right now.");
