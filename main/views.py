@@ -118,6 +118,14 @@ def admin_approve_review(request, pk):
 
 
 @login_required(login_url='main:logadmin')
+@require_POST
+def admin_remove_review(request, pk):
+    rev = get_object_or_404(CustomerReview, pk=pk)
+    rev.delete()
+    return JsonResponse({"ok": True})
+
+
+@login_required(login_url='main:logadmin')
 def admin_reservations_recent_json(request):
     """Return recent reservations by status for realtime dashboard boxes."""
     def format_reservation(r):

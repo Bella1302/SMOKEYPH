@@ -18,6 +18,7 @@ urlpatterns = [
     path('admin-dashboard/history/', views.admin_history, name='admin_history'),
     path('admin-dashboard/reservations-recent.json', views.admin_reservations_recent_json, name='admin_reservations_recent_json'),
     path('admin-dashboard/review/<int:pk>/approve/', views.admin_approve_review, name='admin_approve_review'),
+    path('admin-dashboard/review/<int:pk>/remove/', views.admin_remove_review, name='admin_remove_review'),
     path('logadmin/', views.log_admin, name='logadmin'),
     path('admin-logout/', views.admin_logout, name='admin_logout'),
     path('admin-dashboard/reservation/<int:pk>/edit/', views.admin_edit_reservation, name='admin_edit_reservation'),

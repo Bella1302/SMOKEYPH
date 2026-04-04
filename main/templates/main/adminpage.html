@@ -246,8 +246,9 @@
                 <td>{{ rev.email }}</td>
                 <td class="admin-review-comment">{{ rev.comment }}</td>
                 <td>{{ rev.created_at|date:"M j, Y g:i A" }}</td>
-                <td>
+                <td class="admin-review-actions">
                   <button type="button" class="admin-approve-review-btn" data-id="{{ rev.id }}" aria-label="Approve review">Approve</button>
+                  <button type="button" class="admin-remove-review-btn" data-id="{{ rev.id }}" aria-label="Remove review">Remove</button>
                 </td>
               </tr>
               {% empty %}
@@ -265,6 +266,7 @@
                 <th>Email</th>
                 <th>Comment</th>
                 <th>Submitted</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="admin-reviews-approved-tbody">
@@ -273,9 +275,12 @@
                 <td>{{ rev.email }}</td>
                 <td class="admin-review-comment">{{ rev.comment }}</td>
                 <td>{{ rev.created_at|date:"M j, Y g:i A" }}</td>
+                <td class="admin-review-actions">
+                  <button type="button" class="admin-remove-review-btn" data-id="{{ rev.id }}" aria-label="Remove review">Remove</button>
+                </td>
               </tr>
               {% empty %}
-              <tr><td colspan="3" class="admin-recent-empty">No approved reviews yet</td></tr>
+              <tr><td colspan="4" class="admin-recent-empty">No approved reviews yet</td></tr>
               {% endfor %}
             </tbody>
           </table>
@@ -707,11 +712,65 @@
           var m = document.querySelector("meta[name=csrf-token]");
           return m ? m.getAttribute("content") : "";
         }
+        function hasDataRows(tbody) {
+          return Array.prototype.some.call(tbody.querySelectorAll("tr"), function (tr) {
+            return !tr.querySelector("td.admin-recent-empty");
+          });
+        }
+        function appendEmptyRow(tbody, colspan, message) {
+          var tr = document.createElement("tr");
+          var td = document.createElement("td");
+          td.colSpan = colspan;
+          td.className = "admin-recent-empty";
+          td.textContent = message;
+          tr.appendChild(td);
+          tbody.appendChild(tr);
+        }
+        function ensureEmptyPlaceholder(tbody, colspan, message) {
+          if (!hasDataRows(tbody)) appendEmptyRow(tbody, colspan, message);
+        }
+        function makeRemoveButton(id) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "admin-remove-review-btn";
+          b.setAttribute("data-id", id);
+          b.setAttribute("aria-label", "Remove review");
+          b.textContent = "Remove";
+          return b;
+        }
         var pendingBody = document.getElementById("admin-reviews-pending-tbody");
         var approvedBody = document.getElementById("admin-reviews-approved-tbody");
         if (!pendingBody || !approvedBody) return;
 
         document.addEventListener("click", function (e) {
+          var removeBtn = e.target.closest(".admin-remove-review-btn");
+          if (removeBtn) {
+            if (!confirm("Remove this review permanently?")) return;
+            var rid = removeBtn.getAttribute("data-id");
+            var row = removeBtn.closest("tr");
+            var tbody = row && row.closest("tbody");
+            if (!rid || !row || !tbody) return;
+            var fd = new FormData();
+            fd.append("csrfmiddlewaretoken", getCsrfToken());
+            fetch("/admin-dashboard/review/" + rid + "/remove/", {
+              method: "POST",
+              body: fd,
+              headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+              .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+              .then(function (x) {
+                if (!x.ok || !x.d.ok) {
+                  alert("Remove failed");
+                  return;
+                }
+                row.remove();
+                if (tbody === pendingBody) ensureEmptyPlaceholder(pendingBody, 4, "No pending reviews");
+                else ensureEmptyPlaceholder(approvedBody, 4, "No approved reviews yet");
+              })
+              .catch(function () { alert("Remove failed"); });
+            return;
+          }
+
           var btn = e.target.closest(".admin-approve-review-btn");
           if (!btn) return;
           var id = btn.getAttribute("data-id");
@@ -742,20 +801,16 @@
               td1.textContent = (row.cells[1] && row.cells[1].textContent) || "";
               var td2 = document.createElement("td");
               td2.textContent = (row.cells[2] && row.cells[2].textContent) || "";
+              var td3 = document.createElement("td");
+              td3.className = "admin-review-actions";
+              td3.appendChild(makeRemoveButton(id));
               newRow.appendChild(td0);
               newRow.appendChild(td1);
               newRow.appendChild(td2);
+              newRow.appendChild(td3);
               approvedBody.insertBefore(newRow, approvedBody.firstChild);
               row.remove();
-              if (!pendingBody.querySelector("tr")) {
-                var tr = document.createElement("tr");
-                var td = document.createElement("td");
-                td.colSpan = 4;
-                td.className = "admin-recent-empty";
-                td.textContent = "No pending reviews";
-                tr.appendChild(td);
-                pendingBody.appendChild(tr);
-              }
+              ensureEmptyPlaceholder(pendingBody, 4, "No pending reviews");
             })
             .catch(function () { alert("Approve failed"); });
         });

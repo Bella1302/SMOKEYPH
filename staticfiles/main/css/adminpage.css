@@ -792,3 +792,28 @@ body {
   background: var(--accent);
   color: #fff;
 }
+
+.admin-review-actions {
+  white-space: nowrap;
+}
+
+.admin-review-actions .admin-approve-review-btn + .admin-remove-review-btn {
+  margin-left: 0.35rem;
+}
+
+.admin-remove-review-btn {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(180, 40, 40, 0.45);
+  background: rgba(180, 40, 40, 0.08);
+  color: #a32a2a;
+  cursor: pointer;
+}
+
+.admin-remove-review-btn:hover {
+  background: #a32a2a;
+  color: #fff;
+  border-color: #a32a2a;
+}
