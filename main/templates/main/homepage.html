@@ -32,20 +32,43 @@
         -webkit-backdrop-filter: blur(20px);
       }
 
-      #page-loader .page-loader-logo {
-        display: block;
-        width: 64px !important;
-        height: 64px !important;
-        max-width: 64px !important;
-        max-height: 64px !important;
-        object-fit: contain;
-        mix-blend-mode: screen;
-        animation: loader-logo-spin 2s linear infinite;
+      #page-loader .page-loader-inner {
+        align-items: center;
+        justify-content: center;
       }
 
-      @keyframes loader-logo-spin {
-        to {
-          transform: rotate(360deg);
+      #page-loader .page-loader-logo {
+        display: block;
+        width: 100px !important;
+        height: 100px !important;
+        max-width: 100px !important;
+        max-height: 100px !important;
+        object-fit: contain;
+        mix-blend-mode: screen;
+        transform-origin: center center;
+        animation: loader-heartbeat 1.4s ease-in-out infinite;
+      }
+
+      @keyframes loader-heartbeat {
+        0% {
+          transform: scale(1);
+        }
+
+        14% {
+          transform: scale(1.2);
+        }
+
+        28% {
+          transform: scale(1);
+        }
+
+        42% {
+          transform: scale(1.14);
+        }
+
+        70%,
+        100% {
+          transform: scale(1);
         }
       }
     </style>
