@@ -33,7 +33,7 @@ def send_confirmation_email_on_status_change(sender, instance, raw, **kwargs):
                     f"- Location: {instance.get_location_display()}\n"
                     f"- Guests: {instance.guests}\n\n"
                     f"We look forward to seeing you at Smokey Peeks!\n\n"
-                    f"For questions, call 0977 469 6618 or 0977 654 4225."
+                    f"For questions, call 0967 586 7197 or 0977 654 4225."
                 ),
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[instance.email],
