@@ -4,7 +4,7 @@
 
   document.body.classList.add("page-loading");
 
-  const MIN_MS = 3000;
+  const MIN_MS = 2000;
   const start = Date.now();
 
   function hideLoader() {

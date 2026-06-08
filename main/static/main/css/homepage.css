@@ -1423,10 +1423,10 @@ body.page-loading > *:not(#page-loader) {
 
 .page-loader-logo {
   display: block;
-  width: 200px;
-  height: 200px;
-  max-width: 200px;
-  max-height: 200px;
+  width: 300px;
+  height: 300px;
+  max-width: 300px;
+  max-height: 300px;
   object-fit: contain;
   animation: loader-logo-pulse 1.1s ease-in-out infinite;
   mix-blend-mode: screen;
