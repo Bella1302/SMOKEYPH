@@ -34,18 +34,35 @@
 
       #page-loader .page-loader-logo {
         display: block;
-        width: 128px !important;
-        height: 128px !important;
-        max-width: 128px !important;
-        max-height: 128px !important;
+        width: 200px !important;
+        height: 200px !important;
+        max-width: 200px !important;
+        max-height: 200px !important;
         object-fit: contain;
         mix-blend-mode: screen;
-        animation: loader-logo-spin 2s linear infinite;
+        animation: loader-logo-pulse 1.1s ease-in-out infinite;
       }
 
-      @keyframes loader-logo-spin {
-        to {
-          transform: rotate(360deg);
+      @keyframes loader-logo-pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+
+        14% {
+          transform: scale(1.18);
+        }
+
+        28% {
+          transform: scale(1);
+        }
+
+        42% {
+          transform: scale(1.1);
+        }
+
+        70% {
+          transform: scale(1);
         }
       }
     </style>
