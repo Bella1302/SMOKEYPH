@@ -1396,9 +1396,9 @@ body.page-loading > *:not(#page-loader) {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(5, 6, 7, 0.45);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: transparent;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   transition: opacity 0.6s ease, visibility 0.6s ease;
 }
 
@@ -1422,11 +1422,14 @@ body.page-loading > *:not(#page-loader) {
 }
 
 .page-loader-logo {
-  width: clamp(72px, 16vw, 110px);
-  height: auto;
+  display: block;
+  width: 64px;
+  height: 64px;
+  max-width: 64px;
+  max-height: 64px;
   object-fit: contain;
   animation: loader-logo-spin 2s linear infinite;
-  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.45));
+  mix-blend-mode: screen;
 }
 
 .page-loader-dots {

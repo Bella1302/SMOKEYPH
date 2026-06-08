@@ -8,6 +8,46 @@
     <link rel="shortcut icon" href="img/log.png" />
     <link rel="apple-touch-icon" href="img/log.png" />
     <link rel="stylesheet" href="homepage.css" />
+    <style>
+      body.page-loading {
+        overflow: hidden;
+      }
+
+      body.page-loading > *:not(#page-loader) {
+        filter: blur(16px);
+        pointer-events: none;
+        user-select: none;
+      }
+
+      #page-loader.page-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      #page-loader .page-loader-logo {
+        display: block;
+        width: 64px !important;
+        height: 64px !important;
+        max-width: 64px !important;
+        max-height: 64px !important;
+        object-fit: contain;
+        mix-blend-mode: screen;
+        animation: loader-logo-spin 2s linear infinite;
+      }
+
+      @keyframes loader-logo-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -23,6 +63,8 @@
             src="img/logoload.png"
             alt="Smokey Peeks"
             class="page-loader-logo"
+            width="64"
+            height="64"
           />
         </div>
         <div class="page-loader-dots" aria-hidden="true">
