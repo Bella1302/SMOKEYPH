@@ -1415,10 +1415,10 @@ body.page-loading > *:not(#page-loader) {
 
 .page-loader-logo {
   display: block;
-  width: 64px;
-  height: 64px;
-  max-width: 64px;
-  max-height: 64px;
+  width: 128px;
+  height: 128px;
+  max-width: 128px;
+  max-height: 128px;
   object-fit: contain;
   animation: loader-logo-spin 2s linear infinite;
   mix-blend-mode: screen;
