@@ -5,9 +5,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smokey Peeks - Homepage</title>
-    <link rel="icon" type="image/png" href="{% static 'main/img/log.png' %}" />
-    <link rel="shortcut icon" href="{% static 'main/img/log.png' %}" />
-    <link rel="apple-touch-icon" href="{% static 'main/img/log.png' %}" />
+    <link rel="icon" type="image/png" href="{% static 'main/img/logoload.png' %}" />
+    <link rel="shortcut icon" href="{% static 'main/img/logoload.png' %}" />
+    <link rel="apple-touch-icon" href="{% static 'main/img/logoload.png' %}" />
     <link rel="stylesheet" href="{% static 'main/css/homepage.css' %}" />
     <style>
       body.page-loading {
@@ -337,22 +337,7 @@
               <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
               <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
               <div class="footer-social">
-                <a
-                  href="https://www.facebook.com/people/Smokey-Peeks-BBQ-Restobar/61585040055392/"
-                  class="footer-social-link"
-                  aria-label="Facebook"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Facebook</a
-                >
-                <a
-                  href="https://www.instagram.com/smokeypeeksph"
-                  class="footer-social-link"
-                  aria-label="Instagram"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  >Instagram</a
-                >
+                {% include 'main/_footer_social.html' %}
               </div>
             </div>
           </div>

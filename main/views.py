@@ -53,7 +53,7 @@ def reservation(request):
             "Il Corso South Food Park": "ilcorso",
         }
         loc = request.POST.get("location", "").strip()
-        loc = location_map.get(loc, "onepav")
+        loc = location_map.get(loc, "ilcorso")
         try:
             email = request.POST.get("email", "").strip()
             Reservation.objects.create(

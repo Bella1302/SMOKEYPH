@@ -20,7 +20,7 @@
         <div class="admin-brand-wrap">
           <a href="{% url 'main:home' %}" class="admin-brand" aria-label="Smokey Peeks – Back to home">
             <img
-              src="{% static 'main/img/logoorg.png' %}"
+              src="{% static 'main/img/logoload.png' %}"
               alt="Smokey Peeks logo"
               class="admin-brand-logo"
             />
@@ -379,7 +379,7 @@
           form.elements["name"].value = (row.cells[0] && row.cells[0].textContent) || "";
           form.elements["email"].value = row.getAttribute("data-email") || "";
           form.elements["phone"].value = (row.cells[1] && row.cells[1].textContent) || "";
-          form.elements["location"].value = row.getAttribute("data-location") || "onepav";
+          form.elements["location"].value = row.getAttribute("data-location") || "ilcorso";
           form.elements["guests"].value = (row.cells[2] && row.cells[2].textContent) || "";
           form.elements["date"].value = row.getAttribute("data-date") || "";
           form.elements["time"].value = row.getAttribute("data-time") || "";

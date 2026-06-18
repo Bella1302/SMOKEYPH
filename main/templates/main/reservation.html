@@ -59,10 +59,8 @@
               <div class="reservation-field">
                 <label for="event-location" class="reservation-label" data-i18n="loc_label">Location</label>
                 <select id="event-location" name="location" class="reservation-select" required>
-                  <option value="onepav" selected>One Pavilion Mall</option>
-                  <option value="ilcorso" disabled>Il Corso South Food Park (Opens May 15)</option>
+                  <option value="ilcorso" selected>Il Corso South Food Park</option>
                 </select>
-                <p class="reservation-location-notice">Il Corso South Food Park opens May 15. Reservations there will be available soon.</p>
               </div>
 
               <div class="reservation-field">
@@ -180,22 +178,7 @@
               <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
               <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
             <div class="footer-social">
-              <a
-                href="https://www.facebook.com/people/Smokey-Peeks-BBQ-Restobar/61585040055392/"
-                class="footer-social-link"
-                aria-label="Facebook"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Facebook</a
-              >
-              <a
-                href="https://www.instagram.com/smokeypeeksph"
-                class="footer-social-link"
-                aria-label="Instagram"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Instagram</a
-              >
+              {% include 'main/_footer_social.html' %}
             </div>
           </div>
         </div>
