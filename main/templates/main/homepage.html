@@ -160,27 +160,27 @@
 
           <div class="menu-grid">
             <div class="menu-card">
-              <img src="{% static 'main/img/menu7.png' %}" alt="Menu item 1" />
+              <img src="{% static 'main/img/ilcormenu/Smokey Brisket.png' %}" alt="Smoked Brisket" />
             </div>
             <div class="menu-card">
-              <img src="{% static 'main/img/menu2.JPG' %}" alt="Menu item 2" />
+              <img src="{% static 'main/img/ilcormenu/Beef BBQ Ribs.png' %}" alt="Beef BBQ Ribs" />
             </div>
             <div class="menu-card">
-              <img src="{% static 'main/img/menu3.PNG' %}" alt="Menu item 3" />
+              <img src="{% static 'main/img/ilcormenu/Rib Eye Steak.png' %}" alt="Rib-eye Steak" />
             </div>
             <div class="menu-card">
-              <img src="{% static 'main/img/menu4.png' %}" alt="Menu item 4" />
+              <img src="{% static 'main/img/ilcormenu/Deep Dish Pizza.png' %}" alt="Deep-Dish Pizza" />
             </div>
             <div class="menu-card">
-              <img src="{% static 'main/img/menu5.jpg' %}" alt="Menu item 5" />
+              <img src="{% static 'main/img/ilcormenu/Ox Tails.png' %}" alt="Beef Ox Tails in Kare" />
             </div>
             <div class="menu-card">
-              <img src="{% static 'main/img/menu6.png' %}" alt="Menu item 6" />
+              <img src="{% static 'main/img/ilcormenu/Angus.png' %}" alt="Chicago Angus" />
             </div>
           </div>
 
           <div class="menu-actions">
-            <a href="{% url 'main:menu' %}" class="menu-more-button" data-i18n="see_more">See more</a>
+            <a href="{% url 'main:menu' %}?branch=ilcorso" class="menu-more-button" data-i18n="see_more">See more</a>
           </div>
         </div>
       </section>
@@ -267,36 +267,7 @@
         </div>
       </section>
 
-      <footer class="site-footer">
-        <div class="footer-accent"></div>
-        <div class="footer-inner">
-          <div class="footer-grid">
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="opening_hours">Opening Hours</h3>
-              <p class="footer-text" data-i18n="happy_hour">HAPPY HOUR FROM 2PM-5PM</p>
-            </div>
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="for_reservations">For Reservations</h3>
-              <ul class="footer-list">
-                <li><a href="tel:09774696618">0977 469 6618</a></li>
-                <li><a href="tel:09776564225">0977 654 4225</a></li>
-                <li><a href="mailto:admin@smokeypeeks-ph.com">admin@smokeypeeks-ph.com</a></li>
-              </ul>
-            </div>
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
-              <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
-              <div class="footer-social">
-                <a href="#" class="footer-social-link" aria-label="Facebook">Facebook</a>
-                <a href="#" class="footer-social-link" aria-label="Instagram">Instagram</a>
-              </div>
-            </div>
-          </div>
-          <div class="footer-bottom">
-            <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. <span data-i18n="rights_reserved">All rights reserved.</span></p>
-          </div>
-        </div>
-      </footer>
+      {% include 'main/_footer.html' %}
     </main>
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();

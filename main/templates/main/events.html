@@ -139,36 +139,7 @@
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-accent"></div>
-      <div class="footer-inner">
-          <div class="footer-grid">
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="opening_hours">Opening Hours</h3>
-              <p class="footer-text" data-i18n="happy_hour">HAPPY HOUR FROM 2PM-5PM</p>
-            </div>
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="for_reservations">For Reservations</h3>
-            <ul class="footer-list">
-              <li><a href="tel:09774696618">0977 469 6618</a></li>
-              <li><a href="tel:09776564225">0977 654 4225</a></li>
-              <li><a href="mailto:admin@smokeypeeks-ph.com">admin@smokeypeeks-ph.com</a></li>
-            </ul>
-          </div>
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
-              <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
-            <div class="footer-social">
-              <a href="#" class="footer-social-link" aria-label="Facebook">Facebook</a>
-              <a href="#" class="footer-social-link" aria-label="Instagram">Instagram</a>
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. <span data-i18n="rights_reserved">All rights reserved.</span></p>
-        </div>
-      </div>
-    </footer>
+    {% include 'main/_footer.html' %}
 
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();

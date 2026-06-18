@@ -371,4 +371,18 @@
   .location-lead {
     font-size: 1.55rem;
   }
+
+  .location-actions {
+    flex-direction: column;
+  }
+
+  .location-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .branch-fact {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
 }

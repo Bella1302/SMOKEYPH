@@ -426,18 +426,48 @@
           data-branch="ilcorso"
           aria-label="Il Corso menu (no pork)"
         >
-          <section class="menu-category" aria-label="Il Corso beef specials">
+          <section class="menu-category" aria-label="Il Corso meats">
             <header class="menu-category-header">
               <p class="menu-category-eyebrow">Il Corso Branch</p>
-              <h2 class="menu-category-title">Beef Specials</h2>
+              <h2 class="menu-category-title">Meats</h2>
             </header>
 
             <div class="menu-items">
               <article class="menu-item">
                 <img
                   class="menu-item-photo"
-                  src="{% static 'main/img/ilcormenu/Smokey Peeks Angus.png' %}"
-                  alt="Smokey Peeks Angus"
+                  src="{% static 'main/img/ilcormenu/Smokey Brisket.png' %}"
+                  alt="Smoked Brisket"
+                  loading="lazy"
+                />
+                <div>
+                  <h3 class="menu-item-name">Smoked Brisket (3 pcs)</h3>
+                  <p class="menu-item-desc">Slow-smoked beef brisket, tender and smoky.</p>
+                  <span class="menu-item-tag">Beef</span>
+                </div>
+                <div class="menu-item-price">₱700</div>
+              </article>
+
+              <article class="menu-item">
+                <img
+                  class="menu-item-photo"
+                  src="{% static 'main/img/ilcormenu/Italian Beef Sandwich.png' %}"
+                  alt="Italian Beef"
+                  loading="lazy"
+                />
+                <div>
+                  <h3 class="menu-item-name">Italian Beef</h3>
+                  <p class="menu-item-desc">Chicago-style Italian beef sandwich.</p>
+                  <span class="menu-item-tag">Beef</span>
+                </div>
+                <div class="menu-item-price">₱600</div>
+              </article>
+
+              <article class="menu-item">
+                <img
+                  class="menu-item-photo"
+                  src="{% static 'main/img/ilcormenu/Angus.png' %}"
+                  alt="Chicago Angus"
                   loading="lazy"
                 />
                 <div>
@@ -445,35 +475,50 @@
                   <p class="menu-item-desc">Grilled Angus steak with our signature rub.</p>
                   <span class="menu-item-tag">Beef</span>
                 </div>
-                <div class="menu-item-price">₱275</div>
+                <div class="menu-item-price">₱550</div>
               </article>
 
               <article class="menu-item">
                 <img
                   class="menu-item-photo"
-                  src="{% static 'main/img/ilcormenu/Smokey Brisket Meal.JPG' %}"
-                  alt="Smokey Brisket Meal"
+                  src="{% static 'main/img/ilcormenu/Beef BBQ Ribs.png' %}"
+                  alt="Beef BBQ Ribs"
                   loading="lazy"
                 />
                 <div>
-                  <h3 class="menu-item-name">Smokey Brisket Meal</h3>
-                  <p class="menu-item-desc">Slow-smoked brisket (3 pcs) with sides.</p>
+                  <h3 class="menu-item-name">Beef BBQ Ribs</h3>
+                  <p class="menu-item-desc">Smoky, tender beef BBQ ribs.</p>
                   <span class="menu-item-tag">Beef</span>
                 </div>
-                <div class="menu-item-price">₱520</div>
+                <div class="menu-item-price">₱800</div>
               </article>
 
               <article class="menu-item">
                 <img
                   class="menu-item-photo"
                   src="{% static 'main/img/ilcormenu/JD Glazed BBQ Chicken.JPG' %}"
-                  alt="JD Glazed BBQ Chicken"
+                  alt="Jack Daniels Chicken"
                   loading="lazy"
                 />
                 <div>
-                  <h3 class="menu-item-name">Jack Daniel's Chicken</h3>
+                  <h3 class="menu-item-name">Jack Daniels CKN</h3>
                   <p class="menu-item-desc">Char-grilled chicken in Jack Daniel's glaze.</p>
                   <span class="menu-item-tag">No pork</span>
+                </div>
+                <div class="menu-item-price">₱550</div>
+              </article>
+
+              <article class="menu-item">
+                <img
+                  class="menu-item-photo"
+                  src="{% static 'main/img/ilcormenu/Beef Link.jpg' %}"
+                  alt="Beef Sausage Link"
+                  loading="lazy"
+                />
+                <div>
+                  <h3 class="menu-item-name">Beef Sausage Link</h3>
+                  <p class="menu-item-desc">Smoked beef sausage link.</p>
+                  <span class="menu-item-tag">Beef</span>
                 </div>
                 <div class="menu-item-price">₱500</div>
               </article>
@@ -481,109 +526,65 @@
               <article class="menu-item">
                 <img
                   class="menu-item-photo"
-                  src="{% static 'main/img/ilcormenu/Italian Beef.jpg' %}"
-                  alt="Italian Beef"
+                  src="{% static 'main/img/ilcormenu/Rib Eye Steak.png' %}"
+                  alt="Rib-eye Steak"
                   loading="lazy"
                 />
                 <div>
-                  <h3 class="menu-item-name">Italian Beef (Dip/Dry)</h3>
-                  <p class="menu-item-desc">Chicago-style Italian beef sandwich, served dip or dry.</p>
+                  <h3 class="menu-item-name">Rib-eye Steak</h3>
+                  <p class="menu-item-desc">Premium rib-eye steak, grilled to order.</p>
                   <span class="menu-item-tag">Beef</span>
                 </div>
-                <div class="menu-item-price">₱400</div>
+                <div class="menu-item-price">₱1150</div>
               </article>
 
               <article class="menu-item">
                 <img
                   class="menu-item-photo"
-                  src="{% static 'main/img/ilcormenu/Deep Dish Pizza.jpg' %}"
-                  alt="Deep Dish Pizza"
+                  src="{% static 'main/img/ilcormenu/Ox Tails.png' %}"
+                  alt="Beef Ox Tails in Kare"
                   loading="lazy"
                 />
                 <div>
-                  <h3 class="menu-item-name">Deep Dish Pizza</h3>
-                  <p class="menu-item-desc">
-                    Chicago-style deep dish pizza, available in Veggie or Meat Lovers.
-                  </p>
-                  <span class="menu-item-tag">Veggie / Meat Lovers</span>
+                  <h3 class="menu-item-name">Beef Ox Tails in Kare</h3>
+                  <p class="menu-item-desc">Slow-braised ox tails in rich kare sauce.</p>
+                  <span class="menu-item-tag">Best seller</span>
                 </div>
-                <div class="menu-item-price">₱850 / ₱1050</div>
+                <div class="menu-item-price">₱750</div>
               </article>
 
               <article class="menu-item">
                 <img
                   class="menu-item-photo"
-                  src="{% static 'main/img/ilcormenu/bbqribs.png' %}"
-                  alt="BBQ Ribs x3"
+                  src="{% static 'main/img/ilcormenu/Deep Dish Pizza.png' %}"
+                  alt="Deep-Dish Pizza"
                   loading="lazy"
                 />
                 <div>
-                  <h3 class="menu-item-name">BBQ Ribs x3</h3>
-                  <p class="menu-item-desc">3 pcs BBQ ribs, smoky and tender.</p>
+                  <h3 class="menu-item-name">Deep-Dish Pizza</h3>
+                  <p class="menu-item-desc">Chicago-style deep dish pizza.</p>
                   <span class="menu-item-tag">Beef</span>
                 </div>
-                <div class="menu-item-price">₱450</div>
+                <div class="menu-item-price">₱1100</div>
               </article>
+            </div>
+          </section>
 
-              <article class="menu-item">
-                <img
-                  class="menu-item-photo"
-                  src="{% static 'main/img/ilcormenu/chickenloadedsisg.png' %}"
-                  alt="Loaded Chicken Sisig"
-                  loading="lazy"
-                />
-                <div>
-                  <h3 class="menu-item-name">Loaded Chicken Sisig</h3>
-                  <p class="menu-item-desc">Sizzling chicken sisig loaded with toppings.</p>
-                  <span class="menu-item-tag">No pork</span>
-                </div>
-                <div class="menu-item-price">₱350</div>
-              </article>
+          <section class="menu-category" aria-label="Il Corso sides">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Sides</h2>
+            </header>
 
-              <article class="menu-item">
-                <img
-                  class="menu-item-photo"
-                  src="{% static 'main/img/ilcormenu/beefsausage.png' %}"
-                  alt="Beef Sausage Link"
-                  loading="lazy"
-                />
-                <div>
-                  <h3 class="menu-item-name">Beef Sausage Link</h3>
-                  <p class="menu-item-desc">Single smoked beef sausage link.</p>
-                  <span class="menu-item-tag">Beef</span>
-                </div>
-                <div class="menu-item-price">₱225</div>
-              </article>
-
-              <article class="menu-item">
-                <img
-                  class="menu-item-photo"
-                  src="{% static 'main/img/ilcormenu/beefbone.png' %}"
-                  alt="Beef Bone Soup"
-                  loading="lazy"
-                />
-                <div>
-                  <h3 class="menu-item-name">Beef Bone Soup</h3>
-                  <p class="menu-item-desc">Comforting beef bone soup.</p>
-                  <span class="menu-item-tag">Beef</span>
-                </div>
-                <div class="menu-item-price">₱185</div>
-              </article>
-
-              <article class="menu-item">
-                <img
-                  class="menu-item-photo"
-                  src="{% static 'main/img/ilcormenu/ribeyesteak.png' %}"
-                  alt="Rib Eye Steak"
-                  loading="lazy"
-                />
-                <div>
-                  <h3 class="menu-item-name">Rib Eye Steak</h3>
-                  <p class="menu-item-desc">Rib eye steak with baked potato and drink.</p>
-                  <span class="menu-item-tag">Beef</span>
-                </div>
-                <div class="menu-item-price">₱950</div>
-              </article>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item"><div><h3 class="menu-item-name">Rice</h3></div><div class="menu-item-price">₱75</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Corn Bread</h3></div><div class="menu-item-price">₱60</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Baked Beans</h3></div><div class="menu-item-price">₱75</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Fries</h3></div><div class="menu-item-price">₱50</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Baked Potato</h3></div><div class="menu-item-price">₱110</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Cole Slaw</h3></div><div class="menu-item-price">₱80</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Mac N Cheese</h3></div><div class="menu-item-price">₱110</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Potato Salad</h3></div><div class="menu-item-price">₱80</div></article>
             </div>
           </section>
 
@@ -596,10 +597,10 @@
             <div class="menu-items menu-items-dessert">
               <article class="menu-item">
                 <div>
-                  <h3 class="menu-item-name">Achara</h3>
+                  <h3 class="menu-item-name">Atchara</h3>
                   <p class="menu-item-desc">House-made pickled papaya, light and refreshing.</p>
                 </div>
-                <div class="menu-item-price">₱80</div>
+                <div class="menu-item-price">₱100</div>
               </article>
 
               <article class="menu-item">
@@ -607,15 +608,15 @@
                   <h3 class="menu-item-name">Banana Cake</h3>
                   <p class="menu-item-desc">Moist banana loaf with a hint of spice.</p>
                 </div>
-                <div class="menu-item-price">₱65</div>
+                <div class="menu-item-price">₱120</div>
               </article>
 
               <article class="menu-item">
                 <div>
-                  <h3 class="menu-item-name">Macaroons</h3>
+                  <h3 class="menu-item-name">Macaroons (6)</h3>
                   <p class="menu-item-desc">Coconut macaroons, perfectly chewy and sweet.</p>
                 </div>
-                <div class="menu-item-price">₱65</div>
+                <div class="menu-item-price">₱140</div>
               </article>
 
               <article class="menu-item">
@@ -623,223 +624,197 @@
                   <h3 class="menu-item-name">Puto Cheese</h3>
                   <p class="menu-item-desc">Steamed rice cakes topped with cheese.</p>
                 </div>
-                <div class="menu-item-price">₱50</div>
+                <div class="menu-item-price">₱100</div>
               </article>
             </div>
           </section>
 
-          <section class="menu-category" aria-label="Il Corso sides">
-            <header class="menu-category-header">
-              <p class="menu-category-eyebrow">Il Corso Branch</p>
-              <h2 class="menu-category-title">Sides</h2>
-            </header>
-
-            <div class="menu-items menu-items-dessert">
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">RICE</h3>
-                </div>
-                <div class="menu-item-price">₱30</div>
-              </article>
-
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">CORN COB</h3>
-                </div>
-                <div class="menu-item-price">₱45</div>
-              </article>
-
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">CORN BREAD</h3>
-                </div>
-                <div class="menu-item-price">₱40</div>
-              </article>
-
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">BAKED BEANS</h3>
-                </div>
-                <div class="menu-item-price">₱65</div>
-              </article>
-
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">FRIES</h3>
-                </div>
-                <div class="menu-item-price">₱55</div>
-              </article>
-
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">PICKLES</h3>
-                </div>
-                <div class="menu-item-price">₱30</div>
-              </article>
-
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">BAKED POTATO</h3>
-                </div>
-                <div class="menu-item-price">₱140</div>
-              </article>
-            </div>
-          </section>
-
-          <section class="menu-category" aria-label="Il Corso drinks">
+          <section class="menu-category" aria-label="Il Corso non-alcoholic drinks">
             <header class="menu-category-header">
               <p class="menu-category-eyebrow">Il Corso Branch</p>
               <h2 class="menu-category-title">Drinks</h2>
             </header>
 
             <div class="menu-items menu-items-dessert">
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Coke</h3>
-                </div>
-                <div class="menu-item-price">₱30</div>
-              </article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Soda (Coke, Sprite, Royal)</h3></div><div class="menu-item-price">₱80</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Water</h3></div><div class="menu-item-price">₱65</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Ice-Tea</h3></div><div class="menu-item-price">₱80</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Coffee</h3></div><div class="menu-item-price">₱60</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Espresso</h3></div><div class="menu-item-price">₱75</div></article>
+            </div>
+          </section>
 
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Sprite</h3>
-                </div>
-                <div class="menu-item-price">₱30</div>
-              </article>
+          <section class="menu-category" aria-label="Il Corso beers">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Beers</h2>
+            </header>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item"><div><h3 class="menu-item-name">San Miguel Light</h3></div><div class="menu-item-price">₱140</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">San Miguel Pilsen</h3></div><div class="menu-item-price">₱110</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Red Horse (500 case)</h3><p class="menu-item-desc">₱120 each</p></div><div class="menu-item-price">₱120</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Red Horse (1L)</h3></div><div class="menu-item-price">₱160</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">San Miguel Flavor Beer</h3></div><div class="menu-item-price">₱100</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Corona</h3></div><div class="menu-item-price">₱170</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Heineken</h3></div><div class="menu-item-price">₱160</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Paulaner</h3></div><div class="menu-item-price">₱220</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Stella Artois</h3></div><div class="menu-item-price">₱170</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Budweiser</h3></div><div class="menu-item-price">₱180</div></article>
+            </div>
+          </section>
 
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Royal</h3>
-                </div>
-                <div class="menu-item-price">₱30</div>
-              </article>
+          <section class="menu-category" aria-label="Il Corso whiskey">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Whiskey (Shot)</h2>
+            </header>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item"><div><h3 class="menu-item-name">Jack Daniels</h3></div><div class="menu-item-price">₱220</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Chivas Regal</h3></div><div class="menu-item-price">₱200</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Crown Royal</h3></div><div class="menu-item-price">₱250</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Evan Williams</h3></div><div class="menu-item-price">₱170</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Glenfiddich</h3></div><div class="menu-item-price">₱320</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Jameson Irish</h3></div><div class="menu-item-price">₱170</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Johnnie Walker</h3></div><div class="menu-item-price">₱280</div></article>
+            </div>
+          </section>
 
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Water</h3>
-                </div>
-                <div class="menu-item-price">₱25</div>
-              </article>
+          <section class="menu-category" aria-label="Il Corso vodka">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Vodka (Shot)</h2>
+            </header>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item"><div><h3 class="menu-item-name">Absolut Blue</h3></div><div class="menu-item-price">₱160</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Artisan</h3></div><div class="menu-item-price">₱140</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Antonov</h3></div><div class="menu-item-price">₱120</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Grey Goose</h3></div><div class="menu-item-price">₱210</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Kanto Salted Caramel</h3></div><div class="menu-item-price">₱170</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Tito's</h3></div><div class="menu-item-price">₱180</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Smirnoff Red</h3></div><div class="menu-item-price">₱150</div></article>
+            </div>
+          </section>
 
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Iced Tea</h3>
-                </div>
-                <div class="menu-item-price">₱45</div>
-              </article>
+          <section class="menu-category" aria-label="Il Corso rum">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Rum (Shot)</h2>
+            </header>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item"><div><h3 class="menu-item-name">Bacardi Black</h3></div><div class="menu-item-price">₱170</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Bacardi Gold</h3></div><div class="menu-item-price">₱150</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Bacardi Superior Light</h3></div><div class="menu-item-price">₱180</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Captain Morgan</h3></div><div class="menu-item-price">₱140</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Cebu Mango Rum</h3></div><div class="menu-item-price">₱180</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Don Papa 7y</h3></div><div class="menu-item-price">₱220</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Tanduay Dark 5y</h3></div><div class="menu-item-price">₱120</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">CLVB</h3></div><div class="menu-item-price">₱80</div></article>
+            </div>
+          </section>
 
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Coffee</h3>
-                </div>
-                <div class="menu-item-price">₱30</div>
-              </article>
+          <section class="menu-category" aria-label="Il Corso gin">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Gin (Shot)</h2>
+            </header>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item"><div><h3 class="menu-item-name">Bombay</h3></div><div class="menu-item-price">₱150</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Dancing Sands Sun Kissed / Wasabi</h3></div><div class="menu-item-price">₱260</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">GSM Blue Light</h3></div><div class="menu-item-price">₱60</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">GSM Pomelo</h3></div><div class="menu-item-price">₱70</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Hendricks</h3></div><div class="menu-item-price">₱240</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Tanqueray</h3></div><div class="menu-item-price">₱180</div></article>
+            </div>
+          </section>
 
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Espresso</h3>
-                </div>
-                <div class="menu-item-price">₱35</div>
-              </article>
+          <section class="menu-category" aria-label="Il Corso tequila">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Tequila (Shot)</h2>
+            </header>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item"><div><h3 class="menu-item-name">1800 Tequila Blanco</h3></div><div class="menu-item-price">₱280</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">1800 Tequila Reposado</h3></div><div class="menu-item-price">₱300</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Don Julio Blanco</h3></div><div class="menu-item-price">₱360</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Jose Cuervo Gold</h3></div><div class="menu-item-price">₱240</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Mojitos Tequila Gold</h3></div><div class="menu-item-price">₱200</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Mojitos Tequila Silver</h3></div><div class="menu-item-price">₱180</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Patron Anejo</h3></div><div class="menu-item-price">₱380</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Patron Silver</h3></div><div class="menu-item-price">₱320</div></article>
+            </div>
+          </section>
 
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Heineken</h3>
-                </div>
-                <div class="menu-item-price">₱210</div>
-              </article>
+          <section class="menu-category" aria-label="Il Corso cognac">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Cognac (Shot)</h2>
+            </header>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item"><div><h3 class="menu-item-name">Hennessy</h3></div><div class="menu-item-price">₱280</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Hennessy XO</h3></div><div class="menu-item-price">₱1200</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Macallan 15 Double</h3></div><div class="menu-item-price">₱1000</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Remy Martin</h3></div><div class="menu-item-price">₱250</div></article>
+            </div>
+          </section>
 
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Corona</h3>
-                </div>
-                <div class="menu-item-price">₱140</div>
-              </article>
+          <section class="menu-category" aria-label="Il Corso martini">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Martini (Shot)</h2>
+            </header>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item"><div><h3 class="menu-item-name">Martini Rosso</h3></div><div class="menu-item-price">₱300</div></article>
+            </div>
+          </section>
 
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Red Horse</h3>
-                </div>
-                <div class="menu-item-price">₱90</div>
-              </article>
+          <section class="menu-category" aria-label="Il Corso cocktails">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Cocktails</h2>
+            </header>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item"><div><h3 class="menu-item-name">Vodka &amp; Redbull</h3></div><div class="menu-item-price">₱290</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Vodka &amp; Cranberry</h3></div><div class="menu-item-price">₱260</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Whisky Sour</h3></div><div class="menu-item-price">₱350</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Amaretto Sour</h3></div><div class="menu-item-price">₱230</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Kamikaza</h3></div><div class="menu-item-price">₱325</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Sangria Special</h3></div><div class="menu-item-price">₱295</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Pineapple Mojito</h3></div><div class="menu-item-price">₱295</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Corona Mojito</h3></div><div class="menu-item-price">₱320</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Piña Colada</h3></div><div class="menu-item-price">₱295</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Long Island Ice Tea</h3></div><div class="menu-item-price">₱385</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Ole Fashion</h3></div><div class="menu-item-price">₱375</div></article>
+            </div>
+          </section>
 
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">San Mig Pilsen</h3>
-                </div>
-                <div class="menu-item-price">₱85</div>
-              </article>
+          <section class="menu-category" aria-label="Il Corso mocktails">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Mocktails</h2>
+            </header>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item"><div><h3 class="menu-item-name">Cuddles on the Beach</h3></div><div class="menu-item-price">₱250</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Tropical Main Splash</h3></div><div class="menu-item-price">₱250</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Berry Mint</h3></div><div class="menu-item-price">₱250</div></article>
+            </div>
+          </section>
 
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">San Mig Light</h3>
-                </div>
-                <div class="menu-item-price">₱80</div>
-              </article>
-
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Hennessy</h3>
-                </div>
-                <div class="menu-item-price">₱250</div>
-              </article>
-
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Jack Daniels</h3>
-                </div>
-                <div class="menu-item-price">₱150</div>
-              </article>
-
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Chardonnay</h3>
-                </div>
-                <div class="menu-item-price">₱165</div>
-              </article>
-
-              <article class="menu-item">
-                <div>
-                  <h3 class="menu-item-name">Merlot</h3>
-                </div>
-                <div class="menu-item-price">₱165</div>
-              </article>
+          <section class="menu-category" aria-label="Il Corso shooters">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Shooters</h2>
+            </header>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item"><div><h3 class="menu-item-name">Blow Job</h3></div><div class="menu-item-price">₱220</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">B52</h3></div><div class="menu-item-price">₱220</div></article>
+              <article class="menu-item"><div><h3 class="menu-item-name">Flaming Jager Bomb</h3></div><div class="menu-item-price">₱260</div></article>
             </div>
           </section>
         </section>
       </div>
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-accent"></div>
-      <div class="footer-inner">
-          <div class="footer-grid">
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="opening_hours">Opening Hours</h3>
-              <p class="footer-text" data-i18n="happy_hour">HAPPY HOUR FROM 2PM-5PM</p>
-            </div>
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="for_reservations">For Reservations</h3>
-            <ul class="footer-list">
-              <li><a href="tel:09774696618">0977 469 6618</a></li>
-              <li><a href="tel:09776564225">0977 654 4225</a></li>
-              <li><a href="mailto:admin@smokeypeeks-ph.com">admin@smokeypeeks-ph.com</a></li>
-            </ul>
-          </div>
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
-              <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
-            <div class="footer-social">
-              <a href="#" class="footer-social-link" aria-label="Facebook">Facebook</a>
-              <a href="#" class="footer-social-link" aria-label="Instagram">Instagram</a>
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. <span data-i18n="rights_reserved">All rights reserved.</span></p>
-        </div>
-      </div>
-    </footer>
+    {% include 'main/_footer.html' %}
 
     <script>
       // Set current year in footer
