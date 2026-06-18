@@ -23,7 +23,7 @@
         <div class="location-hero-inner">
           <p class="location-eyebrow">Smokey Peeks</p>
           <h1 class="location-title" data-i18n="locations_title">Locations</h1>
-          <p class="location-lead" id="branch-lead">One Pavilion Mall, Cebu City</p>
+          <p class="location-lead" id="branch-lead">Il Corso South Food Park</p>
         </div>
       </section>
 
@@ -32,10 +32,11 @@
           <div class="location-grid">
             <section class="location-card" aria-label="Branch details">
               <header class="location-card-header">
-                <h2 class="location-card-title" data-i18n="choose_branch">Choose a branch</h2>
-                <p class="location-card-subtitle" data-i18n="choose_branch_sub">Tap a location to update the map and directions.</p>
+                <h2 class="location-card-title" data-i18n="il_corso_south">Il Corso South</h2>
+                <p class="location-card-subtitle" data-i18n="food_park">Food Park</p>
               </header>
 
+<<<<<<< HEAD
               <div class="branch-tabs" role="tablist" aria-label="Select branch">
                 <button
                   class="branch-tab"
@@ -59,17 +60,19 @@
                 </button>
               </div>
 
+=======
+>>>>>>> 46096d797f38c0aa3e6d4a7bb2fd167590bedf91
               <div class="branch-panel" role="region" aria-label="Selected branch details">
-                <h3 class="branch-name" id="branch-name">One Pavilion Mall</h3>
+                <h3 class="branch-name" id="branch-name">Il Corso South Food Park</h3>
                 <p class="location-address" id="branch-address">
-                  One Pavilion Mall, 22 R. Duterte St, Cebu City, 6000 Cebu
+                  Il Corso South Food Park, Cebu South Coastal Rd, Cebu City, Cebu
                 </p>
 
                 <dl class="branch-facts" aria-label="Branch quick facts">
                   <div class="branch-fact">
                     <dt data-i18n="contact">Contact</dt>
                     <dd>
-                      <a href="tel:09774696618">0977 469 6618</a>
+                      <a href="tel:09675867197">0967 586 7197</a>
                       <span class="fact-sep">•</span>
                       <a href="tel:09776544225">0977 654 4225</a>
                     </dd>
@@ -84,7 +87,7 @@
                   <a
                     class="btn btn-primary"
                     id="directions-link"
-                    href="https://www.google.com/maps/dir/?api=1&destination=10.3154216,123.8848071"
+                    href="https://share.google/r5CzzxfCdPnaIUWUA"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -93,7 +96,7 @@
                   <a
                     class="btn btn-outline"
                     id="maps-link"
-                    href="https://maps.app.goo.gl/xwBoMn1BU6oM29k56"
+                    href="https://share.google/r5CzzxfCdPnaIUWUA"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -113,7 +116,7 @@
               <header class="map-header">
                 <div class="map-header-text">
                   <div class="map-kicker" data-i18n="map_label">Map</div>
-                  <div class="map-title" id="map-title">One Pavilion Mall</div>
+                  <div class="map-title" id="map-title">Il Corso South Food Park</div>
                 </div>
                 <a
                   class="map-open-link"
@@ -128,10 +131,10 @@
               <div class="map-embed">
                 <iframe
                   id="map-iframe"
-                  title="One Pavilion Mall map"
+                  title="Il Corso South Food Park map"
                   loading="lazy"
                   referrerpolicy="no-referrer-when-downgrade"
-                  src="https://www.google.com/maps?q=10.3154216,123.8848071&z=16&output=embed"
+                  src="https://www.google.com/maps?q=10.2627203,123.875397&z=16&output=embed"
                 ></iframe>
               </div>
             </section>
@@ -140,7 +143,39 @@
       </section>
     </main>
 
+<<<<<<< HEAD
     {% include 'main/_footer.html' %}
+=======
+    <footer class="site-footer">
+      <div class="footer-accent"></div>
+      <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-col">
+              <h3 class="footer-heading" data-i18n="opening_hours">Opening Hours</h3>
+              <p class="footer-text" data-i18n="happy_hour">HAPPY HOUR FROM 2PM-5PM</p>
+            </div>
+            <div class="footer-col">
+              <h3 class="footer-heading" data-i18n="for_reservations">For Reservations</h3>
+            <ul class="footer-list">
+              <li><a href="tel:09675867197">0967 586 7197</a></li>
+              <li><a href="tel:09776564225">0977 654 4225</a></li>
+              <li><a href="mailto:smokeypeekscebu@gmail.com">smokeypeekscebu@gmail.com</a></li>
+            </ul>
+          </div>
+            <div class="footer-col">
+              <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
+              <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
+            <div class="footer-social">
+              {% include 'main/_footer_social.html' %}
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. <span data-i18n="rights_reserved">All rights reserved.</span></p>
+        </div>
+      </div>
+    </footer>
+>>>>>>> 46096d797f38c0aa3e6d4a7bb2fd167590bedf91
 
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
@@ -152,6 +187,7 @@
           navToggle.classList.toggle("nav-open");
         });
       }
+<<<<<<< HEAD
 
       var branches = {
         onePavilion: {
@@ -240,6 +276,8 @@
       } else {
         setBranch("onePavilion");
       }
+=======
+>>>>>>> 46096d797f38c0aa3e6d4a7bb2fd167590bedf91
     </script>
   </body>
 </html>

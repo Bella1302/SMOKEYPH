@@ -21,15 +21,15 @@
       <div class="menu-hero-inner">
         <p class="menu-hero-kicker">Smokey Peeks</p>
         <h1 class="menu-hero-title" data-i18n="our_menu">Our Menu</h1>
-        <p class="menu-hero-subtitle" data-i18n="menu_choose_branch">
-          Choose a branch below to see the menu. Il Corso is <strong>no pork</strong>
-          (beef-focused).
+        <p class="menu-hero-subtitle" data-i18n="menu_il_corso_note">
+          Il Corso menu — <strong>no pork</strong> (beef-focused).
         </p>
       </div>
     </header>
 
     <main class="menu-content">
       <div class="menu-inner">
+<<<<<<< HEAD
         <div class="branch-switch" role="group" aria-label="Select branch menu">
           <button
             class="branch-pill"
@@ -427,6 +427,10 @@
           aria-label="Il Corso menu (no pork)"
         >
           <section class="menu-category" aria-label="Il Corso meats">
+=======
+        <section class="branch" aria-label="Il Corso menu (no pork)">
+          <section class="menu-category" aria-label="Il Corso beef specials">
+>>>>>>> 46096d797f38c0aa3e6d4a7bb2fd167590bedf91
             <header class="menu-category-header">
               <p class="menu-category-eyebrow">Il Corso Branch</p>
               <h2 class="menu-category-title">Meats</h2>
@@ -629,7 +633,68 @@
             </div>
           </section>
 
+<<<<<<< HEAD
           <section class="menu-category" aria-label="Il Corso non-alcoholic drinks">
+=======
+          <section class="menu-category" aria-label="Il Corso sides">
+            <header class="menu-category-header">
+              <p class="menu-category-eyebrow">Il Corso Branch</p>
+              <h2 class="menu-category-title">Sides</h2>
+            </header>
+            <div class="menu-items menu-items-dessert">
+              <article class="menu-item">
+                <div>
+                  <h3 class="menu-item-name">RICE</h3>
+                </div>
+                <div class="menu-item-price">₱30</div>
+              </article>
+
+              <article class="menu-item">
+                <div>
+                  <h3 class="menu-item-name">CORN COB</h3>
+                </div>
+                <div class="menu-item-price">₱45</div>
+              </article>
+
+              <article class="menu-item">
+                <div>
+                  <h3 class="menu-item-name">CORN BREAD</h3>
+                </div>
+                <div class="menu-item-price">₱40</div>
+              </article>
+
+              <article class="menu-item">
+                <div>
+                  <h3 class="menu-item-name">BAKED BEANS</h3>
+                </div>
+                <div class="menu-item-price">₱65</div>
+              </article>
+
+              <article class="menu-item">
+                <div>
+                  <h3 class="menu-item-name">FRIES</h3>
+                </div>
+                <div class="menu-item-price">₱55</div>
+              </article>
+
+              <article class="menu-item">
+                <div>
+                  <h3 class="menu-item-name">PICKLES</h3>
+                </div>
+                <div class="menu-item-price">₱30</div>
+              </article>
+
+              <article class="menu-item">
+                <div>
+                  <h3 class="menu-item-name">BAKED POTATO</h3>
+                </div>
+                <div class="menu-item-price">₱140</div>
+              </article>
+            </div>
+          </section>
+
+          <section class="menu-category" aria-label="Il Corso drinks">
+>>>>>>> 46096d797f38c0aa3e6d4a7bb2fd167590bedf91
             <header class="menu-category-header">
               <p class="menu-category-eyebrow">Il Corso Branch</p>
               <h2 class="menu-category-title">Drinks</h2>
@@ -814,63 +879,48 @@
       </div>
     </main>
 
+<<<<<<< HEAD
     {% include 'main/_footer.html' %}
+=======
+    <footer class="site-footer">
+      <div class="footer-accent"></div>
+      <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-col">
+              <h3 class="footer-heading" data-i18n="opening_hours">Opening Hours</h3>
+              <p class="footer-text" data-i18n="happy_hour">HAPPY HOUR FROM 2PM-5PM</p>
+            </div>
+            <div class="footer-col">
+              <h3 class="footer-heading" data-i18n="for_reservations">For Reservations</h3>
+            <ul class="footer-list">
+              <li><a href="tel:09675867197">0967 586 7197</a></li>
+              <li><a href="tel:09776564225">0977 654 4225</a></li>
+              <li><a href="mailto:smokeypeekscebu@gmail.com">smokeypeekscebu@gmail.com</a></li>
+            </ul>
+          </div>
+            <div class="footer-col">
+              <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
+              <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
+            <div class="footer-social">
+              {% include 'main/_footer_social.html' %}
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. <span data-i18n="rights_reserved">All rights reserved.</span></p>
+        </div>
+      </div>
+    </footer>
+>>>>>>> 46096d797f38c0aa3e6d4a7bb2fd167590bedf91
 
     <script>
-      // Set current year in footer
       document.getElementById("year").textContent = new Date().getFullYear();
-
-      // Mobile nav toggle
       const navToggle = document.querySelector(".nav-toggle");
       const navLinks = document.querySelector(".nav-links");
       navToggle.addEventListener("click", () => {
         navLinks.classList.toggle("nav-open");
         navToggle.classList.toggle("nav-open");
       });
-
-      // Branch switching (supports ?branch=onepav | ?branch=ilcorso)
-      const branchNote = document.getElementById("branch-note");
-      const branchButtons = Array.from(document.querySelectorAll("[data-branch-button]"));
-      const branches = Array.from(document.querySelectorAll("[data-branch]"));
-
-      const getBranchFromUrl = () => {
-        const url = new URL(window.location.href);
-        const value = (url.searchParams.get("branch") || "").toLowerCase();
-        return value === "ilcorso" ? "ilcorso" : "onepav";
-      };
-
-      const setBranchInUrl = (branch) => {
-        const url = new URL(window.location.href);
-        url.searchParams.set("branch", branch);
-        window.history.replaceState({}, "", url.toString());
-      };
-
-      const setActiveBranch = (branch) => {
-        branches.forEach((el) => {
-          const isActive = el.getAttribute("data-branch") === branch;
-          el.classList.toggle("branch-hidden", !isActive);
-        });
-
-        branchButtons.forEach((btn) => {
-          const isActive = btn.getAttribute("data-branch-button") === branch;
-          btn.setAttribute("aria-pressed", String(isActive));
-        });
-
-        branchNote.innerHTML = (typeof SmokeyI18n !== "undefined" && SmokeyI18n.t)
-          ? SmokeyI18n.t(branch === "ilcorso" ? "showing_ilcorso" : "showing_onepav")
-          : (branch === "ilcorso" ? "Showing: <strong>Il Corso</strong> (no pork)" : "Showing: <strong>One Pavilion Mall</strong>");
-
-        setBranchInUrl(branch);
-      };
-
-      branchButtons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          setActiveBranch(btn.getAttribute("data-branch-button"));
-        });
-      });
-
-      setActiveBranch(getBranchFromUrl());
     </script>
   </body>
 </html>
-

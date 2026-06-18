@@ -5,7 +5,67 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smokey Peeks - Homepage</title>
+    <link rel="icon" type="image/png" href="{% static 'main/img/logoload.png' %}" />
+    <link rel="shortcut icon" href="{% static 'main/img/logoload.png' %}" />
+    <link rel="apple-touch-icon" href="{% static 'main/img/logoload.png' %}" />
     <link rel="stylesheet" href="{% static 'main/css/homepage.css' %}" />
+    <style>
+      body.page-loading {
+        overflow: hidden;
+      }
+
+      body.page-loading > *:not(#page-loader) {
+        filter: blur(16px);
+        pointer-events: none;
+        user-select: none;
+      }
+
+      #page-loader.page-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      #page-loader .page-loader-logo {
+        display: block;
+        width: 300px !important;
+        height: 300px !important;
+        max-width: 300px !important;
+        max-height: 300px !important;
+        object-fit: contain;
+        mix-blend-mode: screen;
+        animation: loader-logo-pulse 1.1s ease-in-out infinite;
+      }
+
+      @keyframes loader-logo-pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+
+        14% {
+          transform: scale(1.18);
+        }
+
+        28% {
+          transform: scale(1);
+        }
+
+        42% {
+          transform: scale(1.1);
+        }
+
+        70% {
+          transform: scale(1);
+        }
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -14,7 +74,8 @@
     />
     <script src="{% static 'main/js/i18n.js' %}"></script>
   </head>
-  <body>
+  <body class="page-loading">
+    {% include 'main/_loader.html' %}
     {% include 'main/_nav.html' %}
 
     <main>
@@ -195,32 +256,21 @@
           </header>
 
           <div class="reviews-grid">
-            <article class="review-card">
-              <p data-i18n="review1">
-                "Smokey Peeks is our go-to spot for weekend nights. Amazing BBQ,
-                cold drinks, and the vibe is always on point."
-              </p>
-              <span class="review-name">– Alex M.</span>
-            </article>
-            <article class="review-card">
-              <p data-i18n="review2">
-                "We celebrated my birthday here and the team made everything
-                feel special. Great service and live music!"
-              </p>
-              <span class="review-name">– Jamie R.</span>
-            </article>
-            <article class="review-card">
-              <p data-i18n="review3">
-                "Love the Chicago-style flavors with Cebu vibes. Highly
-                recommend the brisket and signature cocktails."
-              </p>
-              <span class="review-name">– Carlo S.</span>
-            </article>
+            {% if reviews %}
+              {% for review in reviews %}
+                <article class="review-card">
+                  <p>"{{ review.comment }}"</p>
+                  <span class="review-name">- {{ review.email|cut:"@gmail.com" }}</span>
+                  <time class="review-time">{{ review.created_at|date:"M d, Y h:i A" }}</time>
+                </article>
+              {% endfor %}
+            {% endif %}
           </div>
 
           <div class="review-form-wrapper">
             <h3 data-i18n="share_experience">Share your experience</h3>
-            <form class="review-form">
+            <form class="review-form" id="review-form" method="post" action="{% url 'main:submit_review' %}">
+              {% csrf_token %}
               <div class="form-row">
                 <label for="review-email" data-i18n="email">Email</label>
                 <input
@@ -267,7 +317,39 @@
         </div>
       </section>
 
+<<<<<<< HEAD
       {% include 'main/_footer.html' %}
+=======
+      <footer class="site-footer">
+        <div class="footer-accent"></div>
+        <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-col">
+              <h3 class="footer-heading" data-i18n="opening_hours">Opening Hours</h3>
+              <p class="footer-text" data-i18n="happy_hour">HAPPY HOUR FROM 2PM-5PM</p>
+            </div>
+            <div class="footer-col">
+              <h3 class="footer-heading" data-i18n="for_reservations">For Reservations</h3>
+              <ul class="footer-list">
+                <li><a href="tel:09675867197">0967 586 7197</a></li>
+                <li><a href="tel:09776564225">0977 654 4225</a></li>
+                <li><a href="mailto:smokeypeekscebu@gmail.com">smokeypeekscebu@gmail.com</a></li>
+              </ul>
+            </div>
+            <div class="footer-col">
+              <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
+              <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
+              <div class="footer-social">
+                {% include 'main/_footer_social.html' %}
+              </div>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. <span data-i18n="rights_reserved">All rights reserved.</span></p>
+          </div>
+        </div>
+      </footer>
+>>>>>>> 46096d797f38c0aa3e6d4a7bb2fd167590bedf91
     </main>
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
@@ -304,6 +386,38 @@
         window.addEventListener("resize", update);
         update();
       }
+
+      const reviewForm = document.getElementById("review-form");
+      const reviewsGrid = document.querySelector(".reviews-grid");
+      if (reviewForm && reviewsGrid) {
+        reviewForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const formData = new FormData(reviewForm);
+          const submitButton = reviewForm.querySelector("button[type='submit']");
+          if (submitButton) submitButton.disabled = true;
+
+          try {
+            const response = await fetch(reviewForm.action, {
+              method: "POST",
+              body: formData,
+            });
+            const result = await response.json();
+            if (!response.ok || !result.ok) {
+              throw new Error(result.error || "Unable to submit review.");
+            }
+
+            if (result.pending && result.message) {
+              alert(result.message);
+            }
+            reviewForm.reset();
+          } catch (error) {
+            alert(error.message || "Unable to submit review right now.");
+          } finally {
+            if (submitButton) submitButton.disabled = false;
+          }
+        });
+      }
     </script>
+    <script src="{% static 'main/js/loader.js' %}"></script>
   </body>
 </html>

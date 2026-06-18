@@ -8,11 +8,32 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from .models import AdminActivity, Reservation
+from django.utils import timezone
+from .models import AdminActivity, CustomerReview, Reservation
 
 
 def home(request):
-    return render(request, 'main/homepage.html')
+    reviews = CustomerReview.objects.filter(approved=True)[:6]
+    return render(request, 'main/homepage.html', {"reviews": reviews})
+
+
+@require_POST
+def submit_review(request):
+    email = request.POST.get("email", "").strip()
+    comment = request.POST.get("comment", "").strip()
+
+    if not email or not comment:
+        return JsonResponse({"ok": False, "error": "Email and comment are required."}, status=400)
+
+    CustomerReview.objects.create(email=email, comment=comment)
+
+    return JsonResponse(
+        {
+            "ok": True,
+            "pending": True,
+            "message": "Thank you! Your review will appear on the site after an admin approves it.",
+        }
+    )
 
 
 def menu(request):
@@ -32,7 +53,7 @@ def reservation(request):
             "Il Corso South Food Park": "ilcorso",
         }
         loc = request.POST.get("location", "").strip()
-        loc = location_map.get(loc, "onepav")
+        loc = location_map.get(loc, "ilcorso")
         try:
             email = request.POST.get("email", "").strip()
             Reservation.objects.create(
@@ -73,13 +94,35 @@ def admin_page(request):
     today_confirmed = today_qs.filter(status='confirmed').count()
     today_pending = today_qs.filter(status='pending').count()
     today_cancelled = today_qs.filter(status='cancelled').count()
+    reviews_pending = CustomerReview.objects.filter(approved=False).order_by("-created_at")
+    reviews_approved = CustomerReview.objects.filter(approved=True).order_by("-created_at")[:50]
     return render(request, 'main/adminpage.html', {
         'reservations': reservations,
         'today_count': today_count,
         'today_confirmed': today_confirmed,
         'today_pending': today_pending,
         'today_cancelled': today_cancelled,
+        'reviews_pending': reviews_pending,
+        'reviews_approved': reviews_approved,
     })
+
+
+@login_required(login_url='main:logadmin')
+@require_POST
+def admin_approve_review(request, pk):
+    rev = get_object_or_404(CustomerReview, pk=pk)
+    if not rev.approved:
+        rev.approved = True
+        rev.save()
+    return JsonResponse({"ok": True})
+
+
+@login_required(login_url='main:logadmin')
+@require_POST
+def admin_remove_review(request, pk):
+    rev = get_object_or_404(CustomerReview, pk=pk)
+    rev.delete()
+    return JsonResponse({"ok": True})
 
 
 @login_required(login_url='main:logadmin')

@@ -77,3 +77,20 @@ class AdminActivity(models.Model):
 
     def __str__(self):
         return f"{self.get_action_display()} - {self.reservation_name} at {self.created_at}"
+
+
+class CustomerReview(models.Model):
+    """Customer reviews shown on the homepage."""
+
+    email = models.EmailField()
+    comment = models.TextField(max_length=1000)
+    created_at = models.DateTimeField(auto_now_add=True)
+    approved = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Customer Review"
+        verbose_name_plural = "Customer Reviews"
+
+    def __str__(self):
+        return f"{self.email} at {self.created_at}"

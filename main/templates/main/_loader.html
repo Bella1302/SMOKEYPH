@@ -1,0 +1,17 @@
+{% load static %}
+<div id="page-loader" class="page-loader" role="status" aria-live="polite" aria-label="Loading Smokey Peeks">
+  <div class="page-loader-inner">
+    <div class="page-loader-logo-wrap">
+      <img
+        src="{% static 'main/img/logoload.png' %}"
+        alt="Smokey Peeks"
+        class="page-loader-logo"
+        width="300"
+        height="300"
+      />
+    </div>
+    <div class="page-loader-dots" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</div>

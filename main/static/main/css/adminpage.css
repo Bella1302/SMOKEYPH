@@ -748,3 +748,72 @@ body {
     font-size: 0.75rem;
   }
 }
+
+/* Customer reviews (admin approval) */
+.admin-card-reviews {
+  margin-top: 1.5rem;
+}
+
+.admin-reviews-note {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.admin-reviews-subtitle {
+  margin: 0 0 0.65rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.admin-reviews-subtitle-spaced {
+  margin-top: 1.75rem;
+}
+
+.admin-review-comment {
+  max-width: 28rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.admin-approve-review-btn {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.admin-approve-review-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.admin-review-actions {
+  white-space: nowrap;
+}
+
+.admin-review-actions .admin-approve-review-btn + .admin-remove-review-btn {
+  margin-left: 0.35rem;
+}
+
+.admin-remove-review-btn {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(180, 40, 40, 0.45);
+  background: rgba(180, 40, 40, 0.08);
+  color: #a32a2a;
+  cursor: pointer;
+}
+
+.admin-remove-review-btn:hover {
+  background: #a32a2a;
+  color: #fff;
+  border-color: #a32a2a;
+}

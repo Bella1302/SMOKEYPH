@@ -20,7 +20,7 @@
         <div class="admin-brand-wrap">
           <a href="{% url 'main:home' %}" class="admin-brand" aria-label="Smokey Peeks – Back to home">
             <img
-              src="{% static 'main/img/logo no bg.png' %}"
+              src="{% static 'main/img/logoload.png' %}"
               alt="Smokey Peeks logo"
               class="admin-brand-logo"
             />
@@ -225,6 +225,68 @@
         </div>
       </section>
 
+      <section class="admin-card admin-card-reviews" aria-labelledby="reviews-heading">
+        <h2 id="reviews-heading" class="admin-card-title">Customer reviews</h2>
+        <p class="admin-reviews-note">Approve reviews below to show them on the homepage (up to six most recent).</p>
+
+        <h3 class="admin-reviews-subtitle">Pending approval</h3>
+        <div class="admin-table-wrapper admin-table-wrapper-full">
+          <table class="admin-table admin-table-full" role="grid">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Comment</th>
+                <th>Submitted</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-reviews-pending-tbody">
+              {% for rev in reviews_pending %}
+              <tr data-review-id="{{ rev.id }}">
+                <td>{{ rev.email }}</td>
+                <td class="admin-review-comment">{{ rev.comment }}</td>
+                <td>{{ rev.created_at|date:"M j, Y g:i A" }}</td>
+                <td class="admin-review-actions">
+                  <button type="button" class="admin-approve-review-btn" data-id="{{ rev.id }}" aria-label="Approve review">Approve</button>
+                  <button type="button" class="admin-remove-review-btn" data-id="{{ rev.id }}" aria-label="Remove review">Remove</button>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="4" class="admin-recent-empty">No pending reviews</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="admin-reviews-subtitle admin-reviews-subtitle-spaced">Approved (on homepage)</h3>
+        <div class="admin-table-wrapper admin-table-wrapper-full">
+          <table class="admin-table admin-table-full" role="grid">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Comment</th>
+                <th>Submitted</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-reviews-approved-tbody">
+              {% for rev in reviews_approved %}
+              <tr>
+                <td>{{ rev.email }}</td>
+                <td class="admin-review-comment">{{ rev.comment }}</td>
+                <td>{{ rev.created_at|date:"M j, Y g:i A" }}</td>
+                <td class="admin-review-actions">
+                  <button type="button" class="admin-remove-review-btn" data-id="{{ rev.id }}" aria-label="Remove review">Remove</button>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="4" class="admin-recent-empty">No approved reviews yet</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <!-- Edit reservation modal -->
       <div id="admin-edit-modal" class="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-edit-modal-title" hidden>
         <div class="admin-modal-backdrop"></div>
@@ -317,7 +379,7 @@
           form.elements["name"].value = (row.cells[0] && row.cells[0].textContent) || "";
           form.elements["email"].value = row.getAttribute("data-email") || "";
           form.elements["phone"].value = (row.cells[1] && row.cells[1].textContent) || "";
-          form.elements["location"].value = row.getAttribute("data-location") || "onepav";
+          form.elements["location"].value = row.getAttribute("data-location") || "ilcorso";
           form.elements["guests"].value = (row.cells[2] && row.cells[2].textContent) || "";
           form.elements["date"].value = row.getAttribute("data-date") || "";
           form.elements["time"].value = row.getAttribute("data-time") || "";
@@ -643,6 +705,115 @@
         setInterval(fetchAndUpdate, RECENT_POLL_INTERVAL);
 
         window.refreshAdminRecentBoxes = fetchAndUpdate;
+      })();
+
+      (function () {
+        function getCsrfToken() {
+          var m = document.querySelector("meta[name=csrf-token]");
+          return m ? m.getAttribute("content") : "";
+        }
+        function hasDataRows(tbody) {
+          return Array.prototype.some.call(tbody.querySelectorAll("tr"), function (tr) {
+            return !tr.querySelector("td.admin-recent-empty");
+          });
+        }
+        function appendEmptyRow(tbody, colspan, message) {
+          var tr = document.createElement("tr");
+          var td = document.createElement("td");
+          td.colSpan = colspan;
+          td.className = "admin-recent-empty";
+          td.textContent = message;
+          tr.appendChild(td);
+          tbody.appendChild(tr);
+        }
+        function ensureEmptyPlaceholder(tbody, colspan, message) {
+          if (!hasDataRows(tbody)) appendEmptyRow(tbody, colspan, message);
+        }
+        function makeRemoveButton(id) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "admin-remove-review-btn";
+          b.setAttribute("data-id", id);
+          b.setAttribute("aria-label", "Remove review");
+          b.textContent = "Remove";
+          return b;
+        }
+        var pendingBody = document.getElementById("admin-reviews-pending-tbody");
+        var approvedBody = document.getElementById("admin-reviews-approved-tbody");
+        if (!pendingBody || !approvedBody) return;
+
+        document.addEventListener("click", function (e) {
+          var removeBtn = e.target.closest(".admin-remove-review-btn");
+          if (removeBtn) {
+            if (!confirm("Remove this review permanently?")) return;
+            var rid = removeBtn.getAttribute("data-id");
+            var row = removeBtn.closest("tr");
+            var tbody = row && row.closest("tbody");
+            if (!rid || !row || !tbody) return;
+            var fd = new FormData();
+            fd.append("csrfmiddlewaretoken", getCsrfToken());
+            fetch("/admin-dashboard/review/" + rid + "/remove/", {
+              method: "POST",
+              body: fd,
+              headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+              .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+              .then(function (x) {
+                if (!x.ok || !x.d.ok) {
+                  alert("Remove failed");
+                  return;
+                }
+                row.remove();
+                if (tbody === pendingBody) ensureEmptyPlaceholder(pendingBody, 4, "No pending reviews");
+                else ensureEmptyPlaceholder(approvedBody, 4, "No approved reviews yet");
+              })
+              .catch(function () { alert("Remove failed"); });
+            return;
+          }
+
+          var btn = e.target.closest(".admin-approve-review-btn");
+          if (!btn) return;
+          var id = btn.getAttribute("data-id");
+          var row = btn.closest("tr");
+          if (!id || !row) return;
+          var fd = new FormData();
+          fd.append("csrfmiddlewaretoken", getCsrfToken());
+          fetch("/admin-dashboard/review/" + id + "/approve/", {
+            method: "POST",
+            body: fd,
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+          })
+            .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+            .then(function (x) {
+              if (!x.ok || !x.d.ok) {
+                alert("Approve failed");
+                return;
+              }
+              var emptyPending = pendingBody.querySelector("tr td.admin-recent-empty");
+              if (emptyPending) emptyPending.closest("tr").remove();
+              var emptyApproved = approvedBody.querySelector("tr td.admin-recent-empty");
+              if (emptyApproved) emptyApproved.closest("tr").remove();
+              var newRow = document.createElement("tr");
+              var td0 = document.createElement("td");
+              td0.textContent = (row.cells[0] && row.cells[0].textContent) || "";
+              var td1 = document.createElement("td");
+              td1.className = "admin-review-comment";
+              td1.textContent = (row.cells[1] && row.cells[1].textContent) || "";
+              var td2 = document.createElement("td");
+              td2.textContent = (row.cells[2] && row.cells[2].textContent) || "";
+              var td3 = document.createElement("td");
+              td3.className = "admin-review-actions";
+              td3.appendChild(makeRemoveButton(id));
+              newRow.appendChild(td0);
+              newRow.appendChild(td1);
+              newRow.appendChild(td2);
+              newRow.appendChild(td3);
+              approvedBody.insertBefore(newRow, approvedBody.firstChild);
+              row.remove();
+              ensureEmptyPlaceholder(pendingBody, 4, "No pending reviews");
+            })
+            .catch(function () { alert("Approve failed"); });
+        });
       })();
     </script>
   </body>

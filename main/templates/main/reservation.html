@@ -59,10 +59,8 @@
               <div class="reservation-field">
                 <label for="event-location" class="reservation-label" data-i18n="loc_label">Location</label>
                 <select id="event-location" name="location" class="reservation-select" required>
-                  <option value="onepav" selected>One Pavilion Mall</option>
-                  <option value="ilcorso" disabled>Il Corso South Food Park (Opens May 15)</option>
+                  <option value="ilcorso" selected>Il Corso South Food Park</option>
                 </select>
-                <p class="reservation-location-notice">Il Corso South Food Park opens May 15. Reservations there will be available soon.</p>
               </div>
 
               <div class="reservation-field">
@@ -160,7 +158,39 @@
       </section>
     </main>
 
+<<<<<<< HEAD
     {% include 'main/_footer.html' %}
+=======
+    <footer class="site-footer">
+      <div class="footer-accent"></div>
+      <div class="footer-inner">
+          <div class="footer-grid">
+            <div class="footer-col">
+              <h3 class="footer-heading" data-i18n="opening_hours">Opening Hours</h3>
+              <p class="footer-text" data-i18n="happy_hour">HAPPY HOUR FROM 2PM-5PM</p>
+            </div>
+            <div class="footer-col">
+              <h3 class="footer-heading" data-i18n="for_reservations">For Reservations</h3>
+            <ul class="footer-list">
+              <li><a href="tel:09675867197">0967 586 7197</a></li>
+              <li><a href="tel:09776564225">0977 654 4225</a></li>
+              <li><a href="mailto:smokeypeekscebu@gmail.com">smokeypeekscebu@gmail.com</a></li>
+            </ul>
+          </div>
+            <div class="footer-col">
+              <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
+              <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
+            <div class="footer-social">
+              {% include 'main/_footer_social.html' %}
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. <span data-i18n="rights_reserved">All rights reserved.</span></p>
+        </div>
+      </div>
+    </footer>
+>>>>>>> 46096d797f38c0aa3e6d4a7bb2fd167590bedf91
 
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
