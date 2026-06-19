@@ -413,6 +413,7 @@
           </div>
         </div>
       </footer>
+    </main>
     <script>
       // Set current year in footer
       document.getElementById("year").textContent = new Date().getFullYear();
@@ -420,10 +421,12 @@
       // Mobile nav toggle
       const navToggle = document.querySelector(".nav-toggle");
       const navLinks = document.querySelector(".nav-links");
-      navToggle.addEventListener("click", () => {
-        navLinks.classList.toggle("nav-open");
-        navToggle.classList.toggle("nav-open");
-      });
+      if (navToggle && navLinks) {
+        navToggle.addEventListener("click", () => {
+          navLinks.classList.toggle("nav-open");
+          navToggle.classList.toggle("nav-open");
+        });
+      }
 
       // Mobile experience carousel arrows
       const experienceTrack = document.getElementById("experience-track");
