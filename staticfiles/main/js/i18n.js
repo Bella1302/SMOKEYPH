@@ -142,7 +142,7 @@
       reviews_title: "Mga Review ng Customer",
       review1: '"Go-to spot namin ang Smokey Peeks tuwing weekend. Amazing na BBQ, malamig na inumin, at on point ang vibe."',
       review2: '"Nagdiwang ako ng birthday dito at sobrang special ang naging experience. Great service at live music!"',
-      review3: '" gusto ang Chicago-style flavors at Cebu vibes. Highly recommend ang brisket at signature cocktails."',
+      review3: '"Gusto ang Chicago-style flavors at Cebu vibes. Highly recommend ang brisket at signature cocktails."',
       share_experience: "Ibahagi ang iyong karanasan",
       email: "Email",
       comment: "Komento",

@@ -101,3 +101,15 @@
   color: var(--accent);
   font-weight: 500;
 }
+
+@media (max-width: 720px) {
+  .about-hero,
+  .about-content {
+    margin-inline: 1.1rem;
+    padding-inline: 1.25rem;
+  }
+
+  .about-main {
+    background-size: 80%;
+  }
+}

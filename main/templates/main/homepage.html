@@ -219,29 +219,102 @@
             <h2 class="menu-title" data-i18n="menus_title">Menu's</h2>
           </header>
 
-          <div class="menu-grid">
-            <div class="menu-card">
-              <img src="{% static 'main/img/menu7.png' %}" alt="Menu item 1" />
+          <div class="menu-carousel" aria-roledescription="carousel">
+            <div class="menu-carousel-shell">
+              <button
+                class="menu-carousel-btn prev"
+                type="button"
+                aria-label="Previous menu items"
+              >
+                ‹
+              </button>
+              <div class="menu-carousel-viewport">
+                <div class="menu-carousel-track" id="menu-carousel-track">
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Smokey Brisket.png' %}" alt="Smoked Brisket" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Beef BBQ Ribs.png' %}" alt="Beef BBQ Ribs" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Rib Eye Steak.png' %}" alt="Rib-eye Steak" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Deep Dish Pizza.png' %}" alt="Deep-Dish Pizza" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Ox Tails.png' %}" alt="Beef Ox Tails in Kare" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Angus.png' %}" alt="Chicago Angus" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Italian Beef Sandwich.png' %}" alt="Italian Beef Sandwich" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Beef Link.jpg' %}" alt="Beef Link" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Beef Steak Sandwich.jpg' %}" alt="Beef Steak Sandwich" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Mac and Cheese.png' %}" alt="Mac and Cheese" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Baked Beans.png' %}" alt="Baked Beans" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Baked cornbread.png' %}" alt="Baked Cornbread" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Loaded Baked Potateo.png' %}" alt="Loaded Baked Potato" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Southern style Potateo Salad.png' %}" alt="Southern Style Potato Salad" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="menu-carousel-btn next"
+                type="button"
+                aria-label="Next menu items"
+              >
+                ›
+              </button>
             </div>
-            <div class="menu-card">
-              <img src="{% static 'main/img/menu2.JPG' %}" alt="Menu item 2" />
-            </div>
-            <div class="menu-card">
-              <img src="{% static 'main/img/menu3.PNG' %}" alt="Menu item 3" />
-            </div>
-            <div class="menu-card">
-              <img src="{% static 'main/img/menu4.png' %}" alt="Menu item 4" />
-            </div>
-            <div class="menu-card">
-              <img src="{% static 'main/img/menu5.jpg' %}" alt="Menu item 5" />
-            </div>
-            <div class="menu-card">
-              <img src="{% static 'main/img/menu6.png' %}" alt="Menu item 6" />
-            </div>
+            <div class="menu-carousel-dots" id="menu-carousel-dots" role="tablist" aria-label="Menu slides"></div>
           </div>
 
           <div class="menu-actions">
-            <a href="{% url 'main:menu' %}" class="menu-more-button" data-i18n="see_more">See more</a>
+            <a href="{% url 'main:menu' %}?branch=ilcorso" class="menu-more-button" data-i18n="see_more">See more</a>
           </div>
         </div>
       </section>
@@ -317,44 +390,18 @@
         </div>
       </section>
 
-      <footer class="site-footer">
-        <div class="footer-accent"></div>
-        <div class="footer-inner">
-          <div class="footer-grid">
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="opening_hours">Opening Hours</h3>
-              <p class="footer-text" data-i18n="happy_hour">HAPPY HOUR FROM 2PM-5PM</p>
-            </div>
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="for_reservations">For Reservations</h3>
-              <ul class="footer-list">
-                <li><a href="tel:09675867197">0967 586 7197</a></li>
-                <li><a href="tel:09776564225">0977 654 4225</a></li>
-                <li><a href="mailto:smokeypeekscebu@gmail.com">smokeypeekscebu@gmail.com</a></li>
-              </ul>
-            </div>
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
-              <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
-              <div class="footer-social">
-                {% include 'main/_footer_social.html' %}
-              </div>
-            </div>
-          </div>
-          <div class="footer-bottom">
-            <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. <span data-i18n="rights_reserved">All rights reserved.</span></p>
-          </div>
-        </div>
-      </footer>
     </main>
+    {% include 'main/_footer.html' %}
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
       const navToggle = document.querySelector(".nav-toggle");
       const navLinks = document.querySelector(".nav-links");
-      navToggle.addEventListener("click", () => {
-        navLinks.classList.toggle("nav-open");
-        navToggle.classList.toggle("nav-open");
-      });
+      if (navToggle && navLinks) {
+        navToggle.addEventListener("click", () => {
+          navLinks.classList.toggle("nav-open");
+          navToggle.classList.toggle("nav-open");
+        });
+      }
       const experienceTrack = document.getElementById("experience-track");
       const prevBtn = document.querySelector(".experience-carousel-btn.prev");
       const nextBtn = document.querySelector(".experience-carousel-btn.next");
@@ -381,6 +428,113 @@
         nextBtn.addEventListener("click", () => { index = Math.min(maxIndex(), index + 1); update(); });
         window.addEventListener("resize", update);
         update();
+      }
+
+      const menuTrack = document.getElementById("menu-carousel-track");
+      const menuDots = document.getElementById("menu-carousel-dots");
+      const menuPrevBtn = document.querySelector(".menu-carousel-btn.prev");
+      const menuNextBtn = document.querySelector(".menu-carousel-btn.next");
+      if (menuTrack && menuPrevBtn && menuNextBtn) {
+        const menuCards = Array.from(menuTrack.querySelectorAll(".menu-card"));
+        const menuViewport = menuTrack.parentElement;
+        let menuIndex = 0;
+        let menuVisibleCount = 3;
+        let menuTouchStartX = 0;
+
+        const getMenuVisibleCount = () => {
+          if (window.innerWidth <= 720) return 1;
+          if (window.innerWidth <= 900) return 2;
+          return 3;
+        };
+
+        const getMenuStep = () => {
+          const first = menuCards[0];
+          if (!first) return 0;
+          const gap = parseFloat(getComputedStyle(menuTrack).gap) || 0;
+          return first.getBoundingClientRect().width + gap;
+        };
+
+        const getMenuMaxIndex = () => Math.max(0, menuCards.length - menuVisibleCount);
+
+        const setMenuSlideSizes = () => {
+          menuVisibleCount = getMenuVisibleCount();
+          const gap = parseFloat(getComputedStyle(menuTrack).gap) || 0;
+          const slideWidth =
+            (menuViewport.clientWidth - gap * (menuVisibleCount - 1)) / menuVisibleCount;
+          menuTrack.style.setProperty("--menu-slide-width", `${slideWidth}px`);
+        };
+
+        const buildMenuDots = () => {
+          if (!menuDots) return;
+          setMenuSlideSizes();
+          menuDots.innerHTML = "";
+          const pages = getMenuMaxIndex() + 1;
+          for (let i = 0; i < pages; i += 1) {
+            const dot = document.createElement("button");
+            dot.type = "button";
+            dot.className = "menu-carousel-dot";
+            dot.setAttribute("role", "tab");
+            dot.setAttribute("aria-label", `Go to menu slide ${i + 1}`);
+            dot.setAttribute("aria-selected", i === menuIndex ? "true" : "false");
+            dot.addEventListener("click", () => {
+              menuIndex = i;
+              updateMenuCarousel();
+            });
+            menuDots.appendChild(dot);
+          }
+        };
+
+        const updateMenuCarousel = () => {
+          setMenuSlideSizes();
+          if (menuIndex > getMenuMaxIndex()) menuIndex = getMenuMaxIndex();
+          const step = getMenuStep();
+          menuTrack.style.transform = `translateX(${-(step * menuIndex)}px)`;
+          menuPrevBtn.disabled = menuIndex <= 0;
+          menuNextBtn.disabled = menuIndex >= getMenuMaxIndex();
+          if (menuDots) {
+            menuDots.querySelectorAll(".menu-carousel-dot").forEach((dot, i) => {
+              const isActive = i === menuIndex;
+              dot.classList.toggle("is-active", isActive);
+              dot.setAttribute("aria-selected", isActive ? "true" : "false");
+            });
+          }
+        };
+
+        menuPrevBtn.addEventListener("click", () => {
+          menuIndex = Math.max(0, menuIndex - 1);
+          updateMenuCarousel();
+        });
+        menuNextBtn.addEventListener("click", () => {
+          menuIndex = Math.min(getMenuMaxIndex(), menuIndex + 1);
+          updateMenuCarousel();
+        });
+
+        menuTrack.addEventListener(
+          "touchstart",
+          (event) => {
+            menuTouchStartX = event.touches[0].clientX;
+          },
+          { passive: true }
+        );
+        menuTrack.addEventListener(
+          "touchend",
+          (event) => {
+            const diff = menuTouchStartX - event.changedTouches[0].clientX;
+            if (Math.abs(diff) < 40) return;
+            if (diff > 0) menuIndex = Math.min(getMenuMaxIndex(), menuIndex + 1);
+            else menuIndex = Math.max(0, menuIndex - 1);
+            updateMenuCarousel();
+          },
+          { passive: true }
+        );
+
+        window.addEventListener("resize", () => {
+          buildMenuDots();
+          updateMenuCarousel();
+        });
+
+        buildMenuDots();
+        updateMenuCarousel();
       }
 
       const reviewForm = document.getElementById("review-form");

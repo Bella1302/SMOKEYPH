@@ -36,6 +36,29 @@
                 <p class="location-card-subtitle" data-i18n="food_park">Food Park</p>
               </header>
 
+              <div class="branch-tabs" role="tablist" aria-label="Select branch">
+                <button
+                  class="branch-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                  data-branch="onePavilion"
+                >
+                  <span class="branch-tab-title" data-i18n="one_pavilion">One Pavilion Mall</span>
+                  <span class="branch-tab-sub" data-i18n="cebu_city">Cebu City</span>
+                </button>
+                <button
+                  class="branch-tab"
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-branch="ilCorso"
+                >
+                  <span class="branch-tab-title">Smokey Peeks IL Corso</span>
+                  <span class="branch-tab-sub" data-i18n="food_park">Food Park</span>
+                </button>
+              </div>
+
               <div class="branch-panel" role="region" aria-label="Selected branch details">
                 <h3 class="branch-name" id="branch-name">Il Corso South Food Park</h3>
                 <p class="location-address" id="branch-address">
@@ -48,7 +71,7 @@
                     <dd>
                       <a href="tel:09675867197">0967 586 7197</a>
                       <span class="fact-sep">•</span>
-                      <a href="tel:09776544225">0977 654 4225</a>
+                      <a href="tel:09776564225">0977 654 4225</a>
                     </dd>
                   </div>
                   <div class="branch-fact">
@@ -117,35 +140,7 @@
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-accent"></div>
-      <div class="footer-inner">
-          <div class="footer-grid">
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="opening_hours">Opening Hours</h3>
-              <p class="footer-text" data-i18n="happy_hour">HAPPY HOUR FROM 2PM-5PM</p>
-            </div>
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="for_reservations">For Reservations</h3>
-            <ul class="footer-list">
-              <li><a href="tel:09675867197">0967 586 7197</a></li>
-              <li><a href="tel:09776564225">0977 654 4225</a></li>
-              <li><a href="mailto:smokeypeekscebu@gmail.com">smokeypeekscebu@gmail.com</a></li>
-            </ul>
-          </div>
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
-              <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
-            <div class="footer-social">
-              {% include 'main/_footer_social.html' %}
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. <span data-i18n="rights_reserved">All rights reserved.</span></p>
-        </div>
-      </div>
-    </footer>
+    {% include 'main/_footer.html' %}
 
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
@@ -156,6 +151,102 @@
           navLinks.classList.toggle("nav-open");
           navToggle.classList.toggle("nav-open");
         });
+      }
+
+      var branches = {
+        onePavilion: {
+          lead: "One Pavilion Mall, Cebu City",
+          name: "One Pavilion Mall",
+          address: "One Pavilion Mall, 22 R. Duterte St, Cebu City, 6000 Cebu",
+          lat: 10.3154216,
+          lng: 123.8848071,
+          embedQuery: "Smokey Peeks One Pavilion Mall",
+          directionsUrl:
+            "https://www.google.com/maps/dir/?api=1&destination=10.3154216,123.8848071",
+          mapsUrl: "https://maps.app.goo.gl/xwBoMn1BU6oM29k56",
+        },
+        ilCorso: {
+          lead: "Smokey Peeks IL Corso, Il Corso South Food Park",
+          name: "Smokey Peeks IL Corso",
+          address: "Il Corso South Food Park, South Road Properties, Cebu City, Cebu",
+          lat: 10.2627203,
+          lng: 123.875397,
+          embedQuery: "Smokey Peeks IL Corso",
+          directionsUrl:
+            "https://www.google.com/maps/dir/?api=1&destination=Smokey+Peeks+IL+Corso",
+          mapsUrl:
+            "https://www.google.com/maps/search/?api=1&query=Smokey+Peeks+IL+Corso",
+        },
+      };
+
+      var tabButtons = Array.prototype.slice.call(
+        document.querySelectorAll(".branch-tab")
+      );
+
+      function setActiveTab(branchKey) {
+        tabButtons.forEach(function (btn) {
+          var selected = btn.getAttribute("data-branch") === branchKey;
+          btn.setAttribute("aria-selected", selected ? "true" : "false");
+        });
+      }
+
+      function setBranch(branchKey) {
+        var branch = branches[branchKey] || branches.onePavilion;
+
+        document.getElementById("branch-lead").textContent = branch.lead;
+        document.getElementById("branch-name").textContent = branch.name;
+        document.getElementById("branch-address").textContent = branch.address;
+        document.getElementById("map-title").textContent = branch.name;
+
+        var directionsHref =
+          branch.directionsUrl ||
+          "https://www.google.com/maps/dir/?api=1&destination=" +
+            branch.lat +
+            "," +
+            branch.lng;
+        var mapsHref = branch.mapsUrl || branch.mapsShort;
+        document.getElementById("directions-link").setAttribute("href", directionsHref);
+        document.getElementById("maps-link").setAttribute("href", mapsHref);
+        document.getElementById("map-open-link").setAttribute("href", mapsHref);
+
+        var iframe = document.getElementById("map-iframe");
+        iframe.setAttribute("title", branch.name + " map");
+        iframe.setAttribute(
+          "src",
+          branch.embedQuery
+            ? "https://www.google.com/maps?q=" +
+                encodeURIComponent(branch.embedQuery) +
+                "&z=16&output=embed"
+            : "https://www.google.com/maps?q=" +
+                branch.lat +
+                "," +
+                branch.lng +
+                "&z=16&output=embed"
+        );
+
+        setActiveTab(branchKey);
+      }
+
+      tabButtons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          setBranch(btn.getAttribute("data-branch"));
+        });
+      });
+
+      var params = new URLSearchParams(window.location.search);
+      var branchAliases = {
+        onepav: "onePavilion",
+        onepavilion: "onePavilion",
+        ilcorso: "ilCorso",
+      };
+      var initial = params.get("branch");
+      var branchKey = initial
+        ? branchAliases[initial.toLowerCase()] || initial
+        : null;
+      if (branchKey && branches[branchKey]) {
+        setBranch(branchKey);
+      } else {
+        setBranch("onePavilion");
       }
     </script>
   </body>
