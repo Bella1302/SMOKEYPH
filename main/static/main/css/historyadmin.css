@@ -98,9 +98,47 @@
     padding: 1rem 0.75rem 2rem;
   }
 
+  .history-title {
+    font-size: 1.25rem;
+  }
+
+  .history-subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .history-card {
+    padding: 1rem;
+  }
+
+  .history-table {
+    min-width: 520px;
+  }
+
   .history-table th,
   .history-table td {
     padding: 0.5rem 0.65rem;
     font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .history-title {
+    font-size: 1.1rem;
+  }
+
+  .history-table {
+    min-width: 460px;
+  }
+
+  .history-table th,
+  .history-table td {
+    padding: 0.45rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .history-badge {
+    font-size: 0.68rem;
+    padding: 0.15rem 0.4rem;
   }
 }
