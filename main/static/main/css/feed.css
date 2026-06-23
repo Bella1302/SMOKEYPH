@@ -1,266 +1,405 @@
-/* Feed page – Smokey Peeks */
+/* Feed page – Facebook-style layout, Smokey Peeks theme */
 .feed-main {
-  background: #0a0a0a;
+  background: #0d0d0d;
   min-height: calc(100vh - 120px);
-  padding-bottom: 3rem;
+  padding: 1.5rem 1rem 3rem;
 }
 
-.feed-hero {
-  position: relative;
-  padding: 3.5rem 1.25rem 2rem;
-  text-align: center;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.85)),
-    url("../img/coverphoto.png") center / cover no-repeat;
-}
-
-.feed-hero-inner {
-  max-width: 640px;
+.feed-page {
+  max-width: 580px;
   margin: 0 auto;
-}
-
-.feed-hero-kicker {
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  font-size: 0.75rem;
-  color: #f5e0b3;
-  margin: 0 0 0.6rem;
-}
-
-.feed-hero-title {
-  font-size: clamp(2rem, 4vw, 2.75rem);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #f2b46a;
-  margin: 0 0 0.75rem;
-}
-
-.feed-hero-subtitle {
-  color: #ccc;
-  font-size: 0.95rem;
-  margin: 0;
-  line-height: 1.5;
-}
-
-.feed-layout {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 1.5rem 1.25rem 0;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
-.feed-upload-card {
-  background: #141414;
-  border: 1px solid rgba(244, 178, 95, 0.25);
-  border-radius: 14px;
-  padding: 1.25rem;
+.feed-page-header {
+  text-align: center;
+  padding: 0.25rem 0 0.5rem;
 }
 
-.feed-upload-card h2 {
-  font-size: 1rem;
+.feed-page-header h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
   color: #f2b46a;
-  margin: 0 0 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.feed-page-header p {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  color: #888;
+}
+
+/* —— Composer (What's on your mind style) —— */
+.feed-composer {
+  background: #161616;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.feed-composer-top {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem 0.65rem;
+}
+
+.feed-composer-trigger {
+  flex: 1;
+  text-align: left;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  border: none;
+  background: #252525;
+  color: #aaa;
+  font-family: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.feed-composer-trigger:hover {
+  background: #2e2e2e;
+  color: #ccc;
+}
+
+.feed-composer-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  margin: 0 0.75rem;
+}
+
+.feed-composer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.75rem 0.65rem;
+}
+
+.feed-composer-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #f2b46a;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.feed-composer-action:hover {
+  background: rgba(244, 178, 95, 0.1);
+}
+
+.feed-composer-action-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.feed-composer-form {
+  padding: 0 1rem 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.feed-composer-form.is-collapsed {
+  display: none;
+}
+
+.feed-composer-form .form-row {
+  margin-top: 0.75rem;
+}
+
+.feed-composer-form label {
+  display: block;
+  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  color: #888;
+  margin-bottom: 0.3rem;
 }
 
-.feed-form .form-row {
-  margin-bottom: 0.85rem;
-}
-
-.feed-form label {
-  display: block;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #aaa;
-  margin-bottom: 0.35rem;
-}
-
-.feed-form input[type="text"],
-.feed-form input[type="email"],
-.feed-form textarea {
+.feed-composer-form input[type="text"],
+.feed-composer-form input[type="email"],
+.feed-composer-form textarea {
   width: 100%;
-  padding: 0.65rem 0.75rem;
+  padding: 0.6rem 0.75rem;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: #0d0d0d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0f0f0f;
   color: #eee;
   font-family: inherit;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
 }
 
-.feed-form input[type="file"] {
+.feed-composer-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.feed-composer-form input[type="file"] {
   width: 100%;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: #bbb;
 }
 
-.feed-form textarea {
-  resize: vertical;
-  min-height: 72px;
+.feed-photo-preview {
+  margin-top: 0.65rem;
+  border-radius: 8px;
+  overflow: hidden;
+  display: none;
 }
 
-.feed-submit {
-  margin-top: 0.25rem;
+.feed-photo-preview.has-image {
+  display: block;
+}
+
+.feed-photo-preview img {
+  display: block;
   width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+}
+
+.feed-composer-submit-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.85rem;
+}
+
+.feed-composer-submit {
+  min-width: 100px;
   justify-content: center;
 }
 
-.feed-timeline {
+/* —— Avatars —— */
+.feed-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+  background: linear-gradient(135deg, #3a2510, #1a1208);
+  border: 2px solid rgba(244, 178, 95, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #f2b46a;
+  overflow: hidden;
+}
+
+.feed-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.feed-avatar-team {
+  border-color: rgba(244, 178, 95, 0.55);
+  background: #111;
+}
+
+/* —— Post stream —— */
+.feed-stream {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .feed-empty {
   text-align: center;
-  color: #888;
-  padding: 2rem 1rem;
-  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: #777;
+  padding: 2.5rem 1.25rem;
+  background: #161616;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
   border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
-.feed-card {
-  background: #121212;
+.feed-post {
+  background: #161616;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   overflow: hidden;
 }
 
-.feed-card-pinned {
-  border-color: rgba(244, 178, 95, 0.45);
-  box-shadow: 0 0 0 1px rgba(244, 178, 95, 0.15);
+.feed-post-pinned {
+  border-color: rgba(244, 178, 95, 0.4);
+  box-shadow: 0 0 0 1px rgba(244, 178, 95, 0.12), 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
-.feed-card-header {
+.feed-post-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+  padding: 0.85rem 1rem 0.65rem;
+}
+
+.feed-post-user {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.85rem 1rem 0.5rem;
+  gap: 0.65rem;
+  min-width: 0;
 }
 
-.feed-card-author {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+.feed-post-user-info {
+  min-width: 0;
 }
 
-.feed-card-name {
+.feed-post-name {
+  display: block;
   font-weight: 600;
   font-size: 0.92rem;
   color: #f5f5f5;
+  line-height: 1.25;
 }
 
-.feed-card-meta {
-  font-size: 0.75rem;
+.feed-post-meta {
+  display: block;
+  font-size: 0.72rem;
   color: #888;
+  margin-top: 0.1rem;
 }
 
-.feed-pin-badge {
+.feed-post-meta-dot::before {
+  content: " · ";
+}
+
+.feed-pin-label {
   font-size: 0.65rem;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: #f2b46a;
   background: rgba(244, 178, 95, 0.12);
-  border: 1px solid rgba(244, 178, 95, 0.35);
-  padding: 0.2rem 0.55rem;
+  border: 1px solid rgba(244, 178, 95, 0.3);
+  padding: 0.2rem 0.5rem;
   border-radius: 999px;
   white-space: nowrap;
 }
 
-.feed-type-badge {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #aaa;
-  background: rgba(255, 255, 255, 0.06);
-  padding: 0.2rem 0.5rem;
-  border-radius: 999px;
-}
-
-.feed-card-image img {
-  display: block;
-  width: 100%;
-  max-height: 480px;
-  object-fit: cover;
-}
-
-.feed-card-body {
-  padding: 0.75rem 1rem 0.5rem;
-}
-
-.feed-card-caption {
+.feed-post-text {
   margin: 0;
-  color: #ddd;
+  padding: 0 1rem 0.75rem;
+  color: #e8e8e8;
   font-size: 0.92rem;
   line-height: 1.55;
   white-space: pre-wrap;
 }
 
-.feed-card-review {
-  padding: 1rem;
+.feed-post-media {
+  margin: 0;
+  line-height: 0;
+  background: #0a0a0a;
 }
 
-.feed-card-review blockquote {
+.feed-post-media img {
+  display: block;
+  width: 100%;
+  max-height: 520px;
+  object-fit: cover;
+}
+
+.feed-post-review-body {
+  padding: 0.25rem 1rem 0.85rem;
+}
+
+.feed-post-review-body blockquote {
   margin: 0;
+  padding: 0.85rem 1rem;
+  background: rgba(244, 178, 95, 0.06);
+  border-left: 3px solid #f2b46a;
+  border-radius: 0 8px 8px 0;
   color: #eee;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   line-height: 1.55;
   font-style: italic;
 }
 
-.feed-card-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem 0.85rem;
+.feed-post-stats {
+  padding: 0.5rem 1rem;
+  font-size: 0.78rem;
+  color: #999;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.feed-like-btn {
+.feed-post-stats:empty {
+  display: none;
+  padding: 0;
+  border: none;
+}
+
+.feed-post-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.35rem 0.5rem;
+}
+
+.feed-post-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.feed-heart-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
+  flex: 1;
+  max-width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 8px;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #ccc;
-  border-radius: 999px;
-  padding: 0.35rem 0.85rem;
+  color: #aaa;
+  font-family: inherit;
   font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
 
-.feed-like-btn:hover {
-  border-color: rgba(244, 178, 95, 0.4);
-  color: #f2b46a;
-}
-
-.feed-like-btn.is-liked {
-  color: #ff6b81;
-  border-color: rgba(255, 107, 129, 0.45);
+.feed-heart-btn:hover:not(:disabled) {
   background: rgba(255, 107, 129, 0.08);
+  color: #ff6b81;
 }
 
-.feed-like-btn:disabled {
-  opacity: 0.7;
+.feed-heart-btn.is-liked {
+  color: #ff6b81;
+}
+
+.feed-heart-btn:disabled {
   cursor: default;
+  opacity: 0.85;
 }
 
-.feed-like-icon {
-  font-size: 1rem;
+.feed-heart-icon {
+  font-size: 1.05rem;
   line-height: 1;
 }
 
 @media (max-width: 600px) {
-  .feed-hero {
-    padding: 2.5rem 1rem 1.5rem;
+  .feed-main {
+    padding-inline: 0.65rem;
   }
 
-  .feed-layout {
-    padding-inline: 1rem;
+  .feed-composer-top {
+    padding-inline: 0.75rem;
+  }
+
+  .feed-composer-trigger {
+    font-size: 0.82rem;
+    padding: 0.55rem 0.85rem;
   }
 }

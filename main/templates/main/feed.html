@@ -7,7 +7,7 @@
     <title>Feed - Smokey Peeks</title>
     <link rel="icon" type="image/png" href="{% static 'main/img/logoload.png' %}" />
     <link rel="stylesheet" href="{% static 'main/css/homepage.css' %}?v=20260623" />
-    <link rel="stylesheet" href="{% static 'main/css/feed.css' %}" />
+    <link rel="stylesheet" href="{% static 'main/css/feed.css' %}?v=20260624" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -20,20 +20,34 @@
     {% include 'main/_nav.html' %}
 
     <main class="feed-main">
-      <section class="feed-hero" aria-label="Community feed">
-        <div class="feed-hero-inner">
-          <p class="feed-hero-kicker" data-i18n="feed_kicker">Community</p>
-          <h1 class="feed-hero-title" data-i18n="feed_title">Feed</h1>
-          <p class="feed-hero-subtitle" data-i18n="feed_subtitle">
-            Share your Smokey Peeks moments, read reviews, and see the latest updates from our team.
-          </p>
-        </div>
-      </section>
+      <div class="feed-page">
+        <header class="feed-page-header">
+          <h1 data-i18n="feed_title">Community Feed</h1>
+          <p data-i18n="feed_subtitle">Share moments, see reviews, and catch updates from Smokey Peeks.</p>
+        </header>
 
-      <div class="feed-layout">
-        <section class="feed-upload-card" aria-label="Share your experience">
-          <h2 data-i18n="feed_share_title">Share your experience</h2>
-          <form class="feed-form" id="feed-upload-form" method="post" action="{% url 'main:submit_feed_post' %}" enctype="multipart/form-data">
+        <section class="feed-composer" aria-label="Create a post">
+          <div class="feed-composer-top">
+            <div class="feed-avatar" aria-hidden="true">?</div>
+            <button type="button" class="feed-composer-trigger" id="feed-composer-open" data-i18n="feed_composer_prompt">
+              Share your Smokey Peeks moment…
+            </button>
+          </div>
+          <div class="feed-composer-divider"></div>
+          <div class="feed-composer-actions">
+            <button type="button" class="feed-composer-action" id="feed-photo-trigger">
+              <span class="feed-composer-action-icon" aria-hidden="true">📷</span>
+              <span data-i18n="feed_photo_action">Photo</span>
+            </button>
+          </div>
+
+          <form
+            class="feed-composer-form is-collapsed"
+            id="feed-upload-form"
+            method="post"
+            action="{% url 'main:submit_feed_post' %}"
+            enctype="multipart/form-data"
+          >
             {% csrf_token %}
             <div class="form-row">
               <label for="feed-name" data-i18n="feed_your_name">Your name</label>
@@ -41,75 +55,110 @@
             </div>
             <div class="form-row">
               <label for="feed-email" data-i18n="email">Email</label>
-              <input type="email" id="feed-email" name="email" required placeholder="you@example.com" data-i18n-placeholder="email_placeholder" />
+              <input type="email" id="feed-email" name="email" required placeholder="you@example.com" />
             </div>
             <div class="form-row">
-              <label for="feed-caption" data-i18n="feed_caption">Caption (optional)</label>
-              <textarea id="feed-caption" name="caption" rows="2" maxlength="1000" placeholder="What made your visit special?" data-i18n-placeholder="feed_caption_placeholder"></textarea>
+              <label for="feed-caption" data-i18n="feed_caption">What's on your mind?</label>
+              <textarea
+                id="feed-caption"
+                name="caption"
+                rows="3"
+                maxlength="1000"
+                placeholder="Tell everyone about your visit…"
+                data-i18n-placeholder="feed_caption_placeholder"
+              ></textarea>
             </div>
             <div class="form-row">
               <label for="feed-photo" data-i18n="feed_photo">Photo</label>
               <input type="file" id="feed-photo" name="image" accept="image/*" required />
+              <div class="feed-photo-preview" id="feed-photo-preview" aria-hidden="true">
+                <img id="feed-photo-preview-img" alt="" />
+              </div>
             </div>
-            <button type="submit" class="btn btn-primary feed-submit" data-i18n="feed_submit">Upload photo</button>
+            <div class="feed-composer-submit-row">
+              <button type="submit" class="btn btn-primary feed-composer-submit" data-i18n="feed_submit">Post</button>
+            </div>
           </form>
         </section>
 
-        <section class="feed-timeline" aria-label="Feed posts">
+        <section class="feed-stream" aria-label="Feed posts">
           {% if feed_items %}
             {% for item in feed_items %}
               {% if item.kind == "post" %}
                 {% with post=item.obj %}
-                <article class="feed-card{% if post.pinned %} feed-card-pinned{% endif %}" data-post-id="{{ post.id }}">
-                  <div class="feed-card-header">
-                    <div class="feed-card-author">
-                      <span class="feed-card-name">{{ post.author_name|default:"Guest" }}</span>
-                      <span class="feed-card-meta">{{ post.created_at|date:"M j, Y g:i A" }}</span>
-                    </div>
-                    <div style="display:flex;gap:0.4rem;align-items:center;">
+                <article class="feed-post{% if post.pinned %} feed-post-pinned{% endif %}" data-post-id="{{ post.id }}">
+                  <header class="feed-post-head">
+                    <div class="feed-post-user">
                       {% if post.post_type == "update" %}
-                        <span class="feed-type-badge" data-i18n="feed_team_update">Team update</span>
+                        <div class="feed-avatar feed-avatar-team">
+                          <img src="{% static 'main/img/logoload.png' %}" alt="" />
+                        </div>
+                      {% else %}
+                        <div class="feed-avatar" aria-hidden="true">{{ post.author_name|default:"G"|slice:":1"|upper }}</div>
                       {% endif %}
-                      {% if post.pinned %}
-                        <span class="feed-pin-badge" data-i18n="feed_pinned">Pinned</span>
-                      {% endif %}
+                      <div class="feed-post-user-info">
+                        <span class="feed-post-name">{{ post.author_name|default:"Guest" }}</span>
+                        <span class="feed-post-meta">
+                          {{ post.created_at|timesince }} ago
+                          {% if post.post_type == "update" %}
+                            <span class="feed-post-meta-dot" data-i18n="feed_team_update">Team update</span>
+                          {% else %}
+                            <span class="feed-post-meta-dot">Smokey Peeks</span>
+                          {% endif %}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  {% if post.image %}
-                  <div class="feed-card-image">
-                    <img src="{{ post.image.url }}" alt="Smokey Peeks experience by {{ post.author_name }}" loading="lazy" />
-                  </div>
-                  {% endif %}
+                    {% if post.pinned %}
+                      <span class="feed-pin-label" data-i18n="feed_pinned">Pinned</span>
+                    {% endif %}
+                  </header>
+
                   {% if post.caption %}
-                  <div class="feed-card-body">
-                    <p class="feed-card-caption">{{ post.caption }}</p>
-                  </div>
+                    <p class="feed-post-text">{{ post.caption }}</p>
                   {% endif %}
-                  <div class="feed-card-actions">
-                    <button
-                      type="button"
-                      class="feed-like-btn{% if item.liked %} is-liked{% endif %}"
-                      data-post-id="{{ post.id }}"
-                      aria-label="Like this post"
-                      {% if item.liked %}disabled{% endif %}
-                    >
-                      <span class="feed-like-icon" aria-hidden="true">♥</span>
-                      <span class="feed-like-count">{{ post.like_count }}</span>
-                    </button>
+
+                  {% if post.image %}
+                    <figure class="feed-post-media">
+                      <img src="{{ post.image.url }}" alt="Experience at Smokey Peeks by {{ post.author_name }}" loading="lazy" />
+                    </figure>
+                  {% endif %}
+
+                  <div class="feed-post-stats">
+                    {% if post.like_count %}<span>♥ {{ post.like_count }}</span>{% endif %}
                   </div>
+                  <footer class="feed-post-footer">
+                    <div class="feed-post-actions">
+                      <button
+                        type="button"
+                        class="feed-heart-btn{% if item.liked %} is-liked{% endif %}"
+                        data-post-id="{{ post.id }}"
+                        aria-label="Love this post"
+                        {% if item.liked %}disabled{% endif %}
+                      >
+                        <span class="feed-heart-icon" aria-hidden="true">♥</span>
+                        <span data-i18n="feed_love">Love</span>
+                        {% if post.like_count %}<span class="feed-like-count">({{ post.like_count }})</span>{% endif %}
+                      </button>
+                    </div>
+                  </footer>
                 </article>
                 {% endwith %}
               {% else %}
                 {% with review=item.obj %}
-                <article class="feed-card feed-card-review-item">
-                  <div class="feed-card-header">
-                    <div class="feed-card-author">
-                      <span class="feed-card-name">{{ review.email|cut:"@gmail.com" }}</span>
-                      <span class="feed-card-meta">{{ review.created_at|date:"M j, Y g:i A" }}</span>
+                <article class="feed-post feed-post-review">
+                  <header class="feed-post-head">
+                    <div class="feed-post-user">
+                      <div class="feed-avatar" aria-hidden="true">{{ review.email|slice:":1"|upper }}</div>
+                      <div class="feed-post-user-info">
+                        <span class="feed-post-name">{{ review.email|cut:"@gmail.com" }}</span>
+                        <span class="feed-post-meta">
+                          {{ review.created_at|timesince }} ago
+                          <span class="feed-post-meta-dot" data-i18n="feed_review">Review</span>
+                        </span>
+                      </div>
                     </div>
-                    <span class="feed-type-badge" data-i18n="feed_review">Review</span>
-                  </div>
-                  <div class="feed-card-review">
+                  </header>
+                  <div class="feed-post-review-body">
                     <blockquote>"{{ review.comment }}"</blockquote>
                   </div>
                 </article>
@@ -124,6 +173,6 @@
     </main>
 
     {% include 'main/_footer.html' %}
-    <script src="{% static 'main/js/feed.js' %}"></script>
+    <script src="{% static 'main/js/feed.js' %}?v=20260624"></script>
   </body>
 </html>
