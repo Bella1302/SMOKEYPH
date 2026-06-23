@@ -1,21 +1,30 @@
 (function () {
-  const openBtn = document.getElementById("feed-composer-open");
-  const photoTrigger = document.getElementById("feed-photo-trigger");
+  const addYoursBtn = document.getElementById("feed-add-yours-btn");
+  const modal = document.getElementById("feed-modal");
   const form = document.getElementById("feed-upload-form");
   const fileInput = document.getElementById("feed-photo");
   const previewWrap = document.getElementById("feed-photo-preview");
   const previewImg = document.getElementById("feed-photo-preview-img");
   const statusBanner = document.getElementById("feed-status-banner");
+  const modalStatus = document.getElementById("feed-modal-status");
 
-  function showStatus(message, type) {
-    if (!statusBanner) {
+  function showStatus(message, type, inModal) {
+    const target = inModal ? modalStatus : statusBanner;
+    if (!target) {
       alert(message);
       return;
     }
-    statusBanner.textContent = message;
-    statusBanner.hidden = false;
-    statusBanner.classList.remove("is-error", "is-success");
-    if (type) statusBanner.classList.add(type);
+    target.textContent = message;
+    target.hidden = false;
+    target.classList.remove("is-error", "is-success");
+    if (type) target.classList.add(type);
+  }
+
+  function clearModalStatus() {
+    if (!modalStatus) return;
+    modalStatus.hidden = true;
+    modalStatus.textContent = "";
+    modalStatus.classList.remove("is-error", "is-success");
   }
 
   function getCsrfToken() {
@@ -25,23 +34,35 @@
     return match ? decodeURIComponent(match[1]) : "";
   }
 
-  function expandComposer() {
-    if (!form) return;
-    form.classList.remove("is-collapsed");
+  function openModal() {
+    if (!modal) return;
+    modal.hidden = false;
+    document.body.style.overflow = "hidden";
+    clearModalStatus();
     const caption = document.getElementById("feed-caption");
-    if (caption) caption.focus();
+    if (caption) window.setTimeout(function () { caption.focus(); }, 50);
   }
 
-  if (openBtn) {
-    openBtn.addEventListener("click", expandComposer);
+  function closeModal() {
+    if (!modal) return;
+    modal.hidden = true;
+    document.body.style.overflow = "";
+    clearModalStatus();
   }
 
-  if (photoTrigger && fileInput) {
-    photoTrigger.addEventListener("click", function () {
-      expandComposer();
-      fileInput.click();
-    });
+  if (addYoursBtn) {
+    addYoursBtn.addEventListener("click", openModal);
   }
+
+  document.querySelectorAll("[data-feed-modal-close]").forEach(function (el) {
+    el.addEventListener("click", closeModal);
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && modal && !modal.hidden) {
+      closeModal();
+    }
+  });
 
   if (fileInput && previewWrap && previewImg) {
     fileInput.addEventListener("change", function () {
@@ -68,13 +89,14 @@
         const caption = document.getElementById("feed-caption");
         const hasCaption = caption && caption.value.trim().length > 0;
         if (!hasCaption) {
-          showStatus("Write a message or add a photo before posting.", "is-error");
+          showStatus("Write a message or add a photo before posting.", "is-error", true);
           return;
         }
       }
 
       const submitBtn = form.querySelector("button[type='submit']");
       if (submitBtn) submitBtn.disabled = true;
+      clearModalStatus();
 
       try {
         const fd = new FormData(form);
@@ -107,12 +129,13 @@
           throw new Error(result.error || "Upload failed.");
         }
 
-        showStatus(result.message || "Photo submitted for approval.", "is-success");
+        closeModal();
+        showStatus(result.message || "Post submitted for approval.", "is-success", false);
         window.setTimeout(function () {
           window.location.reload();
         }, 900);
       } catch (error) {
-        showStatus(error.message || "Unable to upload right now.", "is-error");
+        showStatus(error.message || "Unable to upload right now.", "is-error", true);
         if (submitBtn) submitBtn.disabled = false;
       }
     });
@@ -152,7 +175,7 @@
       countInBtn.textContent = "(" + result.like_count + ")";
     } catch {
       btn.disabled = false;
-      showStatus("Unable to love this post right now.", "is-error");
+      showStatus("Unable to love this post right now.", "is-error", false);
     }
   });
 })();

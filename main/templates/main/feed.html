@@ -7,7 +7,7 @@
     <title>Feed - Smokey Peeks</title>
     <link rel="icon" type="image/png" href="{% static 'main/img/logoload.png' %}" />
     <link rel="stylesheet" href="{% static 'main/css/homepage.css' %}?v=20260623" />
-    <link rel="stylesheet" href="{% static 'main/css/feed.css' %}?v=20260624b" />
+    <link rel="stylesheet" href="{% static 'main/css/feed.css' %}?v=20260625" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -21,67 +21,17 @@
 
     <main class="feed-main">
       <div class="feed-page">
-        <header class="feed-page-header">
-          <h1 data-i18n="feed_title">Community Feed</h1>
-          <p data-i18n="feed_subtitle">Share moments, see reviews, and catch updates from Smokey Peeks.</p>
+        <header class="feed-toolbar">
+          <button type="button" class="feed-add-yours-btn" id="feed-add-yours-btn" data-i18n="feed_add_yours">
+            + Add yours
+          </button>
+          <div class="feed-toolbar-title">
+            <h1 data-i18n="feed_title">Community Feed</h1>
+            <p data-i18n="feed_subtitle">Share moments, see reviews, and catch updates from Smokey Peeks.</p>
+          </div>
         </header>
 
         <div id="feed-status-banner" class="feed-status-banner" role="status" hidden></div>
-
-        <section class="feed-composer" aria-label="Create a post">
-          <div class="feed-composer-top">
-            <div class="feed-avatar" aria-hidden="true">?</div>
-            <button type="button" class="feed-composer-trigger" id="feed-composer-open" data-i18n="feed_composer_prompt">
-              Share your Smokey Peeks moment…
-            </button>
-          </div>
-          <div class="feed-composer-divider"></div>
-          <div class="feed-composer-actions">
-            <button type="button" class="feed-composer-action" id="feed-photo-trigger">
-              <span class="feed-composer-action-icon" aria-hidden="true">📷</span>
-              <span data-i18n="feed_photo_action">Photo</span>
-            </button>
-          </div>
-
-          <form
-            class="feed-composer-form"
-            id="feed-upload-form"
-            method="post"
-            action="{% url 'main:submit_feed_post' %}"
-            enctype="multipart/form-data"
-          >
-            {% csrf_token %}
-            <div class="form-row">
-              <label for="feed-name" data-i18n="feed_your_name">Your name</label>
-              <input type="text" id="feed-name" name="author_name" required maxlength="120" placeholder="Your name" />
-            </div>
-            <div class="form-row">
-              <label for="feed-email" data-i18n="email">Email</label>
-              <input type="email" id="feed-email" name="email" required placeholder="you@example.com" />
-            </div>
-            <div class="form-row">
-              <label for="feed-caption" data-i18n="feed_caption">What's on your mind?</label>
-              <textarea
-                id="feed-caption"
-                name="caption"
-                rows="3"
-                maxlength="1000"
-                placeholder="Tell everyone about your visit…"
-                data-i18n-placeholder="feed_caption_placeholder"
-              ></textarea>
-            </div>
-            <div class="form-row">
-              <label for="feed-photo" data-i18n="feed_photo_optional">Photo (optional)</label>
-              <input type="file" id="feed-photo" name="image" accept="image/*" />
-              <div class="feed-photo-preview" id="feed-photo-preview" aria-hidden="true">
-                <img id="feed-photo-preview-img" alt="" />
-              </div>
-            </div>
-            <div class="feed-composer-submit-row">
-              <button type="submit" class="btn btn-primary feed-composer-submit" data-i18n="feed_submit">Post</button>
-            </div>
-          </form>
-        </section>
 
         <section class="feed-stream" aria-label="Feed posts">
           {% if feed_items %}
@@ -178,7 +128,58 @@
       </div>
     </main>
 
+    <div id="feed-modal" class="feed-modal" role="dialog" aria-modal="true" aria-labelledby="feed-modal-title" hidden>
+      <div class="feed-modal-backdrop" data-feed-modal-close></div>
+      <div class="feed-modal-box">
+        <div class="feed-modal-header">
+          <h2 id="feed-modal-title" data-i18n="feed_modal_title">Share your moment</h2>
+          <button type="button" class="feed-modal-close" data-feed-modal-close aria-label="Close">&times;</button>
+        </div>
+        <p class="feed-modal-note" data-i18n="feed_modal_note">Photo is optional — write a message, add a photo, or both.</p>
+        <div id="feed-modal-status" class="feed-modal-status" role="status" hidden></div>
+        <form
+          class="feed-modal-form"
+          id="feed-upload-form"
+          method="post"
+          action="{% url 'main:submit_feed_post' %}"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <div class="form-row">
+            <label for="feed-name" data-i18n="feed_your_name">Your name</label>
+            <input type="text" id="feed-name" name="author_name" required maxlength="120" placeholder="Your name" />
+          </div>
+          <div class="form-row">
+            <label for="feed-email" data-i18n="email">Email</label>
+            <input type="email" id="feed-email" name="email" required placeholder="you@example.com" />
+          </div>
+          <div class="form-row">
+            <label for="feed-caption" data-i18n="feed_caption">What's on your mind?</label>
+            <textarea
+              id="feed-caption"
+              name="caption"
+              rows="3"
+              maxlength="1000"
+              placeholder="Tell everyone about your visit…"
+              data-i18n-placeholder="feed_caption_placeholder"
+            ></textarea>
+          </div>
+          <div class="form-row">
+            <label for="feed-photo" data-i18n="feed_photo_optional">Photo (optional)</label>
+            <input type="file" id="feed-photo" name="image" accept="image/*" />
+            <div class="feed-photo-preview" id="feed-photo-preview" aria-hidden="true">
+              <img id="feed-photo-preview-img" alt="" />
+            </div>
+          </div>
+          <div class="feed-modal-actions">
+            <button type="button" class="btn btn-secondary feed-modal-cancel" data-feed-modal-close data-i18n="feed_cancel">Cancel</button>
+            <button type="submit" class="btn btn-primary feed-modal-submit" data-i18n="feed_submit">Post</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     {% include 'main/_footer.html' %}
-    <script src="{% static 'main/js/feed.js' %}?v=20260624c"></script>
+    <script src="{% static 'main/js/feed.js' %}?v=20260625"></script>
   </body>
 </html>
