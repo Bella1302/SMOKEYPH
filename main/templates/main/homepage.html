@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" href="{% static 'main/img/logoload.png' %}" />
     <link rel="shortcut icon" href="{% static 'main/img/logoload.png' %}" />
     <link rel="apple-touch-icon" href="{% static 'main/img/logoload.png' %}" />
-    <link rel="stylesheet" href="{% static 'main/css/homepage.css' %}" />
+    <link rel="stylesheet" href="{% static 'main/css/homepage.css' %}?v=20260623" />
     <style>
       body.page-loading {
         overflow: hidden;
@@ -79,7 +79,11 @@
     {% include 'main/_nav.html' %}
 
     <main>
-      <section class="hero" id="home">
+      <section
+        class="hero"
+        id="home"
+        style="background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.65)), url('{% static "main/img/coverphoto.png" %}');"
+      >
         <div class="hero-overlay"></div>
         <div class="hero-content">
           <div class="hero-seasonal" aria-hidden="true"><span class="hero-icon">☀</span><span class="hero-icon">⛱</span></div>
