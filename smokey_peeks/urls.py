@@ -1,11 +1,13 @@
 """
 URL configuration for Smokey Peeks project.
 """
-from django.conf import settings
-from django.conf.urls.static import static
+import os
+
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path, re_path
 from django.views.generic import RedirectView
+
+from main.views import serve_media
 
 urlpatterns = [
     path("favicon.ico", RedirectView.as_view(url="/static/main/img/log.png", permanent=True)),
@@ -13,7 +15,8 @@ urlpatterns = [
     path('', include('main.urls')),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-else:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Local disk storage: Django's static.serve returns 404 when DEBUG=False (production).
+if not os.environ.get("CLOUDINARY_URL"):
+    urlpatterns += [
+        re_path(r"^media/(?P<path>.*)$", serve_media, name="serve_media"),
+    ]

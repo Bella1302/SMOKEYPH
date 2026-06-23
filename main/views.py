@@ -1,17 +1,38 @@
 """
 Views for Smokey Peeks website.
 """
+import mimetypes
 from datetime import datetime
 from pathlib import Path
+from django.conf import settings
 from django.db.models import F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
+from django.http import FileResponse, Http404, JsonResponse
+from django.views.decorators.http import require_GET, require_POST
 from django.utils import timezone
 from .models import AdminActivity, CustomerReview, FeedLike, FeedPost, Reservation, SiteVisitCounter
+
+
+@require_GET
+def serve_media(request, path):
+    """Serve uploaded files in production (Django's static.serve refuses when DEBUG=False)."""
+    media_root = Path(settings.MEDIA_ROOT).resolve()
+    safe_path = path.replace("\\", "/").lstrip("/")
+    full_path = (media_root / safe_path).resolve()
+    try:
+        full_path.relative_to(media_root)
+    except ValueError as exc:
+        raise Http404("Invalid media path") from exc
+    if not full_path.is_file():
+        raise Http404("Media file not found")
+    content_type, _ = mimetypes.guess_type(str(full_path))
+    return FileResponse(
+        full_path.open("rb"),
+        content_type=content_type or "application/octet-stream",
+    )
 
 
 def _ensure_session_key(request):
