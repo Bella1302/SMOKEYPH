@@ -2,6 +2,7 @@
 Views for Smokey Peeks website.
 """
 from datetime import datetime
+from pathlib import Path
 from django.db.models import F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -20,20 +21,38 @@ def _ensure_session_key(request):
 
 
 def _build_feed_items(request):
-    """Merge approved posts and reviews into one timeline (pinned first)."""
+    """Merge approved posts, session-pending uploads, and reviews into one timeline."""
     session_key = _ensure_session_key(request)
     liked_ids = set(
         FeedLike.objects.filter(session_key=session_key).values_list("post_id", flat=True)
     )
+    pending_ids = request.session.get("pending_feed_post_ids", [])
     items = []
+    seen_post_ids = set()
+
     for post in FeedPost.objects.filter(approved=True):
+        seen_post_ids.add(post.id)
         items.append({
             "kind": "post",
             "obj": post,
             "pinned": post.pinned,
             "date": post.created_at,
             "liked": post.id in liked_ids,
+            "pending": False,
         })
+
+    for post in FeedPost.objects.filter(pk__in=pending_ids, approved=False).order_by("-created_at"):
+        if post.id in seen_post_ids:
+            continue
+        items.append({
+            "kind": "post",
+            "obj": post,
+            "pinned": False,
+            "date": post.created_at,
+            "liked": False,
+            "pending": True,
+        })
+
     for review in CustomerReview.objects.filter(approved=True):
         items.append({
             "kind": "review",
@@ -41,6 +60,7 @@ def _build_feed_items(request):
             "pinned": False,
             "date": review.created_at,
             "liked": False,
+            "pending": False,
         })
     items.sort(key=lambda x: (not x["pinned"], -x["date"].timestamp()))
     return items
@@ -57,30 +77,79 @@ def feed(request):
 
 @require_POST
 def submit_feed_post(request):
+    import json
+    import time
+
+    def _debug_log(message, data=None, hypothesis_id="H1"):
+        # #region agent log
+        try:
+            payload = {
+                "sessionId": "5b3a1b",
+                "runId": "feed-upload",
+                "hypothesisId": hypothesis_id,
+                "location": "main/views.py:submit_feed_post",
+                "message": message,
+                "data": data or {},
+                "timestamp": int(time.time() * 1000),
+            }
+            with open(
+                Path(__file__).resolve().parent.parent.parent / "debug-5b3a1b.log",
+                "a",
+                encoding="utf-8",
+            ) as fh:
+                fh.write(json.dumps(payload) + "\n")
+        except OSError:
+            pass
+        # #endregion
+
     author_name = request.POST.get("author_name", "").strip()
     email = request.POST.get("email", "").strip()
     caption = request.POST.get("caption", "").strip()
     image = request.FILES.get("image")
 
+    _debug_log("submit_feed_post called", {
+        "has_name": bool(author_name),
+        "has_email": bool(email),
+        "has_image": bool(image),
+        "image_size": getattr(image, "size", 0),
+    }, "H1")
+
     if not author_name or not email:
+        _debug_log("validation failed missing identity", hypothesis_id="H2")
         return JsonResponse({"ok": False, "error": "Name and email are required."}, status=400)
-    if not image:
-        return JsonResponse({"ok": False, "error": "Please upload a photo of your experience."}, status=400)
-    if image.size > 8 * 1024 * 1024:
+    if not caption and not image:
+        _debug_log("validation failed empty post", hypothesis_id="H2")
+        return JsonResponse({"ok": False, "error": "Write a message or add a photo before posting."}, status=400)
+    if image and image.size > 8 * 1024 * 1024:
+        _debug_log("validation failed image too large", {"size": image.size}, "H2")
         return JsonResponse({"ok": False, "error": "Photo must be 8 MB or smaller."}, status=400)
 
-    FeedPost.objects.create(
-        post_type="customer",
-        author_name=author_name,
-        email=email,
-        caption=caption,
-        image=image,
-        approved=False,
-    )
+    try:
+        post = FeedPost.objects.create(
+            post_type="customer",
+            author_name=author_name,
+            email=email,
+            caption=caption,
+            image=image if image else None,
+            approved=False,
+        )
+        pending_ids = request.session.get("pending_feed_post_ids", [])
+        pending_ids.append(post.id)
+        request.session["pending_feed_post_ids"] = pending_ids[-20:]
+        request.session.modified = True
+        _debug_log("post created", {"post_id": post.id, "approved": post.approved}, "H3")
+    except Exception as exc:
+        _debug_log("post create failed", {"error": str(exc)}, "H4")
+        return JsonResponse(
+            {"ok": False, "error": "Upload failed. Please try a smaller JPG or PNG photo."},
+            status=500,
+        )
+
     return JsonResponse({
         "ok": True,
         "pending": True,
-        "message": "Thank you! Your photo will appear on the Feed after management approves it.",
+        "post_id": post.id,
+        "message": "Post submitted! It will appear here with “Awaiting approval” until management approves it.",
     })
 
 

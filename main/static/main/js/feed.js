@@ -5,6 +5,25 @@
   const fileInput = document.getElementById("feed-photo");
   const previewWrap = document.getElementById("feed-photo-preview");
   const previewImg = document.getElementById("feed-photo-preview-img");
+  const statusBanner = document.getElementById("feed-status-banner");
+
+  function showStatus(message, type) {
+    if (!statusBanner) {
+      alert(message);
+      return;
+    }
+    statusBanner.textContent = message;
+    statusBanner.hidden = false;
+    statusBanner.classList.remove("is-error", "is-success");
+    if (type) statusBanner.classList.add(type);
+  }
+
+  function getCsrfToken() {
+    const input = document.querySelector("[name=csrfmiddlewaretoken]");
+    if (input && input.value) return input.value;
+    const match = document.cookie.match(/csrftoken=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : "";
+  }
 
   function expandComposer() {
     if (!form) return;
@@ -45,35 +64,58 @@
   if (form) {
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      if (!fileInput || !fileInput.files || !fileInput.files.length) {
+        const caption = document.getElementById("feed-caption");
+        const hasCaption = caption && caption.value.trim().length > 0;
+        if (!hasCaption) {
+          showStatus("Write a message or add a photo before posting.", "is-error");
+          return;
+        }
+      }
+
       const submitBtn = form.querySelector("button[type='submit']");
       if (submitBtn) submitBtn.disabled = true;
+
       try {
+        const fd = new FormData(form);
+        const csrf = getCsrfToken();
+        if (csrf) fd.set("csrfmiddlewaretoken", csrf);
+
         const response = await fetch(form.action, {
           method: "POST",
-          body: new FormData(form),
+          body: fd,
+          headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRFToken": csrf,
+          },
+          credentials: "same-origin",
         });
-        const result = await response.json();
+
+        let result = {};
+        const contentType = response.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+          result = await response.json();
+        } else {
+          throw new Error(
+            response.status === 403
+              ? "Session expired. Refresh the page and try again."
+              : "Upload failed. Please try again."
+          );
+        }
+
         if (!response.ok || !result.ok) {
           throw new Error(result.error || "Upload failed.");
         }
-        alert(result.message || "Submitted for approval.");
-        form.reset();
-        form.classList.add("is-collapsed");
-        if (previewWrap) {
-          previewWrap.classList.remove("has-image");
-          previewImg.removeAttribute("src");
-        }
+
+        showStatus(result.message || "Photo submitted for approval.", "is-success");
+        window.setTimeout(function () {
+          window.location.reload();
+        }, 900);
       } catch (error) {
-        alert(error.message || "Unable to upload right now.");
-      } finally {
+        showStatus(error.message || "Unable to upload right now.", "is-error");
         if (submitBtn) submitBtn.disabled = false;
       }
     });
-  }
-
-  function getCsrfToken() {
-    const input = document.querySelector("[name=csrfmiddlewaretoken]");
-    return input ? input.value : "";
   }
 
   document.addEventListener("click", async (event) => {
@@ -83,12 +125,17 @@
     if (!postId) return;
     btn.disabled = true;
     try {
+      const csrf = getCsrfToken();
       const fd = new FormData();
-      fd.append("csrfmiddlewaretoken", getCsrfToken());
+      fd.append("csrfmiddlewaretoken", csrf);
       const response = await fetch("/feed/" + postId + "/like/", {
         method: "POST",
         body: fd,
-        headers: { "X-Requested-With": "XMLHttpRequest" },
+        headers: {
+          "X-Requested-With": "XMLHttpRequest",
+          "X-CSRFToken": csrf,
+        },
+        credentials: "same-origin",
       });
       const result = await response.json();
       if (!response.ok || !result.ok) throw new Error("Like failed");
@@ -105,7 +152,7 @@
       countInBtn.textContent = "(" + result.like_count + ")";
     } catch {
       btn.disabled = false;
-      alert("Unable to love this post right now.");
+      showStatus("Unable to love this post right now.", "is-error");
     }
   });
 })();

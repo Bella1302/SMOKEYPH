@@ -7,7 +7,7 @@
     <title>Feed - Smokey Peeks</title>
     <link rel="icon" type="image/png" href="{% static 'main/img/logoload.png' %}" />
     <link rel="stylesheet" href="{% static 'main/css/homepage.css' %}?v=20260623" />
-    <link rel="stylesheet" href="{% static 'main/css/feed.css' %}?v=20260624" />
+    <link rel="stylesheet" href="{% static 'main/css/feed.css' %}?v=20260624b" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,6 +26,8 @@
           <p data-i18n="feed_subtitle">Share moments, see reviews, and catch updates from Smokey Peeks.</p>
         </header>
 
+        <div id="feed-status-banner" class="feed-status-banner" role="status" hidden></div>
+
         <section class="feed-composer" aria-label="Create a post">
           <div class="feed-composer-top">
             <div class="feed-avatar" aria-hidden="true">?</div>
@@ -42,7 +44,7 @@
           </div>
 
           <form
-            class="feed-composer-form is-collapsed"
+            class="feed-composer-form"
             id="feed-upload-form"
             method="post"
             action="{% url 'main:submit_feed_post' %}"
@@ -69,8 +71,8 @@
               ></textarea>
             </div>
             <div class="form-row">
-              <label for="feed-photo" data-i18n="feed_photo">Photo</label>
-              <input type="file" id="feed-photo" name="image" accept="image/*" required />
+              <label for="feed-photo" data-i18n="feed_photo_optional">Photo (optional)</label>
+              <input type="file" id="feed-photo" name="image" accept="image/*" />
               <div class="feed-photo-preview" id="feed-photo-preview" aria-hidden="true">
                 <img id="feed-photo-preview-img" alt="" />
               </div>
@@ -86,7 +88,7 @@
             {% for item in feed_items %}
               {% if item.kind == "post" %}
                 {% with post=item.obj %}
-                <article class="feed-post{% if post.pinned %} feed-post-pinned{% endif %}" data-post-id="{{ post.id }}">
+                <article class="feed-post{% if post.pinned %} feed-post-pinned{% endif %}{% if item.pending %} feed-post-pending{% endif %}" data-post-id="{{ post.id }}">
                   <header class="feed-post-head">
                     <div class="feed-post-user">
                       {% if post.post_type == "update" %}
@@ -110,6 +112,8 @@
                     </div>
                     {% if post.pinned %}
                       <span class="feed-pin-label" data-i18n="feed_pinned">Pinned</span>
+                    {% elif item.pending %}
+                      <span class="feed-pending-label" data-i18n="feed_pending">Awaiting approval</span>
                     {% endif %}
                   </header>
 
@@ -124,8 +128,9 @@
                   {% endif %}
 
                   <div class="feed-post-stats">
-                    {% if post.like_count %}<span>♥ {{ post.like_count }}</span>{% endif %}
+                    {% if post.like_count and not item.pending %}<span>♥ {{ post.like_count }}</span>{% endif %}
                   </div>
+                  {% if not item.pending %}
                   <footer class="feed-post-footer">
                     <div class="feed-post-actions">
                       <button
@@ -141,6 +146,7 @@
                       </button>
                     </div>
                   </footer>
+                  {% endif %}
                 </article>
                 {% endwith %}
               {% else %}
@@ -173,6 +179,6 @@
     </main>
 
     {% include 'main/_footer.html' %}
-    <script src="{% static 'main/js/feed.js' %}?v=20260624"></script>
+    <script src="{% static 'main/js/feed.js' %}?v=20260624c"></script>
   </body>
 </html>
