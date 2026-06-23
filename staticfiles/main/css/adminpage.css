@@ -93,6 +93,10 @@ body {
 }
 
 .admin-logout-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
   color: var(--accent);
   text-decoration: none;
   font-size: 0.9rem;
@@ -103,6 +107,10 @@ body {
 .admin-logout-link:hover {
   background: var(--accent-soft);
   color: var(--accent);
+}
+
+.admin-logout-icon {
+  flex-shrink: 0;
 }
 
 .admin-brand {
@@ -436,6 +444,7 @@ body {
 /* Tables */
 .admin-table-wrapper {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-soft);
 }
@@ -672,7 +681,32 @@ body {
   font-size: 0.9rem;
 }
 
-/* Responsive: All Reservations table and layout */
+/* Responsive layout */
+@media (max-width: 900px) {
+  .admin-header-inner {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .admin-brand-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .admin-logout-link {
+    margin-left: auto;
+  }
+
+  .admin-card-title {
+    font-size: 1rem;
+  }
+
+  .admin-feed-update-form {
+    max-width: none;
+  }
+}
+
 @media (max-width: 768px) {
   .admin-dashboard {
     padding: 1rem 0.75rem 2rem;
@@ -685,15 +719,44 @@ body {
 
   .admin-card {
     padding: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .admin-card-title {
+    margin-bottom: 1rem;
+  }
+
+  .admin-visits-number {
+    font-size: 2rem;
+  }
+
+  .admin-today-number {
+    font-size: 2.25rem;
   }
 
   .admin-toolbar {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.65rem;
   }
 
   .admin-search-wrap {
     max-width: none;
+    min-width: 0;
+  }
+
+  .admin-filters {
+    width: 100%;
+  }
+
+  .admin-filter-dropdown {
+    flex: 1;
+    min-width: calc(50% - 0.25rem);
+  }
+
+  .admin-filter-btn {
+    width: 100%;
+    text-align: center;
   }
 
   .admin-table-wrapper-full {
@@ -701,8 +764,12 @@ body {
     -webkit-overflow-scrolling: touch;
   }
 
+  .admin-recent-table {
+    min-width: 540px;
+  }
+
   .admin-table-full {
-    min-width: 600px;
+    min-width: 640px;
   }
 
   .admin-table-full th,
@@ -711,8 +778,20 @@ body {
     font-size: 0.8rem;
   }
 
+  .admin-reviews-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .admin-review-comment {
+    max-width: none;
+    min-width: 8rem;
+  }
+
   .admin-actions-cell {
-    white-space: nowrap;
+    white-space: normal;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
   }
 
   .admin-edit-row-btn,
@@ -720,18 +799,85 @@ body {
   .admin-cancel-btn {
     padding: 0.3rem 0.5rem;
     font-size: 0.75rem;
-    margin-right: 0.25rem;
+    margin-right: 0;
+  }
+
+  .admin-modal-box {
+    max-height: 85vh;
+    padding: 1.25rem;
+  }
+
+  .admin-modal-actions {
+    flex-wrap: wrap;
   }
 }
 
 @media (max-width: 480px) {
   .admin-header-inner {
-    flex-wrap: wrap;
+    padding: 0.6rem 0.75rem;
     gap: 0.5rem;
+  }
+
+  .admin-brand-logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  .admin-brand-name {
+    font-size: 0.9rem;
+  }
+
+  .admin-brand-tagline {
+    display: none;
+  }
+
+  .admin-greeting-row {
+    gap: 0.5rem;
+  }
+
+  .admin-greeting {
+    font-size: 0.85rem;
+  }
+
+  .admin-history-link {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.45rem;
+  }
+
+  .admin-datetime {
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
+  .admin-logout-link {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.82rem;
+  }
+
+  .admin-dashboard-title {
+    font-size: 1.1rem;
   }
 
   .admin-today-number {
     font-size: 2rem;
+  }
+
+  .admin-visits-number {
+    font-size: 1.75rem;
+  }
+
+  .admin-today-chips {
+    gap: 0.25rem;
+  }
+
+  .admin-today-chip {
+    font-size: 0.7rem;
+    padding: 0.12rem 0.5rem;
+  }
+
+  .admin-btn-secondary,
+  .admin-btn-add {
+    width: 100%;
   }
 
   .admin-recent-boxes {
@@ -742,10 +888,66 @@ body {
     padding: 0.75rem;
   }
 
+  .admin-recent-title {
+    font-size: 0.85rem;
+  }
+
+  .admin-recent-table {
+    min-width: 480px;
+  }
+
   .admin-recent-table th,
   .admin-recent-table td {
     padding: 0.4rem 0.5rem;
     font-size: 0.75rem;
+  }
+
+  .admin-table-full {
+    min-width: 560px;
+  }
+
+  .admin-filter-dropdown {
+    min-width: 100%;
+  }
+
+  .admin-feed-update-form {
+    padding: 0.85rem;
+  }
+
+  .admin-approve-feed-btn,
+  .admin-pin-feed-btn,
+  .admin-unpin-feed-btn,
+  .admin-remove-feed-btn,
+  .admin-approve-review-btn,
+  .admin-remove-review-btn {
+    padding: 0.3rem 0.55rem;
+    font-size: 0.72rem;
+  }
+
+  .admin-modal {
+    padding: 0.5rem;
+    align-items: flex-end;
+  }
+
+  .admin-modal-box {
+    max-width: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding: 1rem 1rem 1.25rem;
+  }
+
+  .admin-modal-title {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .admin-modal-actions {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+
+  .admin-modal-actions .admin-btn {
+    width: 100%;
   }
 }
 
@@ -794,11 +996,14 @@ body {
 }
 
 .admin-review-actions {
-  white-space: nowrap;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .admin-review-actions .admin-approve-review-btn + .admin-remove-review-btn {
-  margin-left: 0.35rem;
+  margin-left: 0;
 }
 
 .admin-remove-review-btn {
@@ -816,4 +1021,65 @@ body {
   background: #a32a2a;
   color: #fff;
   border-color: #a32a2a;
+}
+
+.admin-visits-summary {
+  padding: 0.5rem 0 0.25rem;
+}
+
+.admin-visits-number {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #2563eb;
+  line-height: 1;
+  display: block;
+}
+
+.admin-visits-label {
+  margin: 0.5rem 0 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.admin-feed-update-form {
+  max-width: 520px;
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: var(--bg-card-alt);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-soft);
+}
+
+.admin-feed-update-form .admin-edit-field {
+  margin-bottom: 0.75rem;
+}
+
+.admin-feed-update-form textarea.admin-edit-input {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.admin-approve-feed-btn,
+.admin-pin-feed-btn,
+.admin-unpin-feed-btn {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(76, 175, 80, 0.45);
+  background: rgba(76, 175, 80, 0.08);
+  color: #2e7d32;
+  cursor: pointer;
+  margin-right: 0.35rem;
+}
+
+.admin-remove-feed-btn {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(180, 40, 40, 0.45);
+  background: rgba(180, 40, 40, 0.08);
+  color: #a32a2a;
+  cursor: pointer;
 }
