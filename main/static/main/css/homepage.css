@@ -207,7 +207,7 @@ video {
       rgba(0, 0, 0, 0.4),
       rgba(0, 0, 0, 0.8)
     ),
-    url("../img/fd.jpg");
+    url("../img/coverphoto.png");
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
