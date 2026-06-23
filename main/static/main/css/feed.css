@@ -1,0 +1,266 @@
+/* Feed page – Smokey Peeks */
+.feed-main {
+  background: #0a0a0a;
+  min-height: calc(100vh - 120px);
+  padding-bottom: 3rem;
+}
+
+.feed-hero {
+  position: relative;
+  padding: 3.5rem 1.25rem 2rem;
+  text-align: center;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.85)),
+    url("../img/coverphoto.png") center / cover no-repeat;
+}
+
+.feed-hero-inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.feed-hero-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.75rem;
+  color: #f5e0b3;
+  margin: 0 0 0.6rem;
+}
+
+.feed-hero-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #f2b46a;
+  margin: 0 0 0.75rem;
+}
+
+.feed-hero-subtitle {
+  color: #ccc;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.feed-layout {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.feed-upload-card {
+  background: #141414;
+  border: 1px solid rgba(244, 178, 95, 0.25);
+  border-radius: 14px;
+  padding: 1.25rem;
+}
+
+.feed-upload-card h2 {
+  font-size: 1rem;
+  color: #f2b46a;
+  margin: 0 0 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.feed-form .form-row {
+  margin-bottom: 0.85rem;
+}
+
+.feed-form label {
+  display: block;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #aaa;
+  margin-bottom: 0.35rem;
+}
+
+.feed-form input[type="text"],
+.feed-form input[type="email"],
+.feed-form textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0d0d0d;
+  color: #eee;
+  font-family: inherit;
+  font-size: 0.92rem;
+}
+
+.feed-form input[type="file"] {
+  width: 100%;
+  font-size: 0.85rem;
+  color: #bbb;
+}
+
+.feed-form textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.feed-submit {
+  margin-top: 0.25rem;
+  width: 100%;
+  justify-content: center;
+}
+
+.feed-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.feed-empty {
+  text-align: center;
+  color: #888;
+  padding: 2rem 1rem;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+}
+
+.feed-card {
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.feed-card-pinned {
+  border-color: rgba(244, 178, 95, 0.45);
+  box-shadow: 0 0 0 1px rgba(244, 178, 95, 0.15);
+}
+
+.feed-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem 0.5rem;
+}
+
+.feed-card-author {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.feed-card-name {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: #f5f5f5;
+}
+
+.feed-card-meta {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.feed-pin-badge {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #f2b46a;
+  background: rgba(244, 178, 95, 0.12);
+  border: 1px solid rgba(244, 178, 95, 0.35);
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.feed-type-badge {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #aaa;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+}
+
+.feed-card-image img {
+  display: block;
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
+}
+
+.feed-card-body {
+  padding: 0.75rem 1rem 0.5rem;
+}
+
+.feed-card-caption {
+  margin: 0;
+  color: #ddd;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.feed-card-review {
+  padding: 1rem;
+}
+
+.feed-card-review blockquote {
+  margin: 0;
+  color: #eee;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  font-style: italic;
+}
+
+.feed-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.feed-like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ccc;
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.feed-like-btn:hover {
+  border-color: rgba(244, 178, 95, 0.4);
+  color: #f2b46a;
+}
+
+.feed-like-btn.is-liked {
+  color: #ff6b81;
+  border-color: rgba(255, 107, 129, 0.45);
+  background: rgba(255, 107, 129, 0.08);
+}
+
+.feed-like-btn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.feed-like-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+@media (max-width: 600px) {
+  .feed-hero {
+    padding: 2.5rem 1rem 1.5rem;
+  }
+
+  .feed-layout {
+    padding-inline: 1rem;
+  }
+}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feed - Smokey Peeks</title>
+    <link rel="icon" type="image/png" href="{% static 'main/img/logoload.png' %}" />
+    <link rel="stylesheet" href="{% static 'main/css/homepage.css' %}?v=20260623" />
+    <link rel="stylesheet" href="{% static 'main/css/feed.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Shadows+Into+Light&display=swap"
+      rel="stylesheet"
+    />
+    <script src="{% static 'main/js/i18n.js' %}"></script>
+  </head>
+  <body>
+    {% include 'main/_nav.html' %}
+
+    <main class="feed-main">
+      <section class="feed-hero" aria-label="Community feed">
+        <div class="feed-hero-inner">
+          <p class="feed-hero-kicker" data-i18n="feed_kicker">Community</p>
+          <h1 class="feed-hero-title" data-i18n="feed_title">Feed</h1>
+          <p class="feed-hero-subtitle" data-i18n="feed_subtitle">
+            Share your Smokey Peeks moments, read reviews, and see the latest updates from our team.
+          </p>
+        </div>
+      </section>
+
+      <div class="feed-layout">
+        <section class="feed-upload-card" aria-label="Share your experience">
+          <h2 data-i18n="feed_share_title">Share your experience</h2>
+          <form class="feed-form" id="feed-upload-form" method="post" action="{% url 'main:submit_feed_post' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row">
+              <label for="feed-name" data-i18n="feed_your_name">Your name</label>
+              <input type="text" id="feed-name" name="author_name" required maxlength="120" placeholder="Your name" />
+            </div>
+            <div class="form-row">
+              <label for="feed-email" data-i18n="email">Email</label>
+              <input type="email" id="feed-email" name="email" required placeholder="you@example.com" data-i18n-placeholder="email_placeholder" />
+            </div>
+            <div class="form-row">
+              <label for="feed-caption" data-i18n="feed_caption">Caption (optional)</label>
+              <textarea id="feed-caption" name="caption" rows="2" maxlength="1000" placeholder="What made your visit special?" data-i18n-placeholder="feed_caption_placeholder"></textarea>
+            </div>
+            <div class="form-row">
+              <label for="feed-photo" data-i18n="feed_photo">Photo</label>
+              <input type="file" id="feed-photo" name="image" accept="image/*" required />
+            </div>
+            <button type="submit" class="btn btn-primary feed-submit" data-i18n="feed_submit">Upload photo</button>
+          </form>
+        </section>
+
+        <section class="feed-timeline" aria-label="Feed posts">
+          {% if feed_items %}
+            {% for item in feed_items %}
+              {% if item.kind == "post" %}
+                {% with post=item.obj %}
+                <article class="feed-card{% if post.pinned %} feed-card-pinned{% endif %}" data-post-id="{{ post.id }}">
+                  <div class="feed-card-header">
+                    <div class="feed-card-author">
+                      <span class="feed-card-name">{{ post.author_name|default:"Guest" }}</span>
+                      <span class="feed-card-meta">{{ post.created_at|date:"M j, Y g:i A" }}</span>
+                    </div>
+                    <div style="display:flex;gap:0.4rem;align-items:center;">
+                      {% if post.post_type == "update" %}
+                        <span class="feed-type-badge" data-i18n="feed_team_update">Team update</span>
+                      {% endif %}
+                      {% if post.pinned %}
+                        <span class="feed-pin-badge" data-i18n="feed_pinned">Pinned</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  {% if post.image %}
+                  <div class="feed-card-image">
+                    <img src="{{ post.image.url }}" alt="Smokey Peeks experience by {{ post.author_name }}" loading="lazy" />
+                  </div>
+                  {% endif %}
+                  {% if post.caption %}
+                  <div class="feed-card-body">
+                    <p class="feed-card-caption">{{ post.caption }}</p>
+                  </div>
+                  {% endif %}
+                  <div class="feed-card-actions">
+                    <button
+                      type="button"
+                      class="feed-like-btn{% if item.liked %} is-liked{% endif %}"
+                      data-post-id="{{ post.id }}"
+                      aria-label="Like this post"
+                      {% if item.liked %}disabled{% endif %}
+                    >
+                      <span class="feed-like-icon" aria-hidden="true">♥</span>
+                      <span class="feed-like-count">{{ post.like_count }}</span>
+                    </button>
+                  </div>
+                </article>
+                {% endwith %}
+              {% else %}
+                {% with review=item.obj %}
+                <article class="feed-card feed-card-review-item">
+                  <div class="feed-card-header">
+                    <div class="feed-card-author">
+                      <span class="feed-card-name">{{ review.email|cut:"@gmail.com" }}</span>
+                      <span class="feed-card-meta">{{ review.created_at|date:"M j, Y g:i A" }}</span>
+                    </div>
+                    <span class="feed-type-badge" data-i18n="feed_review">Review</span>
+                  </div>
+                  <div class="feed-card-review">
+                    <blockquote>"{{ review.comment }}"</blockquote>
+                  </div>
+                </article>
+                {% endwith %}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <p class="feed-empty" data-i18n="feed_empty">No posts yet. Be the first to share your Smokey Peeks experience!</p>
+          {% endif %}
+        </section>
+      </div>
+    </main>
+
+    {% include 'main/_footer.html' %}
+    <script src="{% static 'main/js/feed.js' %}"></script>
+  </body>
+</html>

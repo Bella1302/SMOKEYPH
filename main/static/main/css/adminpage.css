@@ -817,3 +817,64 @@ body {
   color: #fff;
   border-color: #a32a2a;
 }
+
+.admin-visits-summary {
+  padding: 0.5rem 0 0.25rem;
+}
+
+.admin-visits-number {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #2563eb;
+  line-height: 1;
+  display: block;
+}
+
+.admin-visits-label {
+  margin: 0.5rem 0 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+.admin-feed-update-form {
+  max-width: 520px;
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: var(--bg-card-alt);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-soft);
+}
+
+.admin-feed-update-form .admin-edit-field {
+  margin-bottom: 0.75rem;
+}
+
+.admin-feed-update-form textarea.admin-edit-input {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.admin-approve-feed-btn,
+.admin-pin-feed-btn,
+.admin-unpin-feed-btn {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(76, 175, 80, 0.45);
+  background: rgba(76, 175, 80, 0.08);
+  color: #2e7d32;
+  cursor: pointer;
+  margin-right: 0.35rem;
+}
+
+.admin-remove-feed-btn {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(180, 40, 40, 0.45);
+  background: rgba(180, 40, 40, 0.08);
+  color: #a32a2a;
+  cursor: pointer;
+}

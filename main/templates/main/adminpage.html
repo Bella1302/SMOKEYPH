@@ -52,6 +52,14 @@
     <main class="admin-dashboard">
       <h1 class="admin-dashboard-title">Admin Dashboard</h1>
 
+      <section class="admin-card admin-card-visits" aria-labelledby="visits-heading">
+        <h2 id="visits-heading" class="admin-card-title">Website visitors</h2>
+        <div class="admin-visits-summary">
+          <span class="admin-visits-number" aria-live="polite">{{ total_visits }}</span>
+          <p class="admin-visits-label">Total unique browser sessions that visited the site</p>
+        </div>
+      </section>
+
       <section class="admin-card admin-card-today" aria-labelledby="today-heading">
         <h2 id="today-heading" class="admin-card-title">Total Reservations (Transactions Today)</h2>
         <div class="admin-today-summary-row">
@@ -281,6 +289,96 @@
               </tr>
               {% empty %}
               <tr><td colspan="4" class="admin-recent-empty">No approved reviews yet</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="admin-card admin-card-feed" aria-labelledby="feed-heading">
+        <h2 id="feed-heading" class="admin-card-title">Community Feed</h2>
+        <p class="admin-reviews-note">Approve customer photos before they appear on the Feed. Pin important team updates to the top (like Facebook).</p>
+
+        <h3 class="admin-reviews-subtitle">Post a team update</h3>
+        <form id="admin-feed-update-form" class="admin-feed-update-form" enctype="multipart/form-data">
+          <div class="admin-edit-field">
+            <label for="admin-feed-caption">Message</label>
+            <textarea id="admin-feed-caption" name="caption" class="admin-edit-input" rows="3" placeholder="Promo, event, announcement…"></textarea>
+          </div>
+          <div class="admin-edit-field">
+            <label for="admin-feed-image">Photo (optional)</label>
+            <input type="file" id="admin-feed-image" name="image" accept="image/*" class="admin-edit-input" />
+          </div>
+          <button type="submit" class="admin-btn admin-btn-add">Publish update</button>
+        </form>
+
+        <h3 class="admin-reviews-subtitle admin-reviews-subtitle-spaced">Pending approval</h3>
+        <div class="admin-table-wrapper admin-table-wrapper-full">
+          <table class="admin-table admin-table-full" role="grid">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Caption</th>
+                <th>Photo</th>
+                <th>Submitted</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-feed-pending-tbody">
+              {% for post in feed_pending %}
+              <tr data-feed-id="{{ post.id }}">
+                <td>{{ post.author_name }}</td>
+                <td>{{ post.email }}</td>
+                <td class="admin-review-comment">{{ post.caption|default:"—" }}</td>
+                <td>{% if post.image %}<a href="{{ post.image.url }}" target="_blank" rel="noopener">View</a>{% else %}—{% endif %}</td>
+                <td>{{ post.created_at|date:"M j, Y g:i A" }}</td>
+                <td class="admin-review-actions">
+                  <button type="button" class="admin-approve-feed-btn" data-id="{{ post.id }}">Approve</button>
+                  <button type="button" class="admin-remove-feed-btn" data-id="{{ post.id }}">Remove</button>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="6" class="admin-recent-empty">No pending feed posts</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="admin-reviews-subtitle admin-reviews-subtitle-spaced">Live on Feed</h3>
+        <div class="admin-table-wrapper admin-table-wrapper-full">
+          <table class="admin-table admin-table-full" role="grid">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Caption</th>
+                <th>Pinned</th>
+                <th>Likes</th>
+                <th>Posted</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-feed-approved-tbody">
+              {% for post in feed_approved %}
+              <tr data-feed-id="{{ post.id }}">
+                <td>{{ post.author_name|default:"Smokey Peeks" }}</td>
+                <td>{{ post.get_post_type_display }}</td>
+                <td class="admin-review-comment">{{ post.caption|default:"—"|truncatechars:80 }}</td>
+                <td>{% if post.pinned %}Yes{% else %}No{% endif %}</td>
+                <td>{{ post.like_count }}</td>
+                <td>{{ post.created_at|date:"M j, Y g:i A" }}</td>
+                <td class="admin-review-actions">
+                  {% if post.pinned %}
+                  <button type="button" class="admin-unpin-feed-btn" data-id="{{ post.id }}">Unpin</button>
+                  {% else %}
+                  <button type="button" class="admin-pin-feed-btn" data-id="{{ post.id }}">Pin</button>
+                  {% endif %}
+                  <button type="button" class="admin-remove-feed-btn" data-id="{{ post.id }}">Remove</button>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7" class="admin-recent-empty">No approved feed posts yet</td></tr>
               {% endfor %}
             </tbody>
           </table>
@@ -813,6 +911,107 @@
               ensureEmptyPlaceholder(pendingBody, 4, "No pending reviews");
             })
             .catch(function () { alert("Approve failed"); });
+        });
+      })();
+
+      (function () {
+        function getCsrfToken() {
+          var m = document.querySelector("meta[name=csrf-token]");
+          return m ? m.getAttribute("content") : "";
+        }
+        var updateForm = document.getElementById("admin-feed-update-form");
+        if (updateForm) {
+          updateForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            var fd = new FormData(updateForm);
+            fd.append("csrfmiddlewaretoken", getCsrfToken());
+            fetch("{% url 'main:admin_create_feed_update' %}", {
+              method: "POST",
+              body: fd,
+              headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+              .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+              .then(function (x) {
+                if (!x.ok || !x.d.ok) {
+                  alert(x.d.error || "Publish failed");
+                  return;
+                }
+                alert(x.d.message || "Update published.");
+                window.location.reload();
+              })
+              .catch(function () { alert("Publish failed"); });
+          });
+        }
+
+        document.addEventListener("click", function (e) {
+          var approveBtn = e.target.closest(".admin-approve-feed-btn");
+          if (approveBtn) {
+            var id = approveBtn.getAttribute("data-id");
+            var row = approveBtn.closest("tr");
+            if (!id || !row) return;
+            var fd = new FormData();
+            fd.append("csrfmiddlewaretoken", getCsrfToken());
+            fetch("/admin-dashboard/feed/" + id + "/approve/", {
+              method: "POST",
+              body: fd,
+              headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+              .then(function (r) { return r.json(); })
+              .then(function (d) { if (d.ok) window.location.reload(); else alert("Approve failed"); })
+              .catch(function () { alert("Approve failed"); });
+            return;
+          }
+
+          var removeBtn = e.target.closest(".admin-remove-feed-btn");
+          if (removeBtn) {
+            if (!confirm("Remove this feed post permanently?")) return;
+            var rid = removeBtn.getAttribute("data-id");
+            if (!rid) return;
+            var fd = new FormData();
+            fd.append("csrfmiddlewaretoken", getCsrfToken());
+            fetch("/admin-dashboard/feed/" + rid + "/remove/", {
+              method: "POST",
+              body: fd,
+              headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+              .then(function (r) { return r.json(); })
+              .then(function (d) { if (d.ok) window.location.reload(); else alert("Remove failed"); })
+              .catch(function () { alert("Remove failed"); });
+            return;
+          }
+
+          var pinBtn = e.target.closest(".admin-pin-feed-btn");
+          if (pinBtn) {
+            var pid = pinBtn.getAttribute("data-id");
+            if (!pid) return;
+            var fd = new FormData();
+            fd.append("csrfmiddlewaretoken", getCsrfToken());
+            fetch("/admin-dashboard/feed/" + pid + "/pin/", {
+              method: "POST",
+              body: fd,
+              headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+              .then(function (r) { return r.json(); })
+              .then(function (d) { if (d.ok) window.location.reload(); else alert("Pin failed"); })
+              .catch(function () { alert("Pin failed"); });
+            return;
+          }
+
+          var unpinBtn = e.target.closest(".admin-unpin-feed-btn");
+          if (unpinBtn) {
+            var uid = unpinBtn.getAttribute("data-id");
+            if (!uid) return;
+            var fd2 = new FormData();
+            fd2.append("csrfmiddlewaretoken", getCsrfToken());
+            fetch("/admin-dashboard/feed/" + uid + "/unpin/", {
+              method: "POST",
+              body: fd2,
+              headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+              .then(function (r) { return r.json(); })
+              .then(function (d) { if (d.ok) window.location.reload(); else alert("Unpin failed"); })
+              .catch(function () { alert("Unpin failed"); });
+          }
         });
       })();
     </script>

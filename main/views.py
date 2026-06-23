@@ -2,6 +2,7 @@
 Views for Smokey Peeks website.
 """
 from datetime import datetime
+from django.db.models import F
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -9,12 +10,89 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.utils import timezone
-from .models import AdminActivity, CustomerReview, Reservation
+from .models import AdminActivity, CustomerReview, FeedLike, FeedPost, Reservation, SiteVisitCounter
+
+
+def _ensure_session_key(request):
+    if not request.session.session_key:
+        request.session.save()
+    return request.session.session_key
+
+
+def _build_feed_items(request):
+    """Merge approved posts and reviews into one timeline (pinned first)."""
+    session_key = _ensure_session_key(request)
+    liked_ids = set(
+        FeedLike.objects.filter(session_key=session_key).values_list("post_id", flat=True)
+    )
+    items = []
+    for post in FeedPost.objects.filter(approved=True):
+        items.append({
+            "kind": "post",
+            "obj": post,
+            "pinned": post.pinned,
+            "date": post.created_at,
+            "liked": post.id in liked_ids,
+        })
+    for review in CustomerReview.objects.filter(approved=True):
+        items.append({
+            "kind": "review",
+            "obj": review,
+            "pinned": False,
+            "date": review.created_at,
+            "liked": False,
+        })
+    items.sort(key=lambda x: (not x["pinned"], -x["date"].timestamp()))
+    return items
 
 
 def home(request):
     reviews = CustomerReview.objects.filter(approved=True)[:6]
     return render(request, 'main/homepage.html', {"reviews": reviews})
+
+
+def feed(request):
+    return render(request, "main/feed.html", {"feed_items": _build_feed_items(request)})
+
+
+@require_POST
+def submit_feed_post(request):
+    author_name = request.POST.get("author_name", "").strip()
+    email = request.POST.get("email", "").strip()
+    caption = request.POST.get("caption", "").strip()
+    image = request.FILES.get("image")
+
+    if not author_name or not email:
+        return JsonResponse({"ok": False, "error": "Name and email are required."}, status=400)
+    if not image:
+        return JsonResponse({"ok": False, "error": "Please upload a photo of your experience."}, status=400)
+    if image.size > 8 * 1024 * 1024:
+        return JsonResponse({"ok": False, "error": "Photo must be 8 MB or smaller."}, status=400)
+
+    FeedPost.objects.create(
+        post_type="customer",
+        author_name=author_name,
+        email=email,
+        caption=caption,
+        image=image,
+        approved=False,
+    )
+    return JsonResponse({
+        "ok": True,
+        "pending": True,
+        "message": "Thank you! Your photo will appear on the Feed after management approves it.",
+    })
+
+
+@require_POST
+def feed_like(request, pk):
+    post = get_object_or_404(FeedPost, pk=pk, approved=True)
+    session_key = _ensure_session_key(request)
+    like, created = FeedLike.objects.get_or_create(post=post, session_key=session_key)
+    if created:
+        FeedPost.objects.filter(pk=post.pk).update(like_count=F("like_count") + 1)
+        post.refresh_from_db()
+    return JsonResponse({"ok": True, "like_count": post.like_count, "liked": True})
 
 
 @require_POST
@@ -96,6 +174,9 @@ def admin_page(request):
     today_cancelled = today_qs.filter(status='cancelled').count()
     reviews_pending = CustomerReview.objects.filter(approved=False).order_by("-created_at")
     reviews_approved = CustomerReview.objects.filter(approved=True).order_by("-created_at")[:50]
+    feed_pending = FeedPost.objects.filter(approved=False).order_by("-created_at")
+    feed_approved = FeedPost.objects.filter(approved=True).order_by("-pinned", "-created_at")[:50]
+    total_visits = SiteVisitCounter.get_total()
     return render(request, 'main/adminpage.html', {
         'reservations': reservations,
         'today_count': today_count,
@@ -104,6 +185,9 @@ def admin_page(request):
         'today_cancelled': today_cancelled,
         'reviews_pending': reviews_pending,
         'reviews_approved': reviews_approved,
+        'feed_pending': feed_pending,
+        'feed_approved': feed_approved,
+        'total_visits': total_visits,
     })
 
 
@@ -123,6 +207,60 @@ def admin_remove_review(request, pk):
     rev = get_object_or_404(CustomerReview, pk=pk)
     rev.delete()
     return JsonResponse({"ok": True})
+
+
+@login_required(login_url='main:logadmin')
+@require_POST
+def admin_approve_feed_post(request, pk):
+    post = get_object_or_404(FeedPost, pk=pk)
+    if not post.approved:
+        post.approved = True
+        post.save(update_fields=["approved"])
+    return JsonResponse({"ok": True})
+
+
+@login_required(login_url='main:logadmin')
+@require_POST
+def admin_remove_feed_post(request, pk):
+    post = get_object_or_404(FeedPost, pk=pk)
+    post.delete()
+    return JsonResponse({"ok": True})
+
+
+@login_required(login_url='main:logadmin')
+@require_POST
+def admin_pin_feed_post(request, pk):
+    post = get_object_or_404(FeedPost, pk=pk, approved=True)
+    post.pinned = True
+    post.save(update_fields=["pinned"])
+    return JsonResponse({"ok": True})
+
+
+@login_required(login_url='main:logadmin')
+@require_POST
+def admin_unpin_feed_post(request, pk):
+    post = get_object_or_404(FeedPost, pk=pk)
+    post.pinned = False
+    post.save(update_fields=["pinned"])
+    return JsonResponse({"ok": True})
+
+
+@login_required(login_url='main:logadmin')
+@require_POST
+def admin_create_feed_update(request):
+    caption = request.POST.get("caption", "").strip()
+    image = request.FILES.get("image")
+    if not caption and not image:
+        return JsonResponse({"ok": False, "error": "Add a message or photo for the update."}, status=400)
+    FeedPost.objects.create(
+        post_type="update",
+        author_name="Smokey Peeks",
+        caption=caption,
+        image=image,
+        approved=True,
+        created_by=request.user,
+    )
+    return JsonResponse({"ok": True, "message": "Update posted to the Feed."})
 
 
 @login_required(login_url='main:logadmin')
