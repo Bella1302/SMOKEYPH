@@ -980,6 +980,19 @@ video {
   box-shadow: var(--shadow-soft);
 }
 
+.celebrate-left-banner {
+  display: block;
+  grid-template-columns: unset;
+  gap: 0;
+}
+
+.celebrate-banner-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
 .celebrate-photo-frame {
   position: relative;
   overflow: hidden;
