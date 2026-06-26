@@ -212,6 +212,15 @@
           <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. All rights reserved.</p>
         </div>
       </div>
+      <script>
+        (function () {
+          document.querySelectorAll(".footer-col").forEach(function (col) {
+            var heading = col.querySelector(".footer-heading");
+            if (!heading) return;
+            if (/opening hours/i.test(heading.textContent.trim())) col.remove();
+          });
+        })();
+      </script>
     </footer>
 
     <script>

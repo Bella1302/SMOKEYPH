@@ -139,6 +139,10 @@
         <div class="merch-section">
           <h3 class="merch-heading">Smokey Peeks Merch</h3>
           <div class="merch-items">
+            <div class="merch-item merch-item-wide">
+              <img src="img/merch/bbq-work-shirt.png" alt="Smokey Peeks BBQ work shirt front and back" />
+              <p>BBQ Work Shirt - ₱3,000</p>
+            </div>
             <div class="merch-item">
               <img src="img/merch/Shirt 3.jpeg" alt="Smokey Peeks collar and polo shirts" />
               <p>Collar shirt - $28.99</p>
@@ -184,6 +188,15 @@
           <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. All rights reserved.</p>
         </div>
       </div>
+      <script>
+        (function () {
+          document.querySelectorAll(".footer-col").forEach(function (col) {
+            var heading = col.querySelector(".footer-heading");
+            if (!heading) return;
+            if (/opening hours/i.test(heading.textContent.trim())) col.remove();
+          });
+        })();
+      </script>
     </footer>
 
     <script>

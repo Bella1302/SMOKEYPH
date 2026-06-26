@@ -254,6 +254,10 @@
   margin: 0 auto 0.5rem;
 }
 
+.merch-item-wide img {
+  max-width: 220px;
+}
+
 .merch-item p {
   margin: 0;
   font-size: 0.9rem;

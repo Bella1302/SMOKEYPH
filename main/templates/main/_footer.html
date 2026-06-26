@@ -24,4 +24,34 @@
       <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. <span data-i18n="rights_reserved">All rights reserved.</span></p>
     </div>
   </div>
+  <script>
+    (function () {
+      var removed = 0;
+      document.querySelectorAll(".footer-col").forEach(function (col) {
+        var heading = col.querySelector(".footer-heading");
+        if (!heading) return;
+        var text = heading.textContent.trim();
+        var key = heading.getAttribute("data-i18n");
+        if (key === "opening_hours" || /opening hours/i.test(text)) {
+          col.remove();
+          removed += 1;
+        }
+      });
+      // #region agent log
+      fetch("http://127.0.0.1:7802/ingest/7c033e1e-1fc3-4f03-b161-8093971f88b7", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "5f4cf6" },
+        body: JSON.stringify({
+          sessionId: "5f4cf6",
+          runId: "footer-cleanup",
+          hypothesisId: "A",
+          location: "_footer.html:cleanup",
+          message: "footer opening-hours cleanup",
+          data: { removedCols: removed, footerCols: document.querySelectorAll(".footer-col").length },
+          timestamp: Date.now(),
+        }),
+      }).catch(function () {});
+      // #endregion
+    })();
+  </script>
 </footer>

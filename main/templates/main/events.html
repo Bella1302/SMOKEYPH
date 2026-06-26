@@ -13,7 +13,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Shadows+Into+Light&display=swap"
       rel="stylesheet"
     />
-    <script src="{% static 'main/js/i18n.js' %}"></script>
+    <script src="{% static 'main/js/i18n.js' %}?v=2"></script>
   </head>
   <body>
         {% include 'main/_nav.html' %}
@@ -95,6 +95,10 @@
         <div class="merch-section">
           <h3 class="merch-heading" data-i18n="merch_heading">Smokey Peeks Merch</h3>
           <div class="merch-items">
+            <div class="merch-item merch-item-wide">
+              <img src="{% static 'main/img/merch/bbq-work-shirt.png' %}" alt="Smokey Peeks BBQ work shirt front and back" />
+              <p>BBQ Work Shirt - ₱3,000</p>
+            </div>
             <div class="merch-item">
               <img src="{% static 'main/img/merch/Shirt 3.jpeg' %}" alt="Smokey Peeks collar and polo shirts" />
               <p>Collar shirt - $28.99</p>
