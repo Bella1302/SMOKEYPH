@@ -83,7 +83,7 @@
               </ul>
               {% if notification_count %}
               <div class="admin-notifications-footer">
-                <a href="#admin-recent-pending" class="admin-notifications-see-all">See all pending items</a>
+                <a href="#all-reservations" class="admin-notifications-see-all">See all pending items</a>
               </div>
               {% endif %}
             </div>
@@ -102,139 +102,6 @@
 
     <main class="admin-dashboard">
       <h1 class="admin-dashboard-title">Admin Dashboard</h1>
-
-      <div class="admin-stats-row">
-        <section class="admin-card admin-card-visits" aria-labelledby="visits-heading">
-          <h2 id="visits-heading" class="admin-card-title">Website visitors</h2>
-          <div class="admin-visits-summary">
-            <span class="admin-visits-number" aria-live="polite">{{ total_visits }}</span>
-            <p class="admin-visits-label">Total unique browser sessions that visited the site</p>
-          </div>
-        </section>
-
-        <section class="admin-card admin-card-monthly" aria-labelledby="monthly-heading">
-          <h2 id="monthly-heading" class="admin-card-title">Confirmed Reservations ({{ current_month_name }})</h2>
-          <div class="admin-visits-summary">
-            <span id="admin-month-total" class="admin-visits-number" aria-live="polite">{{ month_count }}</span>
-            <p class="admin-visits-label">Total confirmed reservations in {{ current_month_name }}</p>
-          </div>
-        </section>
-
-        <section class="admin-card admin-card-today-stat" aria-labelledby="today-heading">
-          <h2 id="today-heading" class="admin-card-title">Total Reservations (Transactions Today)</h2>
-          <div class="admin-visits-summary">
-            <span id="admin-today-total" class="admin-today-number" aria-live="polite">{{ today_count }}</span>
-            <p class="admin-visits-label">Reservations created today</p>
-          </div>
-        </section>
-      </div>
-
-      <section class="admin-card admin-card-today" aria-labelledby="today-details-heading">
-        <h2 id="today-details-heading" class="admin-card-title admin-sr-only">Today's reservation breakdown</h2>
-        <div class="admin-today-summary-row">
-          <div class="admin-today-summary">
-            <div class="admin-today-chips">
-              <span class="admin-today-chip admin-today-chip-confirmed">
-                <span id="admin-today-confirmed-count">{{ today_confirmed }}</span> Confirmed
-              </span>
-              <span class="admin-today-chip admin-today-chip-pending">
-                <span id="admin-today-pending-count">{{ today_pending }}</span> Pending
-              </span>
-              <span class="admin-today-chip admin-today-chip-cancelled">
-                <span id="admin-today-cancelled-count">{{ today_cancelled }}</span> Cancelled
-              </span>
-            </div>
-            <a href="#all-reservations" class="admin-btn admin-btn-secondary">View All Reservations &gt;</a>
-          </div>
-        </div>
-
-        <div class="admin-recent-boxes">
-          <div class="admin-recent-box" id="admin-upcoming">
-            <h3 class="admin-recent-title">Upcoming Reservations</h3>
-            <div class="admin-table-wrapper">
-              <table class="admin-table admin-recent-table" role="grid">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Guests</th>
-                    <th>Location</th>
-                    <th>Date</th>
-                    <th>Special Request</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-upcoming-tbody">
-                  <tr><td colspan="7" class="admin-recent-loading">Loading…</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="admin-recent-box" id="admin-recent-confirmed">
-            <h3 class="admin-recent-title">Recent Confirmed Reservations</h3>
-            <div class="admin-table-wrapper">
-              <table class="admin-table admin-recent-table" role="grid">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Guests</th>
-                    <th>Location</th>
-                    <th>Date</th>
-                    <th>Special Request</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-recent-confirmed-tbody">
-                  <tr><td colspan="7" class="admin-recent-loading">Loading…</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="admin-recent-box" id="admin-recent-pending">
-            <h3 class="admin-recent-title">Pending Reservations</h3>
-            <div class="admin-table-wrapper">
-              <table class="admin-table admin-recent-table" role="grid">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Guests</th>
-                    <th>Location</th>
-                    <th>Date</th>
-                    <th>Special Request</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-recent-pending-tbody">
-                  <tr><td colspan="7" class="admin-recent-loading">Loading…</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="admin-recent-box" id="admin-recent-cancelled">
-            <h3 class="admin-recent-title">Recent Cancelled Reservations</h3>
-            <div class="admin-table-wrapper">
-              <table class="admin-table admin-recent-table" role="grid">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Guests</th>
-                    <th>Location</th>
-                    <th>Date</th>
-                    <th>Special Request</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-recent-cancelled-tbody">
-                  <tr><td colspan="7" class="admin-recent-loading">Loading…</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section class="admin-card admin-card-all" id="all-reservations" aria-labelledby="all-heading">
         <h2 id="all-heading" class="admin-card-title">All Reservations</h2>
@@ -308,6 +175,51 @@
               {% endfor %}
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <div class="admin-stats-row">
+        <section class="admin-card admin-card-visits" aria-labelledby="visits-heading">
+          <h2 id="visits-heading" class="admin-card-title">Website visitors</h2>
+          <div class="admin-visits-summary">
+            <span class="admin-visits-number" aria-live="polite">{{ total_visits }}</span>
+            <p class="admin-visits-label">Total unique browser sessions that visited the site</p>
+          </div>
+        </section>
+
+        <section class="admin-card admin-card-monthly" aria-labelledby="monthly-heading">
+          <h2 id="monthly-heading" class="admin-card-title">Confirmed Reservations ({{ current_month_name }})</h2>
+          <div class="admin-visits-summary">
+            <span id="admin-month-total" class="admin-visits-number" aria-live="polite">{{ month_count }}</span>
+            <p class="admin-visits-label">Total confirmed reservations in {{ current_month_name }}</p>
+          </div>
+        </section>
+
+        <section class="admin-card admin-card-today-stat" aria-labelledby="today-heading">
+          <h2 id="today-heading" class="admin-card-title">Total Reservations (Transactions Today)</h2>
+          <div class="admin-visits-summary">
+            <span id="admin-today-total" class="admin-today-number" aria-live="polite">{{ today_count }}</span>
+            <p class="admin-visits-label">Reservations created today</p>
+          </div>
+        </section>
+      </div>
+
+      <section class="admin-card admin-card-today" aria-labelledby="today-details-heading">
+        <h2 id="today-details-heading" class="admin-card-title admin-sr-only">Today's reservation breakdown</h2>
+        <div class="admin-today-summary-row">
+          <div class="admin-today-summary">
+            <div class="admin-today-chips">
+              <span class="admin-today-chip admin-today-chip-confirmed">
+                <span id="admin-today-confirmed-count">{{ today_confirmed }}</span> Confirmed
+              </span>
+              <span class="admin-today-chip admin-today-chip-pending">
+                <span id="admin-today-pending-count">{{ today_pending }}</span> Pending
+              </span>
+              <span class="admin-today-chip admin-today-chip-cancelled">
+                <span id="admin-today-cancelled-count">{{ today_cancelled }}</span> Cancelled
+              </span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -941,24 +853,12 @@
         var filterStatus = "";
         var filterGuests = "";
 
-        function parseTimeToMinutes(timeStr) {
-          if (!timeStr || !timeStr.trim()) return 0;
-          var t = timeStr.trim().toLowerCase();
-          var m = t.match(/^(\d{1,2})\s*(am|pm)?$/);
-          if (!m) return 0;
-          var hour = parseInt(m[1], 10);
-          var ampm = (m[2] || "").toLowerCase();
-          if (ampm === "pm" && hour !== 12) hour += 12;
-          if (ampm === "am" && hour === 12) hour = 0;
-          return hour * 60;
-        }
-
         function getRowSortKey(row) {
-          var dateText = (row.cells[4] && row.cells[4].textContent) || "";
-          var timeText = (row.cells[5] && row.cells[5].textContent) || "";
-          var d = dateText.trim() ? new Date(dateText.trim()) : new Date(0);
-          var ts = isNaN(d.getTime()) ? 0 : d.getTime();
-          return ts + parseTimeToMinutes(timeText);
+          var date = row.getAttribute("data-date") || "";
+          var time = row.getAttribute("data-time") || "00:00";
+          if (!date) return 0;
+          var ts = new Date(date + "T" + time + ":00").getTime();
+          return isNaN(ts) ? 0 : ts;
         }
 
         function getRowSummary(row) {
@@ -974,21 +874,16 @@
         function sortReservationsByDate() {
           var rows = Array.from(tbody.querySelectorAll("tr"));
           // #region agent log
-          fetch('http://127.0.0.1:7816/ingest/0d03ab45-eafd-41a7-9e18-92b3e48de016',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'628fad'},body:JSON.stringify({sessionId:'628fad',runId:'pre-fix',hypothesisId:'A',location:'adminpage.html:sortReservationsByDate:before',message:'Client sort input order',data:{rows:rows.slice(0,8).map(getRowSummary)},timestamp:Date.now()})}).catch(function(){});
+          fetch('http://127.0.0.1:7816/ingest/0d03ab45-eafd-41a7-9e18-92b3e48de016',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'628fad'},body:JSON.stringify({sessionId:'628fad',runId:'post-fix',hypothesisId:'A',location:'adminpage.html:sortReservationsByDate:before',message:'Client sort input order',data:{rows:rows.slice(0,8).map(getRowSummary)},timestamp:Date.now()})}).catch(function(){});
           // #endregion
           rows.sort(function (a, b) {
-            var statusA = a.getAttribute("data-status") || getRowStatus(a);
-            var statusB = b.getAttribute("data-status") || getRowStatus(b);
-            var completedA = statusA === "confirmed";
-            var completedB = statusB === "confirmed";
-            if (completedA !== completedB) return completedA ? 1 : -1;
-            return getRowSortKey(a) - getRowSortKey(b);
+            return getRowSortKey(b) - getRowSortKey(a);
           });
           rows.forEach(function (row) {
             tbody.appendChild(row);
           });
           // #region agent log
-          fetch('http://127.0.0.1:7816/ingest/0d03ab45-eafd-41a7-9e18-92b3e48de016',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'628fad'},body:JSON.stringify({sessionId:'628fad',runId:'pre-fix',hypothesisId:'A',location:'adminpage.html:sortReservationsByDate:after',message:'Client sort output order',data:{rows:rows.slice(0,8).map(getRowSummary)},timestamp:Date.now()})}).catch(function(){});
+          fetch('http://127.0.0.1:7816/ingest/0d03ab45-eafd-41a7-9e18-92b3e48de016',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'628fad'},body:JSON.stringify({sessionId:'628fad',runId:'post-fix',hypothesisId:'A',location:'adminpage.html:sortReservationsByDate:after',message:'Client sort output order',data:{rows:rows.slice(0,8).map(getRowSummary)},timestamp:Date.now()})}).catch(function(){});
           // #endregion
         }
 
@@ -997,9 +892,10 @@
         (function () {
           var allSection = document.getElementById("all-reservations");
           var statsRow = document.querySelector(".admin-stats-row");
+          var recentBoxes = document.querySelector(".admin-recent-boxes");
           var allTop = allSection ? allSection.getBoundingClientRect().top : null;
           var statsTop = statsRow ? statsRow.getBoundingClientRect().top : null;
-          fetch('http://127.0.0.1:7816/ingest/0d03ab45-eafd-41a7-9e18-92b3e48de016',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'628fad'},body:JSON.stringify({sessionId:'628fad',runId:'pre-fix',hypothesisId:'B',location:'adminpage.html:layout',message:'Section vertical positions on load',data:{allReservationsTop:allTop,statsRowTop:statsTop,tableVisibleFirst:allTop !== null && statsTop !== null ? allTop < statsTop : false,scrollY:window.scrollY},timestamp:Date.now()})}).catch(function(){});
+          fetch('http://127.0.0.1:7816/ingest/0d03ab45-eafd-41a7-9e18-92b3e48de016',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'628fad'},body:JSON.stringify({sessionId:'628fad',runId:'post-fix',hypothesisId:'B',location:'adminpage.html:layout',message:'Section layout after fix',data:{allReservationsTop:allTop,statsRowTop:statsTop,tableVisibleFirst:allTop !== null && statsTop !== null ? allTop < statsTop : false,recentBoxesRemoved:recentBoxes === null,scrollY:window.scrollY},timestamp:Date.now()})}).catch(function(){});
         })();
         // #endregion
 
@@ -1091,39 +987,7 @@
       })();
 
       (function () {
-        var RECENT_POLL_INTERVAL = 5000;
-        var upcomingTbody = document.getElementById("admin-upcoming-tbody");
-        var confirmedTbody = document.getElementById("admin-recent-confirmed-tbody");
-        var pendingTbody = document.getElementById("admin-recent-pending-tbody");
-        var cancelledTbody = document.getElementById("admin-recent-cancelled-tbody");
-        if (!upcomingTbody || !confirmedTbody || !pendingTbody || !cancelledTbody) return;
-
-        function renderRow(res) {
-          var loc = (res.location_display || res.location || "").replace(/</g, "&lt;");
-          var notes = (res.notes || "").trim().replace(/</g, "&lt;") || "—";
-          return "<tr data-id=\"" + (res.id || "") + "\">" +
-            "<td>" + (res.name || "").replace(/</g, "&lt;") + "</td>" +
-            "<td>" + (res.phone || "").replace(/</g, "&lt;") + "</td>" +
-            "<td>" + (res.guests || "") + "</td>" +
-            "<td>" + loc + "</td>" +
-            "<td>" + (res.date || "").replace(/</g, "&lt;") + "</td>" +
-            "<td class=\"admin-notes-cell\">" + notes + "</td>" +
-            "<td><span class=\"admin-status admin-status-" + (res.status || "") + "\">" + (res.status_display || "").replace(/</g, "&lt;") + "</span></td>" +
-            "</tr>";
-        }
-
-        function renderEmpty(message) {
-          return "<tr><td colspan=\"7\" class=\"admin-recent-empty\">" + (message || "None") + "</td></tr>";
-        }
-
-        function updateBox(tbody, items, emptyMsg) {
-          if (!tbody) return;
-          if (!items || items.length === 0) {
-            tbody.innerHTML = renderEmpty(emptyMsg);
-            return;
-          }
-          tbody.innerHTML = items.map(renderRow).join("");
-        }
+        var STATS_POLL_INTERVAL = 5000;
 
         function fetchAndUpdate() {
           fetch("{% url 'main:admin_reservations_recent_json' %}", {
@@ -1131,10 +995,6 @@
           })
             .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
             .then(function (data) {
-              updateBox(upcomingTbody, data.upcoming, "No upcoming reservations");
-              updateBox(confirmedTbody, data.recent_confirmed, "No recent confirmed");
-              updateBox(pendingTbody, data.recent_pending, "No recent pending");
-              updateBox(cancelledTbody, data.recent_cancelled, "No recent cancelled");
               if (data.today) {
                 var t = data.today;
                 var totalEl = document.getElementById("admin-today-total");
@@ -1158,16 +1018,11 @@
                 }
               }
             })
-            .catch(function () {
-              updateBox(upcomingTbody, null, "Unable to load");
-              updateBox(confirmedTbody, null, "Unable to load");
-              updateBox(pendingTbody, null, "Unable to load");
-              updateBox(cancelledTbody, null, "Unable to load");
-            });
+            .catch(function () {});
         }
 
         fetchAndUpdate();
-        setInterval(fetchAndUpdate, RECENT_POLL_INTERVAL);
+        setInterval(fetchAndUpdate, STATS_POLL_INTERVAL);
 
         window.refreshAdminRecentBoxes = fetchAndUpdate;
       })();
