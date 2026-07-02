@@ -16,6 +16,59 @@ from django.utils import timezone
 from .models import AdminActivity, CustomerReview, FeedLike, FeedPost, Reservation, SiteVisitCounter
 
 
+def _build_admin_notifications(limit=15):
+    """Build Facebook-style notification payload for the admin header."""
+    items = []
+
+    for reservation in Reservation.objects.filter(status='pending').order_by('-created_at'):
+        items.append({
+            'id': f'res-{reservation.id}',
+            'type': 'reservation',
+            'title': f'{reservation.name} requested a reservation',
+            'message': (
+                f'{reservation.guests} guests · '
+                f'{reservation.get_location_display()} · '
+                f'{reservation.date.strftime("%b %d")}'
+            ),
+            'href': '#admin-recent-pending',
+            'created_at': reservation.created_at.isoformat(),
+        })
+
+    for review in CustomerReview.objects.filter(approved=False).order_by('-created_at'):
+        preview = review.comment[:80] + ('…' if len(review.comment) > 80 else '')
+        items.append({
+            'id': f'rev-{review.id}',
+            'type': 'review',
+            'title': 'New customer review awaiting approval',
+            'message': f'{review.email}: {preview}',
+            'href': '#admin-reviews-pending',
+            'created_at': review.created_at.isoformat(),
+        })
+
+    for post in FeedPost.objects.filter(approved=False).order_by('-created_at'):
+        author = post.author_name or post.email or 'Customer'
+        preview = post.caption[:80] + ('…' if len(post.caption) > 80 else '') if post.caption else 'New feed submission'
+        items.append({
+            'id': f'feed-{post.id}',
+            'type': 'feed',
+            'title': f'New feed post from {author}',
+            'message': preview,
+            'href': '#admin-feed-pending',
+            'created_at': post.created_at.isoformat(),
+        })
+
+    items.sort(key=lambda item: item['created_at'], reverse=True)
+    pending_reservations_count = Reservation.objects.filter(status='pending').count()
+    total_count = len(items)
+
+    return {
+        'count': total_count,
+        'items': items[:limit],
+        'pending_count': pending_reservations_count,
+        'all_confirmed': pending_reservations_count == 0,
+    }
+
+
 @require_GET
 def serve_media(request, path):
     """Serve uploaded files in production (Django's static.serve refuses when DEBUG=False)."""
@@ -266,10 +319,39 @@ def admin_page(request):
     month_qs = Reservation.objects.filter(
         created_at__year=now.year,
         created_at__month=now.month,
+        status='confirmed',
     )
     month_count = month_qs.count()
+    # #region agent log
+    try:
+        import json
+        from pathlib import Path
+        _all_month = Reservation.objects.filter(
+            created_at__year=now.year,
+            created_at__month=now.month,
+        ).count()
+        _log_path = Path(__file__).resolve().parent.parent.parent / 'debug-0292ec.log'
+        with open(_log_path, 'a', encoding='utf-8') as _f:
+            _f.write(json.dumps({
+                'sessionId': '0292ec',
+                'runId': 'month-confirmed',
+                'hypothesisId': 'M1',
+                'location': 'views.py:admin_page',
+                'message': 'Monthly reservation counts',
+                'data': {
+                    'all_statuses': _all_month,
+                    'confirmed_only': month_count,
+                    'month': now.month,
+                    'year': now.year,
+                },
+                'timestamp': int(now.timestamp() * 1000),
+            }) + '\n')
+    except Exception:
+        pass
+    # #endregion
     current_month_name = now.strftime('%B')
-    pending_reservations_count = Reservation.objects.filter(status='pending').count()
+    notifications = _build_admin_notifications()
+    pending_reservations_count = notifications['pending_count']
     reviews_pending = CustomerReview.objects.filter(approved=False).order_by("-created_at")
     reviews_approved = CustomerReview.objects.filter(approved=True).order_by("-created_at")[:50]
     feed_pending = FeedPost.objects.filter(approved=False).order_by("-created_at")
@@ -289,6 +371,8 @@ def admin_page(request):
         'month_count': month_count,
         'current_month_name': current_month_name,
         'pending_reservations_count': pending_reservations_count,
+        'notification_count': notifications['count'],
+        'notification_items': notifications['items'],
     })
 
 
@@ -394,13 +478,37 @@ def admin_reservations_recent_json(request):
     month_qs = Reservation.objects.filter(
         created_at__year=now.year,
         created_at__month=now.month,
+        status='confirmed',
     )
     month_data = {'total': month_qs.count()}
-    pending_reservations_count = Reservation.objects.filter(status='pending').count()
-    notification_data = {
-        'pending_count': pending_reservations_count,
-        'all_confirmed': pending_reservations_count == 0,
-    }
+    # #region agent log
+    try:
+        import json
+        from pathlib import Path
+        _all_month = Reservation.objects.filter(
+            created_at__year=now.year,
+            created_at__month=now.month,
+        ).count()
+        _log_path = Path(__file__).resolve().parent.parent.parent / 'debug-0292ec.log'
+        with open(_log_path, 'a', encoding='utf-8') as _f:
+            _f.write(json.dumps({
+                'sessionId': '0292ec',
+                'runId': 'month-confirmed',
+                'hypothesisId': 'M1',
+                'location': 'views.py:admin_reservations_recent_json',
+                'message': 'Monthly JSON reservation counts',
+                'data': {
+                    'all_statuses': _all_month,
+                    'confirmed_only': month_data['total'],
+                    'month': now.month,
+                    'year': now.year,
+                },
+                'timestamp': int(now.timestamp() * 1000),
+            }) + '\n')
+    except Exception:
+        pass
+    # #endregion
+    notification_data = _build_admin_notifications()
 
     upcoming = [
         format_reservation(dict(r))

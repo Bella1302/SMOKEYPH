@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - Smokey Peeks</title>
-    <link rel="stylesheet" href="{% static 'main/css/adminpage.css' %}?v=20260702b" />
+    <link rel="stylesheet" href="{% static 'main/css/adminpage.css' %}?v=20260702d" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -39,23 +39,54 @@
           <div id="admin-datetime" class="admin-datetime" aria-live="polite"></div>
         </div>
         <div class="admin-header-actions">
-          <div
-            id="admin-reservation-notice"
-            class="admin-reservation-notice{% if pending_reservations_count %} admin-reservation-notice--alert{% else %} admin-reservation-notice--confirmed{% endif %}"
-            role="status"
-            aria-live="polite"
-            {% if pending_reservations_count %}data-href="#admin-recent-pending" tabindex="0"{% endif %}
-          >
-            {% if pending_reservations_count %}
-              <span class="admin-notice-alert-label">Alert</span>
-              <span class="admin-notice-alert-count">
-                <span id="admin-notice-pending-count">{{ pending_reservations_count }}</span>
-                Reservation{{ pending_reservations_count|pluralize }} Not Yet Confirmed
-              </span>
-            {% else %}
-              <span class="admin-notice-confirmed-label">Confirmed</span>
-              <span class="admin-notice-confirmed-sub">All reservations confirmed</span>
-            {% endif %}
+          <div class="admin-notifications" id="admin-notifications">
+            <button
+              type="button"
+              class="admin-notifications-btn"
+              id="admin-notifications-btn"
+              aria-label="Notifications"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-controls="admin-notifications-panel"
+            >
+              <svg class="admin-notifications-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <span
+                class="admin-notifications-badge"
+                id="admin-notifications-badge"
+                {% if not notification_count %}hidden{% endif %}
+              >{{ notification_count }}</span>
+            </button>
+            <div class="admin-notifications-panel" id="admin-notifications-panel" hidden>
+              <div class="admin-notifications-header">
+                <h3 class="admin-notifications-title">Notifications</h3>
+                <button type="button" class="admin-notifications-mark-read" id="admin-notifications-mark-read">Mark all as read</button>
+              </div>
+              <ul class="admin-notifications-list" id="admin-notifications-list">
+                {% for item in notification_items %}
+                <li class="admin-notification-item admin-notification-item--unread" data-href="{{ item.href }}" data-id="{{ item.id }}">
+                  <div class="admin-notification-icon admin-notification-icon--{{ item.type }}" aria-hidden="true">
+                    {% if item.type == 'reservation' %}📅{% elif item.type == 'review' %}⭐{% else %}📷{% endif %}
+                  </div>
+                  <div class="admin-notification-body">
+                    <p class="admin-notification-title">{{ item.title }}</p>
+                    <p class="admin-notification-meta">{{ item.message }}</p>
+                    <span class="admin-notification-time" data-created-at="{{ item.created_at }}"></span>
+                  </div>
+                  <span class="admin-notification-dot" aria-hidden="true"></span>
+                </li>
+                {% empty %}
+                <li class="admin-notifications-empty">You're all caught up. No new notifications.</li>
+                {% endfor %}
+              </ul>
+              {% if notification_count %}
+              <div class="admin-notifications-footer">
+                <a href="#admin-recent-pending" class="admin-notifications-see-all">See all pending items</a>
+              </div>
+              {% endif %}
+            </div>
           </div>
           <a href="{% url 'main:admin_logout' %}" class="admin-logout-link" title="Log out">
             <svg class="admin-logout-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -82,20 +113,26 @@
         </section>
 
         <section class="admin-card admin-card-monthly" aria-labelledby="monthly-heading">
-          <h2 id="monthly-heading" class="admin-card-title">Total Reservations ({{ current_month_name }})</h2>
+          <h2 id="monthly-heading" class="admin-card-title">Confirmed Reservations ({{ current_month_name }})</h2>
           <div class="admin-visits-summary">
             <span id="admin-month-total" class="admin-visits-number" aria-live="polite">{{ month_count }}</span>
-            <p class="admin-visits-label">Total reservations created in {{ current_month_name }}</p>
+            <p class="admin-visits-label">Total confirmed reservations in {{ current_month_name }}</p>
+          </div>
+        </section>
+
+        <section class="admin-card admin-card-today-stat" aria-labelledby="today-heading">
+          <h2 id="today-heading" class="admin-card-title">Total Reservations (Transactions Today)</h2>
+          <div class="admin-visits-summary">
+            <span id="admin-today-total" class="admin-today-number" aria-live="polite">{{ today_count }}</span>
+            <p class="admin-visits-label">Reservations created today</p>
           </div>
         </section>
       </div>
 
-      <section class="admin-card admin-card-today" aria-labelledby="today-heading">
-        <h2 id="today-heading" class="admin-card-title">Total Reservations (Transactions Today)</h2>
+      <section class="admin-card admin-card-today" aria-labelledby="today-details-heading">
+        <h2 id="today-details-heading" class="admin-card-title admin-sr-only">Today's reservation breakdown</h2>
         <div class="admin-today-summary-row">
           <div class="admin-today-summary">
-            <span id="admin-today-total" class="admin-today-number" aria-live="polite">{{ today_count }}</span>
-            <p class="admin-today-label">Reservations created today</p>
             <div class="admin-today-chips">
               <span class="admin-today-chip admin-today-chip-confirmed">
                 <span id="admin-today-confirmed-count">{{ today_confirmed }}</span> Confirmed
@@ -278,7 +315,7 @@
         <h2 id="reviews-heading" class="admin-card-title">Customer reviews</h2>
         <p class="admin-reviews-note">Approve reviews below to show them on the homepage (up to six most recent).</p>
 
-        <h3 class="admin-reviews-subtitle">Pending approval</h3>
+        <h3 class="admin-reviews-subtitle" id="admin-reviews-pending">Pending approval</h3>
         <div class="admin-table-wrapper admin-table-wrapper-full">
           <table class="admin-table admin-table-full" role="grid">
             <thead>
@@ -353,7 +390,7 @@
           <button type="submit" class="admin-btn admin-btn-add">Publish update</button>
         </form>
 
-        <h3 class="admin-reviews-subtitle admin-reviews-subtitle-spaced">Pending approval</h3>
+        <h3 class="admin-reviews-subtitle admin-reviews-subtitle-spaced" id="admin-feed-pending">Pending approval</h3>
         <div class="admin-table-wrapper admin-table-wrapper-full">
           <table class="admin-table admin-table-full" role="grid">
             <thead>
@@ -486,50 +523,188 @@
     </main>
     <script>
       (function () {
-        function updateReservationNotice(pendingCount) {
-          var notice = document.getElementById("admin-reservation-notice");
-          if (!notice) return;
-          var count = typeof pendingCount === "number" ? pendingCount : 0;
-          if (count > 0) {
-            notice.className = "admin-reservation-notice admin-reservation-notice--alert";
-            notice.setAttribute("data-href", "#admin-recent-pending");
-            notice.setAttribute("tabindex", "0");
-            notice.innerHTML =
-              '<span class="admin-notice-alert-label">Alert</span>' +
-              '<span class="admin-notice-alert-count">' +
-              '<span id="admin-notice-pending-count">' + count + '</span> Reservation' +
-              (count === 1 ? "" : "s") + " Not Yet Confirmed</span>";
+        var root = document.getElementById("admin-notifications");
+        var btn = document.getElementById("admin-notifications-btn");
+        var panel = document.getElementById("admin-notifications-panel");
+        var list = document.getElementById("admin-notifications-list");
+        var badge = document.getElementById("admin-notifications-badge");
+        var markReadBtn = document.getElementById("admin-notifications-mark-read");
+
+        function formatTimeAgo(iso) {
+          if (!iso) return "";
+          var diff = Date.now() - new Date(iso).getTime();
+          if (diff < 60000) return "Just now";
+          var mins = Math.floor(diff / 60000);
+          if (mins < 60) return mins + "m";
+          var hours = Math.floor(mins / 60);
+          if (hours < 24) return hours + "h";
+          var days = Math.floor(hours / 24);
+          if (days < 7) return days + "d";
+          return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        }
+
+        function refreshTimes() {
+          if (!list) return;
+          list.querySelectorAll(".admin-notification-time[data-created-at]").forEach(function (el) {
+            el.textContent = formatTimeAgo(el.getAttribute("data-created-at"));
+          });
+        }
+
+        function iconForType(type) {
+          if (type === "reservation") return "📅";
+          if (type === "review") return "⭐";
+          return "📷";
+        }
+
+        function renderNotificationItem(item, unread) {
+          var unreadClass = unread ? " admin-notification-item--unread" : "";
+          return (
+            '<li class="admin-notification-item' + unreadClass + '" data-href="' + (item.href || "") + '" data-id="' + (item.id || "") + '">' +
+              '<div class="admin-notification-icon admin-notification-icon--' + (item.type || "reservation") + '" aria-hidden="true">' + iconForType(item.type) + '</div>' +
+              '<div class="admin-notification-body">' +
+                '<p class="admin-notification-title">' + (item.title || "").replace(/</g, "&lt;") + '</p>' +
+                '<p class="admin-notification-meta">' + (item.message || "").replace(/</g, "&lt;") + '</p>' +
+                '<span class="admin-notification-time" data-created-at="' + (item.created_at || "") + '"></span>' +
+              '</div>' +
+              (unread ? '<span class="admin-notification-dot" aria-hidden="true"></span>' : '') +
+            '</li>'
+          );
+        }
+
+        function updateBadge(count, unread) {
+          if (!badge) return;
+          var showCount = typeof unread === "number" ? unread : count;
+          if (showCount > 0) {
+            badge.hidden = false;
+            badge.textContent = showCount > 99 ? "99+" : String(showCount);
           } else {
-            notice.className = "admin-reservation-notice admin-reservation-notice--confirmed";
-            notice.removeAttribute("data-href");
-            notice.removeAttribute("tabindex");
-            notice.innerHTML =
-              '<span class="admin-notice-confirmed-label">Confirmed</span>' +
-              '<span class="admin-notice-confirmed-sub">All reservations confirmed</span>';
+            badge.hidden = true;
           }
         }
 
-        window.updateReservationNotice = updateReservationNotice;
+        function renderNotifications(data) {
+          if (!list) return;
+          var items = data && Array.isArray(data.items) ? data.items : [];
+          var count = data && typeof data.count === "number" ? data.count : items.length;
+          var readIds = JSON.parse(sessionStorage.getItem("adminNotifRead") || "[]");
+          var footer = root ? root.querySelector(".admin-notifications-footer") : null;
+
+          if (items.length === 0) {
+            list.innerHTML = '<li class="admin-notifications-empty">You\'re all caught up. No new notifications.</li>';
+            updateBadge(0, 0);
+            if (footer) footer.hidden = true;
+            return;
+          }
+
+          if (footer) footer.hidden = false;
+
+          list.innerHTML = items.map(function (item) {
+            var unread = readIds.indexOf(item.id) === -1;
+            return renderNotificationItem(item, unread);
+          }).join("");
+          refreshTimes();
+
+          var unreadCount = items.filter(function (item) {
+            return readIds.indexOf(item.id) === -1;
+          }).length;
+          updateBadge(count, unreadCount);
+
+          // #region agent log
+          fetch("http://127.0.0.1:7802/ingest/7c033e1e-1fc3-4f03-b161-8093971f88b7", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "0292ec" },
+            body: JSON.stringify({
+              sessionId: "0292ec",
+              runId: "notif-fb",
+              hypothesisId: "N1",
+              location: "adminpage.html:renderNotifications",
+              message: "Notifications rendered",
+              data: { total: count, unread: unreadCount, items: items.length },
+              timestamp: Date.now()
+            })
+          }).catch(function () {});
+          // #endregion
+        }
+
+        function setPanelOpen(open) {
+          if (!panel || !btn) return;
+          panel.hidden = !open;
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+          if (open) refreshTimes();
+        }
+
+        function markAllRead() {
+          if (!list) return;
+          var ids = [];
+          list.querySelectorAll(".admin-notification-item[data-id]").forEach(function (el) {
+            var id = el.getAttribute("data-id");
+            if (id) ids.push(id);
+            el.classList.remove("admin-notification-item--unread");
+            var dot = el.querySelector(".admin-notification-dot");
+            if (dot) dot.remove();
+          });
+          sessionStorage.setItem("adminNotifRead", JSON.stringify(ids));
+          updateBadge(0, 0);
+        }
+
+        function updateNotifications(data) {
+          renderNotifications(data || {});
+        }
+
+        window.updateReservationNotice = function (pendingCount) {
+          updateNotifications({ count: pendingCount, items: [], pending_count: pendingCount });
+        };
+        window.updateNotifications = updateNotifications;
+
+        if (btn && panel) {
+          btn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            setPanelOpen(panel.hidden);
+          });
+        }
+
+        if (markReadBtn) {
+          markReadBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            markAllRead();
+          });
+        }
+
+        if (list) {
+          list.addEventListener("click", function (e) {
+            var item = e.target.closest(".admin-notification-item");
+            if (!item) return;
+            var href = item.getAttribute("data-href");
+            var id = item.getAttribute("data-id");
+            if (id) {
+              var readIds = JSON.parse(sessionStorage.getItem("adminNotifRead") || "[]");
+              if (readIds.indexOf(id) === -1) {
+                readIds.push(id);
+                sessionStorage.setItem("adminNotifRead", JSON.stringify(readIds));
+              }
+            }
+            item.classList.remove("admin-notification-item--unread");
+            var dot = item.querySelector(".admin-notification-dot");
+            if (dot) dot.remove();
+            setPanelOpen(false);
+            if (href) {
+              var target = document.querySelector(href);
+              if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          });
+        }
 
         document.addEventListener("click", function (e) {
-          var notice = e.target.closest("#admin-reservation-notice.admin-reservation-notice--alert");
-          if (!notice) return;
-          var target = notice.getAttribute("data-href");
-          if (!target) return;
-          var el = document.querySelector(target);
-          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (!root || !panel || panel.hidden) return;
+          if (!root.contains(e.target)) setPanelOpen(false);
         });
 
         document.addEventListener("keydown", function (e) {
-          if (e.key !== "Enter" && e.key !== " ") return;
-          var notice = e.target.closest("#admin-reservation-notice.admin-reservation-notice--alert");
-          if (!notice) return;
-          e.preventDefault();
-          var target = notice.getAttribute("data-href");
-          if (!target) return;
-          var el = document.querySelector(target);
-          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (e.key === "Escape") setPanelOpen(false);
         });
+
+        refreshTimes();
+        setInterval(refreshTimes, 60000);
       })();
       (function () {
         var el = document.getElementById("admin-datetime");
@@ -899,8 +1074,10 @@
                 var monthEl = document.getElementById("admin-month-total");
                 if (monthEl && typeof data.month.total === "number") monthEl.textContent = data.month.total;
               }
-              if (data.notification && typeof data.notification.pending_count === "number") {
-                if (typeof window.updateReservationNotice === "function") {
+              if (data.notification) {
+                if (typeof window.updateNotifications === "function") {
+                  window.updateNotifications(data.notification);
+                } else if (typeof window.updateReservationNotice === "function") {
                   window.updateReservationNotice(data.notification.pending_count);
                 }
               }
@@ -1127,6 +1304,47 @@
               .catch(function () { alert("Unpin failed"); });
           }
         });
+      })();
+    </script>
+    <script>
+      (function () {
+        function logStatsLayout(runId) {
+          var statsRow = document.querySelector(".admin-stats-row");
+          if (!statsRow) return;
+          var cards = statsRow.querySelectorAll(".admin-card");
+          var rowStyle = window.getComputedStyle(statsRow);
+          var todayInRow = !!statsRow.querySelector(".admin-card-today-stat");
+          var cardRects = Array.prototype.map.call(cards, function (card) {
+            var rect = card.getBoundingClientRect();
+            return { className: card.className, width: Math.round(rect.width), height: Math.round(rect.height), top: Math.round(rect.top) };
+          });
+          var payload = {
+            sessionId: "0292ec",
+            runId: runId,
+            hypothesisId: "A-B-C-D",
+            location: "adminpage.html:stats-layout",
+            message: "Admin stats row layout snapshot",
+            data: {
+              viewportWidth: window.innerWidth,
+              gridTemplateColumns: rowStyle.gridTemplateColumns,
+              display: rowStyle.display,
+              cardCount: cards.length,
+              todayStatInRow: todayInRow,
+              cards: cardRects,
+              sameRow: cardRects.length > 1 && Math.abs(cardRects[0].top - cardRects[cardRects.length - 1].top) < 8
+            },
+            timestamp: Date.now()
+          };
+          // #region agent log
+          fetch("http://127.0.0.1:7802/ingest/7c033e1e-1fc3-4f03-b161-8093971f88b7", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "0292ec" },
+            body: JSON.stringify(payload)
+          }).catch(function () {});
+          // #endregion
+        }
+        window.addEventListener("load", function () { logStatsLayout("post-fix"); });
+        window.addEventListener("resize", function () { logStatsLayout("post-fix-resize"); });
       })();
     </script>
   </body>
