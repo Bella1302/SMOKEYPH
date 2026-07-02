@@ -92,6 +92,78 @@ body {
   color: var(--text-muted);
 }
 
+.admin-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.admin-reservation-notice {
+  text-align: center;
+  line-height: 1.25;
+}
+
+.admin-reservation-notice--alert {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: #ffffff;
+  padding: 0.75rem 1.35rem;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.4);
+  cursor: pointer;
+  animation: admin-notice-pulse 2.5s ease-in-out infinite;
+  min-width: 11rem;
+}
+
+.admin-reservation-notice--alert:hover,
+.admin-reservation-notice--alert:focus-visible {
+  outline: 2px solid #14532d;
+  outline-offset: 2px;
+}
+
+.admin-notice-alert-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.2rem;
+}
+
+.admin-notice-alert-count {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.admin-reservation-notice--confirmed {
+  padding: 0.35rem 0.85rem;
+}
+
+.admin-notice-confirmed-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #15803d;
+}
+
+.admin-notice-confirmed-sub {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+@keyframes admin-notice-pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 16px rgba(22, 163, 74, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 22px rgba(22, 163, 74, 0.65);
+  }
+}
+
 .admin-logout-link {
   display: inline-flex;
   align-items: center;
@@ -519,6 +591,21 @@ body {
   color: #c62828;
 }
 
+.admin-res-notes,
+.admin-notes-cell {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: normal;
+  white-space: normal;
+  word-break: break-word;
+  max-width: 14rem;
+}
+
 /* Action buttons in table */
 .admin-edit-row-btn,
 .admin-confirm-btn,
@@ -694,8 +781,24 @@ body {
     min-width: 0;
   }
 
-  .admin-logout-link {
+  .admin-header-actions {
     margin-left: auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.65rem;
+  }
+
+  .admin-reservation-notice--alert {
+    min-width: 9.5rem;
+    padding: 0.65rem 1rem;
+  }
+
+  .admin-notice-alert-count {
+    font-size: 1.05rem;
+  }
+
+  .admin-logout-link {
+    margin-left: 0;
   }
 
   .admin-card-title {
@@ -1021,6 +1124,23 @@ body {
   background: #a32a2a;
   color: #fff;
   border-color: #a32a2a;
+}
+
+.admin-stats-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-stats-row .admin-card {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .admin-stats-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .admin-visits-summary {

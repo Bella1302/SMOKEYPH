@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - Smokey Peeks</title>
-    <link rel="stylesheet" href="{% static 'main/css/adminpage.css' %}?v=20260623" />
+    <link rel="stylesheet" href="{% static 'main/css/adminpage.css' %}?v=20260702b" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -38,27 +38,57 @@
           </div>
           <div id="admin-datetime" class="admin-datetime" aria-live="polite"></div>
         </div>
-        <a href="{% url 'main:admin_logout' %}" class="admin-logout-link" title="Log out">
-          <svg class="admin-logout-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
-          </svg>
-          <span>Log out</span>
-        </a>
+        <div class="admin-header-actions">
+          <div
+            id="admin-reservation-notice"
+            class="admin-reservation-notice{% if pending_reservations_count %} admin-reservation-notice--alert{% else %} admin-reservation-notice--confirmed{% endif %}"
+            role="status"
+            aria-live="polite"
+            {% if pending_reservations_count %}data-href="#admin-recent-pending" tabindex="0"{% endif %}
+          >
+            {% if pending_reservations_count %}
+              <span class="admin-notice-alert-label">Alert</span>
+              <span class="admin-notice-alert-count">
+                <span id="admin-notice-pending-count">{{ pending_reservations_count }}</span>
+                Reservation{{ pending_reservations_count|pluralize }} Not Yet Confirmed
+              </span>
+            {% else %}
+              <span class="admin-notice-confirmed-label">Confirmed</span>
+              <span class="admin-notice-confirmed-sub">All reservations confirmed</span>
+            {% endif %}
+          </div>
+          <a href="{% url 'main:admin_logout' %}" class="admin-logout-link" title="Log out">
+            <svg class="admin-logout-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span>Log out</span>
+          </a>
+        </div>
       </div>
     </header>
 
     <main class="admin-dashboard">
       <h1 class="admin-dashboard-title">Admin Dashboard</h1>
 
-      <section class="admin-card admin-card-visits" aria-labelledby="visits-heading">
-        <h2 id="visits-heading" class="admin-card-title">Website visitors</h2>
-        <div class="admin-visits-summary">
-          <span class="admin-visits-number" aria-live="polite">{{ total_visits }}</span>
-          <p class="admin-visits-label">Total unique browser sessions that visited the site</p>
-        </div>
-      </section>
+      <div class="admin-stats-row">
+        <section class="admin-card admin-card-visits" aria-labelledby="visits-heading">
+          <h2 id="visits-heading" class="admin-card-title">Website visitors</h2>
+          <div class="admin-visits-summary">
+            <span class="admin-visits-number" aria-live="polite">{{ total_visits }}</span>
+            <p class="admin-visits-label">Total unique browser sessions that visited the site</p>
+          </div>
+        </section>
+
+        <section class="admin-card admin-card-monthly" aria-labelledby="monthly-heading">
+          <h2 id="monthly-heading" class="admin-card-title">Total Reservations ({{ current_month_name }})</h2>
+          <div class="admin-visits-summary">
+            <span id="admin-month-total" class="admin-visits-number" aria-live="polite">{{ month_count }}</span>
+            <p class="admin-visits-label">Total reservations created in {{ current_month_name }}</p>
+          </div>
+        </section>
+      </div>
 
       <section class="admin-card admin-card-today" aria-labelledby="today-heading">
         <h2 id="today-heading" class="admin-card-title">Total Reservations (Transactions Today)</h2>
@@ -93,11 +123,12 @@
                     <th>Guests</th>
                     <th>Location</th>
                     <th>Date</th>
+                    <th>Special Request</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody id="admin-upcoming-tbody">
-                  <tr><td colspan="6" class="admin-recent-loading">Loading…</td></tr>
+                  <tr><td colspan="7" class="admin-recent-loading">Loading…</td></tr>
                 </tbody>
               </table>
             </div>
@@ -113,11 +144,12 @@
                     <th>Guests</th>
                     <th>Location</th>
                     <th>Date</th>
+                    <th>Special Request</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody id="admin-recent-confirmed-tbody">
-                  <tr><td colspan="6" class="admin-recent-loading">Loading…</td></tr>
+                  <tr><td colspan="7" class="admin-recent-loading">Loading…</td></tr>
                 </tbody>
               </table>
             </div>
@@ -133,11 +165,12 @@
                     <th>Guests</th>
                     <th>Location</th>
                     <th>Date</th>
+                    <th>Special Request</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody id="admin-recent-pending-tbody">
-                  <tr><td colspan="6" class="admin-recent-loading">Loading…</td></tr>
+                  <tr><td colspan="7" class="admin-recent-loading">Loading…</td></tr>
                 </tbody>
               </table>
             </div>
@@ -153,11 +186,12 @@
                     <th>Guests</th>
                     <th>Location</th>
                     <th>Date</th>
+                    <th>Special Request</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody id="admin-recent-cancelled-tbody">
-                  <tr><td colspan="6" class="admin-recent-loading">Loading…</td></tr>
+                  <tr><td colspan="7" class="admin-recent-loading">Loading…</td></tr>
                 </tbody>
               </table>
             </div>
@@ -211,8 +245,13 @@
             </thead>
             <tbody id="admin-reservations-tbody">
               {% for res in reservations %}
-              <tr data-id="{{ res.id }}" data-guests="{{ res.guests }}" data-status="{{ res.status }}" data-date="{{ res.date|date:'Y-m-d' }}" data-time="{{ res.time|time:'H:i' }}" data-location="{{ res.location }}" data-email="{{ res.email }}" data-notes="{{ res.notes|escapejs }}">
-                <td>{{ res.name }}</td>
+              <tr data-id="{{ res.id }}" data-guests="{{ res.guests }}" data-status="{{ res.status }}" data-date="{{ res.date|date:'Y-m-d' }}" data-time="{{ res.time|time:'H:i' }}" data-location="{{ res.location }}" data-email="{{ res.email }}">
+                <td>
+                  {{ res.name }}
+                  {% if res.notes %}
+                  <div class="admin-res-notes">{{ res.notes|truncatechars:100 }}</div>
+                  {% endif %}
+                </td>
                 <td>{{ res.phone }}</td>
                 <td>{{ res.guests }}</td>
                 <td>{{ res.get_location_display }}</td>
@@ -447,6 +486,52 @@
     </main>
     <script>
       (function () {
+        function updateReservationNotice(pendingCount) {
+          var notice = document.getElementById("admin-reservation-notice");
+          if (!notice) return;
+          var count = typeof pendingCount === "number" ? pendingCount : 0;
+          if (count > 0) {
+            notice.className = "admin-reservation-notice admin-reservation-notice--alert";
+            notice.setAttribute("data-href", "#admin-recent-pending");
+            notice.setAttribute("tabindex", "0");
+            notice.innerHTML =
+              '<span class="admin-notice-alert-label">Alert</span>' +
+              '<span class="admin-notice-alert-count">' +
+              '<span id="admin-notice-pending-count">' + count + '</span> Reservation' +
+              (count === 1 ? "" : "s") + " Not Yet Confirmed</span>";
+          } else {
+            notice.className = "admin-reservation-notice admin-reservation-notice--confirmed";
+            notice.removeAttribute("data-href");
+            notice.removeAttribute("tabindex");
+            notice.innerHTML =
+              '<span class="admin-notice-confirmed-label">Confirmed</span>' +
+              '<span class="admin-notice-confirmed-sub">All reservations confirmed</span>';
+          }
+        }
+
+        window.updateReservationNotice = updateReservationNotice;
+
+        document.addEventListener("click", function (e) {
+          var notice = e.target.closest("#admin-reservation-notice.admin-reservation-notice--alert");
+          if (!notice) return;
+          var target = notice.getAttribute("data-href");
+          if (!target) return;
+          var el = document.querySelector(target);
+          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key !== "Enter" && e.key !== " ") return;
+          var notice = e.target.closest("#admin-reservation-notice.admin-reservation-notice--alert");
+          if (!notice) return;
+          e.preventDefault();
+          var target = notice.getAttribute("data-href");
+          if (!target) return;
+          var el = document.querySelector(target);
+          if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      })();
+      (function () {
         var el = document.getElementById("admin-datetime");
         if (!el) return;
         function update() {
@@ -487,7 +572,9 @@
           form.elements["guests"].value = (row.cells[2] && row.cells[2].textContent) || "";
           form.elements["date"].value = row.getAttribute("data-date") || "";
           form.elements["time"].value = row.getAttribute("data-time") || "";
-          form.elements["notes"].value = row.getAttribute("data-notes") || "";
+          var notesCell = row.querySelector(".admin-notes-cell");
+          var notesText = notesCell ? notesCell.textContent.trim() : "";
+          form.elements["notes"].value = notesText === "—" ? "" : notesText;
           form.elements["status"].value = row.getAttribute("data-status") || "pending";
           modal.removeAttribute("hidden");
         }
@@ -526,7 +613,13 @@
           row.cells[5].textContent = timeFormatted;
           var notes = form.elements["notes"].value.trim();
           row.cells[6].textContent = notes || "—";
-          row.setAttribute("data-notes", notes);
+          var nameCell = row.cells[0];
+          if (nameCell) {
+            var nameOnly = form.elements["name"].value.trim();
+            nameCell.innerHTML = notes
+              ? nameOnly + "<div class=\"admin-res-notes\">" + notes.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</div>"
+              : nameOnly;
+          }
           row.setAttribute("data-guests", guests);
           row.setAttribute("data-status", status);
           row.setAttribute("data-date", date);
@@ -756,18 +849,20 @@
 
         function renderRow(res) {
           var loc = (res.location_display || res.location || "").replace(/</g, "&lt;");
+          var notes = (res.notes || "").trim().replace(/</g, "&lt;") || "—";
           return "<tr data-id=\"" + (res.id || "") + "\">" +
             "<td>" + (res.name || "").replace(/</g, "&lt;") + "</td>" +
             "<td>" + (res.phone || "").replace(/</g, "&lt;") + "</td>" +
             "<td>" + (res.guests || "") + "</td>" +
             "<td>" + loc + "</td>" +
             "<td>" + (res.date || "").replace(/</g, "&lt;") + "</td>" +
+            "<td class=\"admin-notes-cell\">" + notes + "</td>" +
             "<td><span class=\"admin-status admin-status-" + (res.status || "") + "\">" + (res.status_display || "").replace(/</g, "&lt;") + "</span></td>" +
             "</tr>";
         }
 
         function renderEmpty(message) {
-          return "<tr><td colspan=\"6\" class=\"admin-recent-empty\">" + (message || "None") + "</td></tr>";
+          return "<tr><td colspan=\"7\" class=\"admin-recent-empty\">" + (message || "None") + "</td></tr>";
         }
 
         function updateBox(tbody, items, emptyMsg) {
@@ -799,6 +894,15 @@
                 if (pEl && typeof t.pending === "number") pEl.textContent = t.pending;
                 var xEl = document.getElementById("admin-today-cancelled-count");
                 if (xEl && typeof t.cancelled === "number") xEl.textContent = t.cancelled;
+              }
+              if (data.month) {
+                var monthEl = document.getElementById("admin-month-total");
+                if (monthEl && typeof data.month.total === "number") monthEl.textContent = data.month.total;
+              }
+              if (data.notification && typeof data.notification.pending_count === "number") {
+                if (typeof window.updateReservationNotice === "function") {
+                  window.updateReservationNotice(data.notification.pending_count);
+                }
               }
             })
             .catch(function () {

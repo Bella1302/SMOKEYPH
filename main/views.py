@@ -255,13 +255,21 @@ def about_us(request):
 @login_required(login_url='main:logadmin')
 def admin_page(request):
     from django.utils import timezone
-    today = timezone.localdate()
+    now = timezone.localtime()
+    today = now.date()
     reservations = Reservation.objects.all().order_by('-date', '-time')
     today_qs = Reservation.objects.filter(created_at__date=today)
     today_count = today_qs.count()
     today_confirmed = today_qs.filter(status='confirmed').count()
     today_pending = today_qs.filter(status='pending').count()
     today_cancelled = today_qs.filter(status='cancelled').count()
+    month_qs = Reservation.objects.filter(
+        created_at__year=now.year,
+        created_at__month=now.month,
+    )
+    month_count = month_qs.count()
+    current_month_name = now.strftime('%B')
+    pending_reservations_count = Reservation.objects.filter(status='pending').count()
     reviews_pending = CustomerReview.objects.filter(approved=False).order_by("-created_at")
     reviews_approved = CustomerReview.objects.filter(approved=True).order_by("-created_at")[:50]
     feed_pending = FeedPost.objects.filter(approved=False).order_by("-created_at")
@@ -278,6 +286,9 @@ def admin_page(request):
         'feed_pending': feed_pending,
         'feed_approved': feed_approved,
         'total_visits': total_visits,
+        'month_count': month_count,
+        'current_month_name': current_month_name,
+        'pending_reservations_count': pending_reservations_count,
     })
 
 
@@ -370,7 +381,8 @@ def admin_reservations_recent_json(request):
 
     from django.utils import timezone
 
-    today = timezone.localdate()
+    now = timezone.localtime()
+    today = now.date()
 
     today_qs = Reservation.objects.filter(created_at__date=today)
     today_data = {
@@ -379,31 +391,41 @@ def admin_reservations_recent_json(request):
         'pending': today_qs.filter(status='pending').count(),
         'cancelled': today_qs.filter(status='cancelled').count(),
     }
+    month_qs = Reservation.objects.filter(
+        created_at__year=now.year,
+        created_at__month=now.month,
+    )
+    month_data = {'total': month_qs.count()}
+    pending_reservations_count = Reservation.objects.filter(status='pending').count()
+    notification_data = {
+        'pending_count': pending_reservations_count,
+        'all_confirmed': pending_reservations_count == 0,
+    }
 
     upcoming = [
         format_reservation(dict(r))
         for r in Reservation.objects.exclude(status='cancelled')
         .filter(date__gte=today)
         .order_by('date', 'time')[:15]
-        .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status')
+        .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status', 'notes')
     ]
     recent_cancelled = [
         format_reservation(dict(r))
         for r in Reservation.objects.filter(status='cancelled')
         .order_by('-created_at')[:15]
-        .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status')
+        .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status', 'notes')
     ]
     recent_confirmed = [
         format_reservation(dict(r))
         for r in Reservation.objects.filter(status='confirmed')
         .order_by('-created_at')[:15]
-        .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status')
+        .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status', 'notes')
     ]
     recent_pending = [
         format_reservation(dict(r))
         for r in Reservation.objects.filter(status='pending')
         .order_by('-created_at')[:15]
-        .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status')
+        .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status', 'notes')
     ]
 
     return JsonResponse({
@@ -412,6 +434,8 @@ def admin_reservations_recent_json(request):
         'recent_confirmed': recent_confirmed,
         'recent_pending': recent_pending,
         'today': today_data,
+        'month': month_data,
+        'notification': notification_data,
     })
 
 
