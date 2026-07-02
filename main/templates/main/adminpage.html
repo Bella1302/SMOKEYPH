@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - Smokey Peeks</title>
-    <link rel="stylesheet" href="{% static 'main/css/adminpage.css' %}?v=20260702e" />
+    <link rel="stylesheet" href="{% static 'main/css/adminpage.css' %}?v=20260702f" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -626,11 +626,61 @@
           // #endregion
         }
 
+        function logNotifPanelLayout(trigger) {
+          if (!panel) return;
+          var root = document.getElementById("admin-notifications");
+          var listEl = document.getElementById("admin-notifications-list");
+          var ps = window.getComputedStyle(panel);
+          var rs = root ? window.getComputedStyle(root) : null;
+          var ls = listEl ? window.getComputedStyle(listEl) : null;
+          var hasNotifRule = false;
+          try {
+            hasNotifRule = Array.from(document.styleSheets).some(function (sheet) {
+              try {
+                return Array.from(sheet.cssRules || []).some(function (rule) {
+                  return rule.selectorText && rule.selectorText.indexOf(".admin-notifications-panel") >= 0;
+                });
+              } catch (err) {
+                return false;
+              }
+            });
+          } catch (err) {
+            hasNotifRule = false;
+          }
+          // #region agent log
+          fetch("http://127.0.0.1:7816/ingest/0d03ab45-eafd-41a7-9e18-92b3e48de016", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "2950c9" },
+            body: JSON.stringify({
+              sessionId: "2950c9",
+              runId: "notif-layout",
+              hypothesisId: "A-B-C-D-E",
+              location: "adminpage.html:logNotifPanelLayout",
+              message: "Notification panel layout snapshot",
+              data: {
+                trigger: trigger,
+                panelHidden: panel.hidden,
+                panelPosition: ps.position,
+                panelDisplay: ps.display,
+                panelZIndex: ps.zIndex,
+                panelBoxShadow: ps.boxShadow !== "none",
+                rootPosition: rs ? rs.position : null,
+                listStyle: ls ? ls.listStyleType : null,
+                hasNotifCssRule: hasNotifRule,
+                stylesheetCount: document.styleSheets.length
+              },
+              timestamp: Date.now()
+            })
+          }).catch(function () {});
+          // #endregion
+        }
+
         function setPanelOpen(open) {
           if (!panel || !btn) return;
           panel.hidden = !open;
           btn.setAttribute("aria-expanded", open ? "true" : "false");
           if (open) refreshTimes();
+          logNotifPanelLayout(open ? "panel-open" : "panel-close");
         }
 
         function markAllRead() {
@@ -705,6 +755,7 @@
 
         refreshTimes();
         setInterval(refreshTimes, 60000);
+        window.addEventListener("load", function () { logNotifPanelLayout("page-load"); });
       })();
       (function () {
         var el = document.getElementById("admin-datetime");
