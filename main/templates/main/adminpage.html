@@ -204,19 +204,21 @@
                 <th>Location</th>
                 <th>Date</th>
                 <th>Time</th>
+                <th>Special Request</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody id="admin-reservations-tbody">
               {% for res in reservations %}
-              <tr data-id="{{ res.id }}" data-guests="{{ res.guests }}" data-status="{{ res.status }}" data-date="{{ res.date|date:'Y-m-d' }}" data-time="{{ res.time|time:'H:i' }}" data-location="{{ res.location }}" data-email="{{ res.email }}">
+              <tr data-id="{{ res.id }}" data-guests="{{ res.guests }}" data-status="{{ res.status }}" data-date="{{ res.date|date:'Y-m-d' }}" data-time="{{ res.time|time:'H:i' }}" data-location="{{ res.location }}" data-email="{{ res.email }}" data-notes="{{ res.notes|escapejs }}">
                 <td>{{ res.name }}</td>
                 <td>{{ res.phone }}</td>
                 <td>{{ res.guests }}</td>
                 <td>{{ res.get_location_display }}</td>
                 <td>{{ res.date|date:"M j, Y" }}</td>
                 <td>{{ res.time|time:"g:i A" }}</td>
+                <td class="admin-notes-cell">{{ res.notes|default:"—"|truncatechars:80 }}</td>
                 <td class="admin-status-cell"><span class="admin-status admin-status-{{ res.status }}">{{ res.get_status_display }}</span></td>
                 <td class="admin-actions-cell">
                   {% if res.status == 'pending' %}
@@ -226,7 +228,7 @@
                 </td>
               </tr>
               {% empty %}
-              <tr><td colspan="8">No reservations yet</td></tr>
+              <tr><td colspan="9">No reservations yet</td></tr>
               {% endfor %}
             </tbody>
           </table>
@@ -424,6 +426,10 @@
               <input type="time" id="admin-edit-time" name="time" class="admin-edit-input" required />
             </div>
             <div class="admin-edit-field">
+              <label for="admin-edit-notes">Special Request</label>
+              <textarea id="admin-edit-notes" name="notes" class="admin-edit-input" rows="3"></textarea>
+            </div>
+            <div class="admin-edit-field">
               <label for="admin-edit-status">Status</label>
               <select id="admin-edit-status" name="status" class="admin-edit-select">
                 <option value="pending">Pending</option>
@@ -481,6 +487,7 @@
           form.elements["guests"].value = (row.cells[2] && row.cells[2].textContent) || "";
           form.elements["date"].value = row.getAttribute("data-date") || "";
           form.elements["time"].value = row.getAttribute("data-time") || "";
+          form.elements["notes"].value = row.getAttribute("data-notes") || "";
           form.elements["status"].value = row.getAttribute("data-status") || "pending";
           modal.removeAttribute("hidden");
         }
@@ -517,6 +524,9 @@
           row.cells[3].textContent = getLocationDisplay(location);
           row.cells[4].textContent = dateFormatted;
           row.cells[5].textContent = timeFormatted;
+          var notes = form.elements["notes"].value.trim();
+          row.cells[6].textContent = notes || "—";
+          row.setAttribute("data-notes", notes);
           row.setAttribute("data-guests", guests);
           row.setAttribute("data-status", status);
           row.setAttribute("data-date", date);
