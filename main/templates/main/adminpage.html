@@ -961,8 +961,21 @@
           return ts + parseTimeToMinutes(timeText);
         }
 
+        function getRowSummary(row) {
+          return {
+            id: row.getAttribute("data-id") || "",
+            status: row.getAttribute("data-status") || getRowStatus(row),
+            date: row.getAttribute("data-date") || "",
+            time: row.getAttribute("data-time") || "",
+            sortKey: getRowSortKey(row)
+          };
+        }
+
         function sortReservationsByDate() {
           var rows = Array.from(tbody.querySelectorAll("tr"));
+          // #region agent log
+          fetch('http://127.0.0.1:7816/ingest/0d03ab45-eafd-41a7-9e18-92b3e48de016',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'628fad'},body:JSON.stringify({sessionId:'628fad',runId:'pre-fix',hypothesisId:'A',location:'adminpage.html:sortReservationsByDate:before',message:'Client sort input order',data:{rows:rows.slice(0,8).map(getRowSummary)},timestamp:Date.now()})}).catch(function(){});
+          // #endregion
           rows.sort(function (a, b) {
             var statusA = a.getAttribute("data-status") || getRowStatus(a);
             var statusB = b.getAttribute("data-status") || getRowStatus(b);
@@ -974,9 +987,21 @@
           rows.forEach(function (row) {
             tbody.appendChild(row);
           });
+          // #region agent log
+          fetch('http://127.0.0.1:7816/ingest/0d03ab45-eafd-41a7-9e18-92b3e48de016',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'628fad'},body:JSON.stringify({sessionId:'628fad',runId:'pre-fix',hypothesisId:'A',location:'adminpage.html:sortReservationsByDate:after',message:'Client sort output order',data:{rows:rows.slice(0,8).map(getRowSummary)},timestamp:Date.now()})}).catch(function(){});
+          // #endregion
         }
 
         sortReservationsByDate();
+        // #region agent log
+        (function () {
+          var allSection = document.getElementById("all-reservations");
+          var statsRow = document.querySelector(".admin-stats-row");
+          var allTop = allSection ? allSection.getBoundingClientRect().top : null;
+          var statsTop = statsRow ? statsRow.getBoundingClientRect().top : null;
+          fetch('http://127.0.0.1:7816/ingest/0d03ab45-eafd-41a7-9e18-92b3e48de016',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'628fad'},body:JSON.stringify({sessionId:'628fad',runId:'pre-fix',hypothesisId:'B',location:'adminpage.html:layout',message:'Section vertical positions on load',data:{allReservationsTop:allTop,statsRowTop:statsTop,tableVisibleFirst:allTop !== null && statsTop !== null ? allTop < statsTop : false,scrollY:window.scrollY},timestamp:Date.now()})}).catch(function(){});
+        })();
+        // #endregion
 
         function getRowStatus(row) {
           var statusCell = row.querySelector(".admin-status-cell");

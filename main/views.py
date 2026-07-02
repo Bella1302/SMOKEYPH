@@ -326,23 +326,25 @@ def admin_page(request):
     try:
         import json
         from pathlib import Path
-        _all_month = Reservation.objects.filter(
-            created_at__year=now.year,
-            created_at__month=now.month,
-        ).count()
-        _log_path = Path(__file__).resolve().parent.parent.parent / 'debug-0292ec.log'
+        _log_path = Path(__file__).resolve().parent.parent.parent / 'debug-628fad.log'
+        _server_order = list(
+            reservations.values('id', 'date', 'time', 'status', 'created_at')[:10]
+        )
+        for _row in _server_order:
+            _row['date'] = _row['date'].isoformat()
+            _row['time'] = _row['time'].isoformat()
+            _row['created_at'] = _row['created_at'].isoformat()
         with open(_log_path, 'a', encoding='utf-8') as _f:
             _f.write(json.dumps({
-                'sessionId': '0292ec',
-                'runId': 'month-confirmed',
-                'hypothesisId': 'M1',
+                'sessionId': '628fad',
+                'runId': 'pre-fix',
+                'hypothesisId': 'A',
                 'location': 'views.py:admin_page',
-                'message': 'Monthly reservation counts',
+                'message': 'Server reservation order before template render',
                 'data': {
-                    'all_statuses': _all_month,
-                    'confirmed_only': month_count,
-                    'month': now.month,
-                    'year': now.year,
+                    'total_count': reservations.count(),
+                    'first_ten': _server_order,
+                    'order_by': '-date,-time',
                 },
                 'timestamp': int(now.timestamp() * 1000),
             }) + '\n')
@@ -535,6 +537,33 @@ def admin_reservations_recent_json(request):
         .order_by('-created_at')[:15]
         .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status', 'notes')
     ]
+    # #region agent log
+    try:
+        import json
+        from pathlib import Path
+        _log_path = Path(__file__).resolve().parent.parent.parent / 'debug-628fad.log'
+        with open(_log_path, 'a', encoding='utf-8') as _f:
+            _f.write(json.dumps({
+                'sessionId': '628fad',
+                'runId': 'pre-fix',
+                'hypothesisId': 'C',
+                'location': 'views.py:admin_reservations_recent_json',
+                'message': 'Recent box counts vs total available',
+                'data': {
+                    'returned_upcoming': len(upcoming),
+                    'returned_confirmed': len(recent_confirmed),
+                    'returned_pending': len(recent_pending),
+                    'returned_cancelled': len(recent_cancelled),
+                    'total_confirmed': Reservation.objects.filter(status='confirmed').count(),
+                    'total_pending': Reservation.objects.filter(status='pending').count(),
+                    'total_cancelled': Reservation.objects.filter(status='cancelled').count(),
+                    'limit': 15,
+                },
+                'timestamp': int(now.timestamp() * 1000),
+            }) + '\n')
+    except Exception:
+        pass
+    # #endregion
 
     return JsonResponse({
         'upcoming': upcoming,
