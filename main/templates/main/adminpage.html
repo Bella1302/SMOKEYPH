@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - Smokey Peeks</title>
-    <link rel="stylesheet" href="{% static 'main/css/adminpage.css' %}?v=20260702d" />
+    <link rel="stylesheet" href="{% static 'main/css/adminpage.css' %}?v=20260702e" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -1319,9 +1319,9 @@
             return { className: card.className, width: Math.round(rect.width), height: Math.round(rect.height), top: Math.round(rect.top) };
           });
           var payload = {
-            sessionId: "0292ec",
+            sessionId: "2950c9",
             runId: runId,
-            hypothesisId: "A-B-C-D",
+            hypothesisId: "A-B-C-D-E",
             location: "adminpage.html:stats-layout",
             message: "Admin stats row layout snapshot",
             data: {
@@ -1330,21 +1330,26 @@
               display: rowStyle.display,
               cardCount: cards.length,
               todayStatInRow: todayInRow,
-              cards: cardRects,
+              cards: cardRects.map(function (c) {
+                return Object.assign({}, c, {
+                  isSquare: Math.abs(c.width - c.height) <= 8,
+                  aspectRatio: c.height ? +(c.width / c.height).toFixed(2) : null
+                });
+              }),
               sameRow: cardRects.length > 1 && Math.abs(cardRects[0].top - cardRects[cardRects.length - 1].top) < 8
             },
             timestamp: Date.now()
           };
           // #region agent log
-          fetch("http://127.0.0.1:7802/ingest/7c033e1e-1fc3-4f03-b161-8093971f88b7", {
+          fetch("http://127.0.0.1:7816/ingest/0d03ab45-eafd-41a7-9e18-92b3e48de016", {
             method: "POST",
-            headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "0292ec" },
+            headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "2950c9" },
             body: JSON.stringify(payload)
           }).catch(function () {});
           // #endregion
         }
-        window.addEventListener("load", function () { logStatsLayout("post-fix"); });
-        window.addEventListener("resize", function () { logStatsLayout("post-fix-resize"); });
+        window.addEventListener("load", function () { logStatsLayout("pre-fix"); });
+        window.addEventListener("resize", function () { logStatsLayout("pre-fix-resize"); });
       })();
     </script>
   </body>
