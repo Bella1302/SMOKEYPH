@@ -9,9 +9,15 @@ app_name = 'main'
 urlpatterns = [
     path('', views.home, name='home'),
     path('feed/', views.feed, name='feed'),
+<<<<<<< HEAD
     path('feed/add/', views.feed_add_post, name='feed_add_post'),
     path('feed/album/add/', views.feed_add_album, name='feed_add_album'),
     path('feed/post/<int:pk>/like/', views.feed_like_post, name='feed_like_post'),
+=======
+    path('feed/submit/', views.submit_feed_post, name='submit_feed_post'),
+    path('feed/<int:pk>/like/', views.feed_like, name='feed_like'),
+    path('reviews/submit/', views.submit_review, name='submit_review'),
+>>>>>>> 6e55ad62e7796fcef245a89f1d0bbbd06ecd5a50
     path('menu/', views.menu, name='menu'),
     path('location/', views.location, name='location'),
     path('reservation/', views.reservation, name='reservation'),
@@ -20,6 +26,13 @@ urlpatterns = [
     path('admin-dashboard/', views.admin_page, name='admin'),
     path('admin-dashboard/history/', views.admin_history, name='admin_history'),
     path('admin-dashboard/reservations-recent.json', views.admin_reservations_recent_json, name='admin_reservations_recent_json'),
+    path('admin-dashboard/review/<int:pk>/approve/', views.admin_approve_review, name='admin_approve_review'),
+    path('admin-dashboard/review/<int:pk>/remove/', views.admin_remove_review, name='admin_remove_review'),
+    path('admin-dashboard/feed/<int:pk>/approve/', views.admin_approve_feed_post, name='admin_approve_feed_post'),
+    path('admin-dashboard/feed/<int:pk>/remove/', views.admin_remove_feed_post, name='admin_remove_feed_post'),
+    path('admin-dashboard/feed/<int:pk>/pin/', views.admin_pin_feed_post, name='admin_pin_feed_post'),
+    path('admin-dashboard/feed/<int:pk>/unpin/', views.admin_unpin_feed_post, name='admin_unpin_feed_post'),
+    path('admin-dashboard/feed/create-update/', views.admin_create_feed_update, name='admin_create_feed_update'),
     path('logadmin/', views.log_admin, name='logadmin'),
     path('admin-logout/', views.admin_logout, name='admin_logout'),
     path('admin-dashboard/reservation/<int:pk>/edit/', views.admin_edit_reservation, name='admin_edit_reservation'),

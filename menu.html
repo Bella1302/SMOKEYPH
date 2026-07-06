@@ -17,7 +17,7 @@
       <div class="top-bar-inner">
         <div class="top-bar-left">
           <span class="top-bar-label">Contact us</span>
-          <span class="top-bar-phone">0977 469 6618 / 0977 654 4225</span>
+          <span class="top-bar-phone">0967 586 7197 / 0977 654 4225</span>
         </div>
         <div class="top-bar-right">
           <span class="lang-label">Language:</span>
@@ -35,7 +35,7 @@
       <div class="nav-inner">
         <a href="homepage.html" class="brand">
           <img
-            src="img/logo no bg.png"
+            src="img/logoorg.png"
             alt="Smokey Peeks logo"
             class="brand-logo"
           />
@@ -65,10 +65,6 @@
       <div class="menu-hero-inner">
         <p class="menu-hero-kicker">Smokey Peeks</p>
         <h1 class="menu-hero-title">Our Menu</h1>
-        <p class="menu-hero-subtitle">
-          Choose a branch below to see the menu. Il Corso is <strong>no pork</strong>
-          (beef-focused).
-        </p>
       </div>
     </header>
 
@@ -226,7 +222,7 @@
                   <h3 class="menu-item-name">Sizzling Pork Chop</h3>
                   <p class="menu-item-desc">Juicy chop with a sizzling sauce.</p>
                 </div>
-                <div class="menu-item-price">₱---</div>
+                <div class="menu-item-price">₱250</div>
               </article>
 
               <article class="menu-item">
@@ -643,7 +639,7 @@
                   <h3 class="menu-item-name">Achara</h3>
                   <p class="menu-item-desc">House-made pickled papaya, light and refreshing.</p>
                 </div>
-                <div class="menu-item-price">₱80</div>
+                <div class="menu-item-price">₱</div>
               </article>
 
               <article class="menu-item">
@@ -651,7 +647,7 @@
                   <h3 class="menu-item-name">Banana Cake</h3>
                   <p class="menu-item-desc">Moist banana loaf with a hint of spice.</p>
                 </div>
-                <div class="menu-item-price">₱65</div>
+                <div class="menu-item-price">₱</div>
               </article>
 
               <article class="menu-item">
@@ -668,6 +664,22 @@
                   <p class="menu-item-desc">Steamed rice cakes topped with cheese.</p>
                 </div>
                 <div class="menu-item-price">₱50</div>
+              </article>
+
+              <article class="menu-item">
+                <div>
+                  <h3 class="menu-item-name">Banana Pudding</h3>
+                  <p class="menu-item-desc">Creamy layered banana pudding with vanilla wafers.</p>
+                </div>
+                <div class="menu-item-price">₱160</div>
+              </article>
+
+              <article class="menu-item">
+                <div>
+                  <h3 class="menu-item-name">Peach Cobbler</h3>
+                  <p class="menu-item-desc">Warm peach filling with a golden baked topping.</p>
+                </div>
+                <div class="menu-item-price">₱180</div>
               </article>
             </div>
           </section>
@@ -859,23 +871,20 @@
       <div class="footer-inner">
         <div class="footer-grid">
           <div class="footer-col">
-            <h3 class="footer-heading">Opening Hours</h3>
-            <p class="footer-text">HAPPY HOUR FROM 2PM-5PM</p>
-          </div>
-          <div class="footer-col">
             <h3 class="footer-heading">For Reservations</h3>
             <ul class="footer-list">
-              <li><a href="tel:09774696618">0977 469 6618</a></li>
+              <li><a href="tel:09675867197">0967 586 7197</a></li>
               <li><a href="tel:09776564225">0977 654 4225</a></li>
-              <li><a href="mailto:admin@smokeypeeks-ph.com">admin@smokeypeeks-ph.com</a></li>
+              <li><a href="mailto:smokeypeekscebu@gmail.com">smokeypeekscebu@gmail.com</a></li>
             </ul>
           </div>
           <div class="footer-col">
             <h3 class="footer-heading">Follow Us</h3>
             <p class="footer-text">Events, promos &amp; daily specials.</p>
             <div class="footer-social">
-              <a href="#" class="footer-social-link" aria-label="Facebook">Facebook</a>
-              <a href="#" class="footer-social-link" aria-label="Instagram">Instagram</a>
+              <a href="https://www.facebook.com/profile.php?id=61590074791560" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Smokey Peeks on Facebook">Facebook</a>
+              <a href="https://www.instagram.com/smokeypeekscebu?igsh=MnNubjdmaGJ3czI4" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Smokey Peeks on Instagram">Instagram</a>
+              <a href="https://www.tiktok.com/@smokey.peeks?_r=1&amp;_t=ZS-96p13wJxZwO" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Smokey Peeks on TikTok">TikTok</a>
             </div>
           </div>
         </div>
@@ -883,6 +892,15 @@
           <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. All rights reserved.</p>
         </div>
       </div>
+      <script>
+        (function () {
+          document.querySelectorAll(".footer-col").forEach(function (col) {
+            var heading = col.querySelector(".footer-heading");
+            if (!heading) return;
+            if (/opening hours/i.test(heading.textContent.trim())) col.remove();
+          });
+        })();
+      </script>
     </footer>
 
     <script>

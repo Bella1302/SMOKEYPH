@@ -1,0 +1,6 @@
+# Render deployment config - set Root Directory to SMOKEYPH in Dashboard if repo root is parent folder
+services:
+  - type: web
+    runtime: python
+    buildCommand: "bash build.sh"
+    startCommand: "gunicorn smokey_peeks.wsgi --bind 0.0.0.0:$PORT"

@@ -1,0 +1,57 @@
+<footer class="site-footer">
+  <div class="footer-accent"></div>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3 class="footer-heading" data-i18n="for_reservations">For Reservations</h3>
+        <ul class="footer-list">
+          <li><a href="tel:09675867197">0967 586 7197</a></li>
+          <li><a href="tel:09776564225">0977 654 4225</a></li>
+          <li><a href="mailto:smokeypeekscebu@gmail.com">smokeypeekscebu@gmail.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
+        <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/profile.php?id=61590074791560" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Smokey Peeks on Facebook">Facebook</a>
+          <a href="https://www.instagram.com/smokeypeekscebu?igsh=MnNubjdmaGJ3czI4" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Smokey Peeks on Instagram">Instagram</a>
+          <a href="https://www.tiktok.com/@smokey.peeks?_r=1&amp;_t=ZS-96p13wJxZwO" class="footer-social-link" target="_blank" rel="noopener noreferrer" aria-label="Smokey Peeks on TikTok">TikTok</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. <span data-i18n="rights_reserved">All rights reserved.</span></p>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var removed = 0;
+      document.querySelectorAll(".footer-col").forEach(function (col) {
+        var heading = col.querySelector(".footer-heading");
+        if (!heading) return;
+        var text = heading.textContent.trim();
+        var key = heading.getAttribute("data-i18n");
+        if (key === "opening_hours" || /opening hours/i.test(text)) {
+          col.remove();
+          removed += 1;
+        }
+      });
+      // #region agent log
+      fetch("http://127.0.0.1:7802/ingest/7c033e1e-1fc3-4f03-b161-8093971f88b7", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "5f4cf6" },
+        body: JSON.stringify({
+          sessionId: "5f4cf6",
+          runId: "footer-cleanup",
+          hypothesisId: "A",
+          location: "_footer.html:cleanup",
+          message: "footer opening-hours cleanup",
+          data: { removedCols: removed, footerCols: document.querySelectorAll(".footer-col").length },
+          timestamp: Date.now(),
+        }),
+      }).catch(function () {});
+      // #endregion
+    })();
+  </script>
+</footer>

@@ -5,31 +5,93 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smokey Peeks - Homepage</title>
-    <link rel="stylesheet" href="{% static 'main/css/homepage.css' %}" />
+    <link rel="icon" type="image/png" href="{% static 'main/img/logoload.png' %}" />
+    <link rel="shortcut icon" href="{% static 'main/img/logoload.png' %}" />
+    <link rel="apple-touch-icon" href="{% static 'main/img/logoload.png' %}" />
+    <link rel="stylesheet" href="{% static 'main/css/homepage.css' %}?v=20260623" />
+    <style>
+      body.page-loading {
+        overflow: hidden;
+      }
+
+      body.page-loading > *:not(#page-loader) {
+        filter: blur(16px);
+        pointer-events: none;
+        user-select: none;
+      }
+
+      #page-loader.page-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      #page-loader .page-loader-logo {
+        display: block;
+        width: 300px !important;
+        height: 300px !important;
+        max-width: 300px !important;
+        max-height: 300px !important;
+        object-fit: contain;
+        mix-blend-mode: screen;
+        animation: loader-logo-pulse 1.1s ease-in-out infinite;
+      }
+
+      @keyframes loader-logo-pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+
+        14% {
+          transform: scale(1.18);
+        }
+
+        28% {
+          transform: scale(1);
+        }
+
+        42% {
+          transform: scale(1.1);
+        }
+
+        70% {
+          transform: scale(1);
+        }
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Shadows+Into+Light&display=swap"
       rel="stylesheet"
     />
+    <script src="{% static 'main/js/i18n.js' %}?v=2"></script>
   </head>
-  <body>
+  <body class="page-loading">
+    {% include 'main/_loader.html' %}
     {% include 'main/_nav.html' %}
 
     <main>
-      <section class="hero" id="home">
+      <section
+        class="hero"
+        id="home"
+        style="background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.65)), url('{% static "main/img/coverphoto.png" %}');"
+      >
         <div class="hero-overlay"></div>
         <div class="hero-content">
           <div class="hero-seasonal" aria-hidden="true"><span class="hero-icon">☀</span><span class="hero-icon">⛱</span></div>
-          <p class="hero-kicker">Welcome to</p>
+          <p class="hero-kicker" data-i18n="welcome">Welcome to</p>
           <h1 class="hero-title">Smokey Peeks</h1>
-          <p class="hero-subtitle">
-            where the bold flavors of Chicago-style BBQ
-            <br />
-            meet the laid-back island vibes of Cebu.
-          </p>
+          <p class="hero-subtitle" data-i18n-html="hero_subtitle">where the bold flavors of Chicago-style BBQ<br>meet the laid-back island vibes of Cebu.</p>
           <div class="hero-actions">
-            <a href="{% url 'main:reservation' %}#event-reservation" class="btn btn-primary">Reserve a table</a>
+            <a href="{% url 'main:reservation' %}#event-reservation" class="btn btn-primary" data-i18n="reserve_table">Reserve a table</a>
           </div>
         </div>
       </section>
@@ -56,19 +118,19 @@
                 <div class="experience-image-wrapper">
                   <img src="{% static 'main/img/sing.png' %}" alt="Live music" />
                 </div>
-                <div class="experience-label">Live Music</div>
+                <div class="experience-label" data-i18n="live_music">Live Music</div>
               </a>
               <a href="{% url 'main:events' %}" class="experience-card">
                 <div class="experience-image-wrapper">
                   <img src="{% static 'main/img/pool.jpg' %}" alt="Live sports" />
                 </div>
-                <div class="experience-label">Billards</div>
+                <div class="experience-label" data-i18n="billards">Billards</div>
               </a>
               <a href="{% url 'main:menu' %}" class="experience-card">
                 <div class="experience-image-wrapper">
                   <img src="{% static 'main/img/bbq.png' %}" alt="BBQ and beer" />
                 </div>
-                <div class="experience-label">BBQ &amp; Beer</div>
+                <div class="experience-label" data-i18n="bbq_beer">BBQ &amp; Beer</div>
               </a>
               <a href="{% url 'main:events' %}" class="experience-card merch-card">
                 <div class="experience-image-wrapper">
@@ -77,7 +139,7 @@
                     alt="Smokey Peeks ball cap merchandise"
                   />
                 </div>
-                <div class="experience-label">Merch</div>
+                <div class="experience-label" data-i18n="merch">Merch</div>
               </a>
             </div>
           </div>
@@ -101,8 +163,8 @@
             </div>
           </div>
           <div class="dine-in-text">
-            <p class="dine-in-kicker">Dine in now!</p>
-            <p class="dine-in-copy">
+            <p class="dine-in-kicker" data-i18n="dine_now">Dine in now!</p>
+            <p class="dine-in-copy" data-i18n="dine_copy">
               Experience a delicious dining adventure at our restobar, where
               great food, live music, and thrilling live sports come together
               for the perfect night out.
@@ -114,40 +176,29 @@
       <section class="celebrate-banner" id="celebrate">
         <div class="celebrate-inner">
           <header class="celebrate-header">
-            <h2>Celebrate Your Special Moments With Us</h2>
-            <p class="celebrate-subtitle">
+            <h2 data-i18n="celebrate_title">Celebrate Your Special Moments With Us</h2>
+            <p class="celebrate-subtitle" data-i18n="celebrate_sub">
               Birthdays · Anniversaries · Corporate Events · Private Parties
             </p>
             <div class="celebrate-ribbon">
-              <span class="celebrate-ribbon-label">Birthday Special:</span>
-              <span class="celebrate-ribbon-text">
+              <span class="celebrate-ribbon-label" data-i18n="birthday_label">Birthday Special:</span>
+              <span class="celebrate-ribbon-text" data-i18n="birthday_text">
                 Get discounted on your total bill when you celebrate with us!
               </span>
             </div>
           </header>
 
           <div class="celebrate-body">
-            <div class="celebrate-left">
-              <div class="celebrate-photo-frame">
-                <img
-                  src="{% static 'main/img/ok.jpg' %}"
-                  alt="BBQ feast and celebration spread"
-                />
-              </div>
-              <div class="celebrate-text-panel">
-                <h3>Make It Unforgettable</h3>
-                <ul>
-                  <li>Reserved Party Area</li>
-                  <li>Customized Decoration</li>
-                  <li>Special BBQ Platters</li>
-                  <li>Live Music &amp; Entertainment</li>
-                  <li>Complimentary Birthday Dessert</li>
-                </ul>
-              </div>
+            <div class="celebrate-left celebrate-left-banner">
+              <img
+                class="celebrate-banner-image"
+                src="{% static 'main/img/birthday-banner.png' %}?v=2"
+                alt="Birthdays Made Special at Smokey Peeks American BBQ"
+              />
             </div>
 
             <div class="celebrate-right">
-              <a href="{% url 'main:reservation' %}#event-reservation" class="celebrate-button">
+              <a href="{% url 'main:reservation' %}#event-reservation" class="celebrate-button" data-i18n="book_reservation">
                 Book Reservation
               </a>
             </div>
@@ -158,32 +209,115 @@
       <section class="menu-gallery" id="menu" aria-label="Featured menu items">
         <div class="menu-inner">
           <header class="menu-header">
-            <h2 class="menu-title">Menu's</h2>
+            <h2 class="menu-title" data-i18n="menus_title">Menu's</h2>
           </header>
 
-          <div class="menu-grid">
-            <div class="menu-card">
-              <img src="{% static 'main/img/menu7.png' %}" alt="Menu item 1" />
+          <div class="menu-carousel" aria-roledescription="carousel">
+            <div class="menu-carousel-shell">
+              <button
+                class="menu-carousel-btn prev"
+                type="button"
+                aria-label="Previous menu items"
+              >
+                ‹
+              </button>
+              <div class="menu-carousel-viewport">
+                <div class="menu-carousel-track" id="menu-carousel-track">
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/bananapud.png' %}" alt="Banana Pudding" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/peachcub.png' %}" alt="Peach Cobbler" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Smokey Brisket.png' %}" alt="Smoked Brisket" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Beef BBQ Ribs.png' %}" alt="Beef BBQ Ribs" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Rib Eye Steak.png' %}" alt="Rib-eye Steak" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Deep Dish Pizza.png' %}" alt="Deep-Dish Pizza" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Ox Tails.png' %}" alt="Beef Ox Tails in Kare" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Angus.png' %}" alt="Chicago Angus" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Italian Beef Sandwich.png' %}" alt="Italian Beef Sandwich" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Beef Link.jpg' %}" alt="Beef Link" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Beef Steak Sandwich.jpg' %}" alt="Beef Steak Sandwich" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Mac and Cheese.png' %}" alt="Mac and Cheese" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Baked Beans.png' %}" alt="Baked Beans" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Baked cornbread.png' %}" alt="Baked Cornbread" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Loaded Baked Potateo.png' %}" alt="Loaded Baked Potato" />
+                    </div>
+                  </div>
+                  <div class="menu-card">
+                    <div class="menu-card-image">
+                      <img src="{% static 'main/img/ILCorso_newMenu/Southern style Potateo Salad.png' %}" alt="Southern Style Potato Salad" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="menu-carousel-btn next"
+                type="button"
+                aria-label="Next menu items"
+              >
+                ›
+              </button>
             </div>
-            <div class="menu-card">
-              <img src="{% static 'main/img/menu2.JPG' %}" alt="Menu item 2" />
-            </div>
-            <div class="menu-card">
-              <img src="{% static 'main/img/menu3.PNG' %}" alt="Menu item 3" />
-            </div>
-            <div class="menu-card">
-              <img src="{% static 'main/img/menu4.png' %}" alt="Menu item 4" />
-            </div>
-            <div class="menu-card">
-              <img src="{% static 'main/img/menu5.jpg' %}" alt="Menu item 5" />
-            </div>
-            <div class="menu-card">
-              <img src="{% static 'main/img/menu6.png' %}" alt="Menu item 6" />
-            </div>
+            <div class="menu-carousel-dots" id="menu-carousel-dots" role="tablist" aria-label="Menu slides"></div>
           </div>
 
           <div class="menu-actions">
-            <a href="{% url 'main:menu' %}" class="menu-more-button">See more</a>
+            <a href="{% url 'main:menu' %}?branch=ilcorso" class="menu-more-button" data-i18n="see_more">See more</a>
           </div>
         </div>
       </section>
@@ -191,60 +325,51 @@
       <section class="reviews-section" id="reviews" aria-label="Customer reviews">
         <div class="reviews-inner">
           <header class="reviews-header">
-            <h2 class="reviews-title">Customer Reviews</h2>
+            <h2 class="reviews-title" data-i18n="reviews_title">Customer Reviews</h2>
             <div class="reviews-stars">
               <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
             </div>
           </header>
 
           <div class="reviews-grid">
-            <article class="review-card">
-              <p>
-                "Smokey Peeks is our go-to spot for weekend nights. Amazing BBQ,
-                cold drinks, and the vibe is always on point."
-              </p>
-              <span class="review-name">– Alex M.</span>
-            </article>
-            <article class="review-card">
-              <p>
-                "We celebrated my birthday here and the team made everything
-                feel special. Great service and live music!"
-              </p>
-              <span class="review-name">– Jamie R.</span>
-            </article>
-            <article class="review-card">
-              <p>
-                "Love the Chicago-style flavors with Cebu vibes. Highly
-                recommend the brisket and signature cocktails."
-              </p>
-              <span class="review-name">– Carlo S.</span>
-            </article>
+            {% if reviews %}
+              {% for review in reviews %}
+                <article class="review-card">
+                  <p>"{{ review.comment }}"</p>
+                  <span class="review-name">- {{ review.email|cut:"@gmail.com" }}</span>
+                  <time class="review-time">{{ review.created_at|date:"M d, Y h:i A" }}</time>
+                </article>
+              {% endfor %}
+            {% endif %}
           </div>
 
           <div class="review-form-wrapper">
-            <h3>Share your experience</h3>
-            <form class="review-form">
+            <h3 data-i18n="share_experience">Share your experience</h3>
+            <form class="review-form" id="review-form" method="post" action="{% url 'main:submit_review' %}">
+              {% csrf_token %}
               <div class="form-row">
-                <label for="review-email">Email</label>
+                <label for="review-email" data-i18n="email">Email</label>
                 <input
                   type="email"
                   id="review-email"
                   name="email"
                   placeholder="you@example.com"
+                  data-i18n-placeholder="email_placeholder"
                   required
                 />
               </div>
               <div class="form-row">
-                <label for="review-comment">Comment</label>
+                <label for="review-comment" data-i18n="comment">Comment</label>
                 <textarea
                   id="review-comment"
                   name="comment"
                   rows="3"
                   placeholder="Tell us what you loved…"
+                  data-i18n-placeholder="comment_placeholder"
                   required
                 ></textarea>
               </div>
-              <button type="submit" class="btn review-submit">Submit review</button>
+              <button type="submit" class="btn review-submit" data-i18n="submit_review">Submit review</button>
             </form>
           </div>
         </div>
@@ -257,56 +382,29 @@
       >
         <div class="find-inner">
           <div class="find-text">
-            <h2>Where to find Smokey Peeks?</h2>
+            <h2 data-i18n="find_title">Where to find Smokey Peeks?</h2>
           </div>
           <div class="find-right">
             <div class="find-marker">
               <div class="find-marker-pin"></div>
             </div>
-            <a href="{% url 'main:location' %}" class="find-branches-button">Branches</a>
+            <a href="{% url 'main:location' %}" class="find-branches-button" data-i18n="branches">Branches</a>
           </div>
         </div>
       </section>
 
-      <footer class="site-footer">
-        <div class="footer-accent"></div>
-        <div class="footer-inner">
-          <div class="footer-grid">
-            <div class="footer-col">
-              <h3 class="footer-heading">Opening Hours</h3>
-              <p class="footer-text">HAPPY HOUR FROM 2PM-5PM</p>
-            </div>
-            <div class="footer-col">
-              <h3 class="footer-heading">For Reservations</h3>
-              <ul class="footer-list">
-                <li><a href="tel:09774696618">0977 469 6618</a></li>
-                <li><a href="tel:09776564225">0977 654 4225</a></li>
-                <li><a href="mailto:admin@smokeypeeks-ph.com">admin@smokeypeeks-ph.com</a></li>
-              </ul>
-            </div>
-            <div class="footer-col">
-              <h3 class="footer-heading">Follow Us</h3>
-              <p class="footer-text">Events, promos &amp; daily specials.</p>
-              <div class="footer-social">
-                <a href="#" class="footer-social-link" aria-label="Facebook">Facebook</a>
-                <a href="#" class="footer-social-link" aria-label="Instagram">Instagram</a>
-              </div>
-            </div>
-          </div>
-          <div class="footer-bottom">
-            <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </main>
+    {% include 'main/_footer.html' %}
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
       const navToggle = document.querySelector(".nav-toggle");
       const navLinks = document.querySelector(".nav-links");
-      navToggle.addEventListener("click", () => {
-        navLinks.classList.toggle("nav-open");
-        navToggle.classList.toggle("nav-open");
-      });
+      if (navToggle && navLinks) {
+        navToggle.addEventListener("click", () => {
+          navLinks.classList.toggle("nav-open");
+          navToggle.classList.toggle("nav-open");
+        });
+      }
       const experienceTrack = document.getElementById("experience-track");
       const prevBtn = document.querySelector(".experience-carousel-btn.prev");
       const nextBtn = document.querySelector(".experience-carousel-btn.next");
@@ -334,6 +432,145 @@
         window.addEventListener("resize", update);
         update();
       }
+
+      const menuTrack = document.getElementById("menu-carousel-track");
+      const menuDots = document.getElementById("menu-carousel-dots");
+      const menuPrevBtn = document.querySelector(".menu-carousel-btn.prev");
+      const menuNextBtn = document.querySelector(".menu-carousel-btn.next");
+      if (menuTrack && menuPrevBtn && menuNextBtn) {
+        const menuCards = Array.from(menuTrack.querySelectorAll(".menu-card"));
+        const menuViewport = menuTrack.parentElement;
+        let menuIndex = 0;
+        let menuVisibleCount = 3;
+        let menuTouchStartX = 0;
+
+        const getMenuVisibleCount = () => {
+          if (window.innerWidth <= 720) return 1;
+          if (window.innerWidth <= 900) return 2;
+          return 3;
+        };
+
+        const getMenuStep = () => {
+          const first = menuCards[0];
+          if (!first) return 0;
+          const gap = parseFloat(getComputedStyle(menuTrack).gap) || 0;
+          return first.getBoundingClientRect().width + gap;
+        };
+
+        const getMenuMaxIndex = () => Math.max(0, menuCards.length - menuVisibleCount);
+
+        const setMenuSlideSizes = () => {
+          menuVisibleCount = getMenuVisibleCount();
+          const gap = parseFloat(getComputedStyle(menuTrack).gap) || 0;
+          const slideWidth =
+            (menuViewport.clientWidth - gap * (menuVisibleCount - 1)) / menuVisibleCount;
+          menuTrack.style.setProperty("--menu-slide-width", `${slideWidth}px`);
+        };
+
+        const buildMenuDots = () => {
+          if (!menuDots) return;
+          setMenuSlideSizes();
+          menuDots.innerHTML = "";
+          const pages = getMenuMaxIndex() + 1;
+          for (let i = 0; i < pages; i += 1) {
+            const dot = document.createElement("button");
+            dot.type = "button";
+            dot.className = "menu-carousel-dot";
+            dot.setAttribute("role", "tab");
+            dot.setAttribute("aria-label", `Go to menu slide ${i + 1}`);
+            dot.setAttribute("aria-selected", i === menuIndex ? "true" : "false");
+            dot.addEventListener("click", () => {
+              menuIndex = i;
+              updateMenuCarousel();
+            });
+            menuDots.appendChild(dot);
+          }
+        };
+
+        const updateMenuCarousel = () => {
+          setMenuSlideSizes();
+          if (menuIndex > getMenuMaxIndex()) menuIndex = getMenuMaxIndex();
+          const step = getMenuStep();
+          menuTrack.style.transform = `translateX(${-(step * menuIndex)}px)`;
+          menuPrevBtn.disabled = menuIndex <= 0;
+          menuNextBtn.disabled = menuIndex >= getMenuMaxIndex();
+          if (menuDots) {
+            menuDots.querySelectorAll(".menu-carousel-dot").forEach((dot, i) => {
+              const isActive = i === menuIndex;
+              dot.classList.toggle("is-active", isActive);
+              dot.setAttribute("aria-selected", isActive ? "true" : "false");
+            });
+          }
+        };
+
+        menuPrevBtn.addEventListener("click", () => {
+          menuIndex = Math.max(0, menuIndex - 1);
+          updateMenuCarousel();
+        });
+        menuNextBtn.addEventListener("click", () => {
+          menuIndex = Math.min(getMenuMaxIndex(), menuIndex + 1);
+          updateMenuCarousel();
+        });
+
+        menuTrack.addEventListener(
+          "touchstart",
+          (event) => {
+            menuTouchStartX = event.touches[0].clientX;
+          },
+          { passive: true }
+        );
+        menuTrack.addEventListener(
+          "touchend",
+          (event) => {
+            const diff = menuTouchStartX - event.changedTouches[0].clientX;
+            if (Math.abs(diff) < 40) return;
+            if (diff > 0) menuIndex = Math.min(getMenuMaxIndex(), menuIndex + 1);
+            else menuIndex = Math.max(0, menuIndex - 1);
+            updateMenuCarousel();
+          },
+          { passive: true }
+        );
+
+        window.addEventListener("resize", () => {
+          buildMenuDots();
+          updateMenuCarousel();
+        });
+
+        buildMenuDots();
+        updateMenuCarousel();
+      }
+
+      const reviewForm = document.getElementById("review-form");
+      const reviewsGrid = document.querySelector(".reviews-grid");
+      if (reviewForm && reviewsGrid) {
+        reviewForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const formData = new FormData(reviewForm);
+          const submitButton = reviewForm.querySelector("button[type='submit']");
+          if (submitButton) submitButton.disabled = true;
+
+          try {
+            const response = await fetch(reviewForm.action, {
+              method: "POST",
+              body: formData,
+            });
+            const result = await response.json();
+            if (!response.ok || !result.ok) {
+              throw new Error(result.error || "Unable to submit review.");
+            }
+
+            if (result.pending && result.message) {
+              alert(result.message);
+            }
+            reviewForm.reset();
+          } catch (error) {
+            alert(error.message || "Unable to submit review right now.");
+          } finally {
+            if (submitButton) submitButton.disabled = false;
+          }
+        });
+      }
     </script>
+    <script src="{% static 'main/js/loader.js' %}"></script>
   </body>
 </html>

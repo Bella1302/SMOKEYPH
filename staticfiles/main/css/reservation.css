@@ -1,0 +1,225 @@
+@charset "UTF-8";
+
+.messages {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+.messages li {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm, 6px);
+  margin-bottom: 0.5rem;
+}
+.messages .success { background: rgba(76, 175, 80, 0.2); color: #81c784; }
+.messages .error { background: rgba(244, 67, 54, 0.2); color: #e57373; }
+
+.events-main {
+  min-height: calc(100vh - 80px);
+  padding: 1rem 0 2.2rem;
+  background: radial-gradient(circle at top, #2a150b, #050607);
+}
+
+.events-hero {
+  position: relative;
+  max-width: 1120px;
+  margin: 0 auto 1.4rem;
+  padding: 1.6rem 1.9rem 1.7rem;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.75);
+  background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.86)
+    ),
+    url("../img/cover.png");
+  background-size: cover;
+  background-position: center bottom;
+}
+
+.events-hero-inner {
+  position: relative;
+  max-width: 520px;
+  color: var(--text);
+}
+
+.events-hero-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 0.8rem;
+  margin: 0 0 0.4rem;
+  color: #f5e0b3;
+}
+
+.events-hero-title {
+  margin: 0 0 0.45rem;
+  font-size: clamp(1.9rem, 3vw, 2.4rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f2b46a;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.events-hero-subtitle {
+  margin: 0 0 1.1rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.events-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.events-reservation {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.events-reservation-inner {
+  background: #111;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.8);
+  padding: 2.1rem 2rem 2.3rem;
+}
+
+.events-reservation-header {
+  text-align: center;
+  margin-bottom: 1.7rem;
+}
+
+.events-reservation-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.4rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.events-reservation-subtitle {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.reservation-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.5rem;
+}
+
+.reservation-form-full {
+  grid-column: 1 / -1;
+}
+
+.reservation-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.reservation-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-muted);
+}
+
+.reservation-input,
+.reservation-select,
+.reservation-textarea {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #181818;
+  color: var(--text);
+  padding: 0.6rem 0.9rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.reservation-textarea {
+  border-radius: 14px;
+  min-height: 90px;
+  resize: vertical;
+}
+
+.reservation-input:focus,
+.reservation-select:focus,
+.reservation-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.reservation-location-notice {
+  margin: 0.4rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.reservation-guests-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reservation-guests-input {
+  width: 80px;
+  text-align: center;
+}
+
+.events-reservation-actions {
+  margin-top: 1.7rem;
+  text-align: center;
+}
+
+.events-reservation-actions .btn-primary {
+  padding-inline: 2.6rem;
+}
+
+/* Highlight current page in nav */
+.nav-links .nav-current {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .events-hero {
+    margin-inline: 1.2rem;
+    padding: 2.1rem 1.6rem 2rem;
+  }
+
+  .events-reservation {
+    padding-inline: 1.2rem;
+  }
+
+  .events-reservation-inner {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .events-main {
+    padding-top: 1.2rem;
+  }
+
+  .events-hero {
+    margin-inline: 1.1rem;
+    padding: 1.9rem 1.4rem 1.9rem;
+  }
+
+  .events-reservation {
+    padding-inline: 1.1rem;
+  }
+
+  .events-reservation-inner {
+    padding: 1.7rem 1.3rem 2rem;
+  }
+
+  .reservation-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

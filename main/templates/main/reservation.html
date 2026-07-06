@@ -13,6 +13,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Shadows+Into+Light&display=swap"
       rel="stylesheet"
     />
+    <script src="{% static 'main/js/i18n.js' %}?v=2"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
@@ -21,9 +22,9 @@
     <main class="events-main">
       <section class="events-hero" aria-label="Reserve your table">
         <div class="events-hero-inner">
-          <p class="events-hero-kicker">Reserve your table today</p>
-          <h1 class="events-hero-title">Experience Authentic BBQ &amp; Unforgettable Dining</h1>
-          <p class="events-hero-subtitle">
+          <p class="events-hero-kicker" data-i18n="reserve_title">Reserve your table today</p>
+          <h1 class="events-hero-title" data-i18n="reserve_hero">Experience Authentic BBQ &amp; Unforgettable Dining</h1>
+          <p class="events-hero-subtitle" data-i18n="reserve_sub">
             Perfect for birthdays, barkada nights, corporate gatherings, and special celebrations.
             Book your table and we’ll take care of the rest.
           </p>
@@ -46,8 +47,8 @@
           </ul>
           {% endif %}
           <header class="events-reservation-header">
-            <h2 class="events-reservation-title">Book Your Reservation</h2>
-            <p class="events-reservation-subtitle">
+            <h2 class="events-reservation-title" data-i18n="book_reservation_title">Book Your Reservation</h2>
+            <p class="events-reservation-subtitle" data-i18n="book_reservation_sub">
               Tell us the details of your event and we’ll confirm your reservation.
             </p>
           </header>
@@ -56,16 +57,14 @@
             {% csrf_token %}
             <div class="reservation-form-grid">
               <div class="reservation-field">
-                <label for="event-location" class="reservation-label">Location</label>
+                <label for="event-location" class="reservation-label" data-i18n="loc_label">Location</label>
                 <select id="event-location" name="location" class="reservation-select" required>
-                  <option value="onepav" selected>One Pavilion Mall</option>
-                  <option value="ilcorso" disabled>Il Corso South Food Park (Opens May 15)</option>
+                  <option value="ilcorso" selected>Il Corso South Food Park</option>
                 </select>
-                <p class="reservation-location-notice">Il Corso South Food Park opens May 15. Reservations there will be available soon.</p>
               </div>
 
               <div class="reservation-field">
-                <label for="event-date" class="reservation-label">Date</label>
+                <label for="event-date" class="reservation-label" data-i18n="date_label">Date</label>
                 <input
                   type="date"
                   id="event-date"
@@ -76,7 +75,7 @@
               </div>
 
               <div class="reservation-field">
-                <label for="event-time" class="reservation-label">Time</label>
+                <label for="event-time" class="reservation-label" data-i18n="time_label">Time</label>
                 <input
                   type="time"
                   id="event-time"
@@ -87,7 +86,7 @@
               </div>
 
               <div class="reservation-field">
-                <label for="event-guests" class="reservation-label">Number of Guests</label>
+                <label for="event-guests" class="reservation-label" data-i18n="guests_label">Number of Guests</label>
                 <div class="reservation-guests-row">
                   <input
                     type="number"
@@ -101,19 +100,20 @@
               </div>
 
               <div class="reservation-field reservation-form-full">
-                <label for="event-name" class="reservation-label">Reservation Name</label>
+                <label for="event-name" class="reservation-label" data-i18n="name_label">Reservation Name</label>
                 <input
                   type="text"
                   id="event-name"
                   name="name"
                   placeholder="Full name"
+                  data-i18n-placeholder="name_placeholder"
                   class="reservation-input"
                   required
                 />
               </div>
 
               <div class="reservation-field">
-                <label for="event-email" class="reservation-label">Email Address</label>
+                <label for="event-email" class="reservation-label" data-i18n="email_label">Email Address</label>
                 <input
                   type="email"
                   id="event-email"
@@ -125,7 +125,7 @@
               </div>
 
               <div class="reservation-field">
-                <label for="event-phone" class="reservation-label">Phone Number</label>
+                <label for="event-phone" class="reservation-label" data-i18n="phone_label">Phone Number</label>
                 <input
                   type="tel"
                   id="event-phone"
@@ -137,18 +137,19 @@
               </div>
 
               <div class="reservation-field reservation-form-full">
-                <label for="event-notes" class="reservation-label">Special Request (Optional)</label>
+                <label for="event-notes" class="reservation-label" data-i18n="notes_label">Special Request (Optional)</label>
                 <textarea
                   id="event-notes"
                   name="notes"
                   class="reservation-textarea"
                   placeholder="Occasion, preferred setup, or special requests"
+                  data-i18n-placeholder="notes_placeholder"
                 ></textarea>
               </div>
             </div>
 
             <div class="events-reservation-actions">
-              <button type="submit" class="btn btn-primary">
+              <button type="submit" class="btn btn-primary" data-i18n="submit_reservation">
                 Submit Reservation
               </button>
             </div>
@@ -157,36 +158,7 @@
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-accent"></div>
-      <div class="footer-inner">
-        <div class="footer-grid">
-          <div class="footer-col">
-            <h3 class="footer-heading">Opening Hours</h3>
-            <p class="footer-text">HAPPY HOUR FROM 2PM-5PM</p>
-          </div>
-          <div class="footer-col">
-            <h3 class="footer-heading">For Reservations</h3>
-            <ul class="footer-list">
-              <li><a href="tel:09774696618">0977 469 6618</a></li>
-              <li><a href="tel:09776564225">0977 654 4225</a></li>
-              <li><a href="mailto:admin@smokeypeeks-ph.com">admin@smokeypeeks-ph.com</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h3 class="footer-heading">Follow Us</h3>
-            <p class="footer-text">Events, promos &amp; daily specials.</p>
-            <div class="footer-social">
-              <a href="#" class="footer-social-link" aria-label="Facebook">Facebook</a>
-              <a href="#" class="footer-social-link" aria-label="Instagram">Instagram</a>
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
+    {% include 'main/_footer.html' %}
 
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();

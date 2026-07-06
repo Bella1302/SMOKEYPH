@@ -13,6 +13,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Shadows+Into+Light&display=swap"
       rel="stylesheet"
     />
+    <script src="{% static 'main/js/i18n.js' %}?v=2"></script>
   </head>
   <body>
         {% include 'main/_nav.html' %}
@@ -21,153 +22,83 @@
       <section class="events-hero" aria-label="Events and special promotions">
         <div class="events-hero-overlay"></div>
         <div class="events-hero-inner">
-          <p class="events-hero-kicker">Events &amp; Special Promotions</p>
-          <h1 class="events-hero-title">Live Music, Happy Hour &amp; Private Events</h1>
-          <p class="events-hero-subtitle">
+          <p class="events-hero-kicker" data-i18n="events_promos_title">Events &amp; Special Promotions</p>
+          <h1 class="events-hero-title" data-i18n="events_hero">Live Music, Happy Hour &amp; Private Events</h1>
+          <p class="events-hero-subtitle" data-i18n="events_sub">
             Catch upcoming live bands, themed nights, and exclusive Smokey Peeks promos.
           </p>
         </div>
       </section>
 
-      <section class="events-list" aria-label="Upcoming live bands">
+      <section class="events-list" aria-label="Live bands">
         <header class="events-list-header">
           <div class="events-divider"></div>
-          <h2 class="events-list-title">Upcoming Live Bands</h2>
+          <h2 class="events-list-title" data-i18n="upcoming_bands">Live Bands</h2>
           <div class="events-divider"></div>
         </header>
 
         <div class="events-cards">
           <article class="event-card">
             <div class="event-card-image">
-              <img src="{% static 'main/img/sing.png' %}" alt="Band performing live on stage" />
+              <img src="{% static 'main/img/inandout.jpg' %}" alt="Out &amp; Out duo live at Smokey Peeks" />
             </div>
             <div class="event-card-body">
-              <h3 class="event-name">The Midnight Riders</h3>
+              <h3 class="event-name">Out &amp; Out duo</h3>
               <p class="event-meta">
-                Date: March 15, 2026 &nbsp;&nbsp; Time: 8:00 PM<br />
-                Genre: Rock / Blues
-              </p>
-              <p class="event-description">
-                A high-energy set of rock and blues classics that will keep the crowd singing all night.
+                Time: 7:00 PM<br />
+                Thursday
               </p>
             </div>
             <div class="event-card-actions">
-              <a href="{% url 'main:reservation' %}" class="event-reserve-btn">Reserve</a>
+              <a href="{% url 'main:reservation' %}" class="event-reserve-btn" data-i18n="reserve_btn">Reserve</a>
             </div>
           </article>
 
           <article class="event-card">
             <div class="event-card-image">
-              <img src="{% static 'main/img/sing.png' %}" alt="Band performing live on stage" />
+              <img src="{% static 'main/img/acon.png' %}" alt="AEON live at Smokey Peeks" />
             </div>
             <div class="event-card-body">
-              <h3 class="event-name">Sunset Groove</h3>
+              <h3 class="event-name">AEON</h3>
               <p class="event-meta">
-                Date: March 22, 2026 &nbsp;&nbsp; Time: 7:30 PM<br />
-                Genre: Acoustic / Pop
-              </p>
-              <p class="event-description">
-                Chill acoustic vibes and crowd favorites, perfect for unwinding with BBQ and cold drinks.
+                Time: 10:00 PM – 1:00 AM<br />
+                Sundays
               </p>
             </div>
             <div class="event-card-actions">
-              <a href="{% url 'main:reservation' %}" class="event-reserve-btn">Reserve</a>
-            </div>
-          </article>
-
-          <article class="event-card">
-            <div class="event-card-image">
-              <img src="{% static 'main/img/sing.png' %}" alt="Band performing live on stage" />
-            </div>
-            <div class="event-card-body">
-              <h3 class="event-name">Island Rhythm Collective</h3>
-              <p class="event-meta">
-                Date: March 29, 2026 &nbsp;&nbsp; Time: 9:00 PM<br />
-                Genre: Reggae / Island Beats
-              </p>
-              <p class="event-description">
-                Feel-good reggae and island beats bringing Cebu’s tropical party energy to Smokey Peeks.
-              </p>
-            </div>
-            <div class="event-card-actions">
-              <a href="{% url 'main:reservation' %}" class="event-reserve-btn">Reserve</a>
+              <a href="{% url 'main:reservation' %}" class="event-reserve-btn" data-i18n="reserve_btn">Reserve</a>
             </div>
           </article>
         </div>
       </section>
 
-      <section class="promos-section" aria-label="Upcoming promos">
-        <header class="promos-header">
-          <div class="events-divider"></div>
-          <h2 class="promos-title">Upcoming Promos</h2>
-          <div class="events-divider"></div>
-        </header>
-
-        <article class="promo-card">
-          <div class="promo-tag">Happy Hour</div>
-          <h3 class="promo-heading">50% Off Drinks</h3>
-          <p class="promo-meta">
-            Location: One Pavilion Mall<br />
-            Time: 2:00 PM – 5:00 AM
-          </p>
-          <p class="promo-description">
-            Enjoy half-price cocktails, beers, and select spirits all night long when you celebrate
-            with your barkada at Smokey Peeks.
-          </p>
-        </article>
-
+      <section class="promos-section" aria-label="Merch">
         <div class="merch-section">
-          <h3 class="merch-heading">Smokey Peeks Merch</h3>
+          <h3 class="merch-heading" data-i18n="merch_heading">Smokey Peeks Merch</h3>
           <div class="merch-items">
+            <div class="merch-item merch-item-wide">
+              <img src="{% static 'main/img/merch/bbq-work-shirt.png' %}" alt="Smokey Peeks BBQ work shirt front and back" />
+              <p>BBQ Work Shirt - ₱3,000</p>
+            </div>
             <div class="merch-item">
               <img src="{% static 'main/img/merch/Shirt 3.jpeg' %}" alt="Smokey Peeks collar and polo shirts" />
-              <p>Collar shirt - $28.99</p>
-              <p>Polo shirt - $24.99</p>
+              <p>Collar shirt - ₱1,800</p>
             </div>
             <div class="merch-item">
               <img src="{% static 'main/img/merch/Tumbler.png' %}" alt="Smokey Peeks tumbler" />
-              <p>Tumbler - $14.00</p>
+              <p>Tumbler - ₱1,300</p>
             </div>
             <div class="merch-item">
               <img src="{% static 'main/img/merch/Ball Cap.jpeg' %}" alt="Smokey Peeks cap" />
-              <p>Cap - $18.99</p>
+              <p>Cap - ₱1,500</p>
             </div>
           </div>
-          <p class="merch-note">For your order, please call our contact number.</p>
+          <p class="merch-note" data-i18n="merch_note">For your order, please call our contact number.</p>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-accent"></div>
-      <div class="footer-inner">
-        <div class="footer-grid">
-          <div class="footer-col">
-            <h3 class="footer-heading">Opening Hours</h3>
-            <p class="footer-text">HAPPY HOUR FROM 2PM-5PM</p>
-          </div>
-          <div class="footer-col">
-            <h3 class="footer-heading">For Reservations</h3>
-            <ul class="footer-list">
-              <li><a href="tel:09774696618">0977 469 6618</a></li>
-              <li><a href="tel:09776564225">0977 654 4225</a></li>
-              <li><a href="mailto:admin@smokeypeeks-ph.com">admin@smokeypeeks-ph.com</a></li>
-            </ul>
-          </div>
-          <div class="footer-col">
-            <h3 class="footer-heading">Follow Us</h3>
-            <p class="footer-text">Events, promos &amp; daily specials.</p>
-            <div class="footer-social">
-              <a href="#" class="footer-social-link" aria-label="Facebook">Facebook</a>
-              <a href="#" class="footer-social-link" aria-label="Instagram">Instagram</a>
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
+    {% include 'main/_footer.html' %}
 
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();

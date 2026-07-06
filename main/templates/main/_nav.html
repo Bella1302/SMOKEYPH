@@ -3,16 +3,16 @@
 <header class="top-bar">
   <div class="top-bar-inner">
     <div class="top-bar-left">
-      <span class="top-bar-label">Contact us</span>
-      <span class="top-bar-phone">0977 469 6618 / 0977 654 4225</span>
+      <span class="top-bar-label" data-i18n="contact_us">Contact us</span>
+      <span class="top-bar-phone">0967 586 7197 / 0977 654 4225</span>
     </div>
     <div class="top-bar-right">
-      <span class="lang-label">Language:</span>
+      <span class="lang-label" data-i18n="language">Language:</span>
       <select class="lang-select" aria-label="Select language">
-        <option selected>English</option>
-        <option>Filipino</option>
-        <option>Korean</option>
-        <option>German</option>
+        <option value="English" selected>English</option>
+        <option value="Filipino">Filipino</option>
+        <option value="Korean">Korean</option>
+        <option value="German">German</option>
       </select>
     </div>
   </div>
@@ -21,10 +21,10 @@
 <nav class="main-nav">
   <div class="nav-inner">
     <a href="{% url 'main:logadmin' %}" class="brand" title="Admin login">
-      <img src="{% static 'main/img/logo no bg.png' %}" alt="Smokey Peeks logo" class="brand-logo" />
+      <img src="{% static 'main/img/logoload.png' %}" alt="Smokey Peeks logo" class="brand-logo" />
       <span class="brand-text">
         <span class="brand-name">Smokey Peeks</span>
-        <span class="brand-tagline">Smoke, Sizzle, and Sip the Night Away. </span>
+        <span class="brand-tagline" data-i18n="tagline">Smoke, Sizzle, and Sip the Night Away. </span>
       </span>
     </a>
 
@@ -34,6 +34,7 @@
     </button>
 
     <ul class="nav-links">
+<<<<<<< HEAD
       <li><a href="{% url 'main:home' %}" {% if request.resolver_match.url_name == 'home' %}class="nav-current"{% endif %}>Home</a></li>
       <li><a href="{% url 'main:feed' %}" {% if request.resolver_match.url_name == 'feed' %}class="nav-current"{% endif %}>Feed/Gallery</a></li>
       <li><a href="{% url 'main:menu' %}" {% if request.resolver_match.url_name == 'menu' %}class="nav-current"{% endif %}>Menu</a></li>
@@ -41,6 +42,15 @@
       <li><a href="{% url 'main:reservation' %}" {% if request.resolver_match.url_name == 'reservation' %}class="nav-current"{% endif %}>Reservations</a></li>
       <li><a href="{% url 'main:events' %}" {% if request.resolver_match.url_name == 'events' %}class="nav-current"{% endif %}>Promos &amp; Merch</a></li>
       <li><a href="{% url 'main:about' %}" {% if request.resolver_match.url_name == 'about' %}class="nav-current"{% endif %}>About Us</a></li>
+=======
+      <li><a href="{% url 'main:home' %}" {% if request.resolver_match.url_name == 'home' %}class="nav-current"{% endif %} data-i18n="home">Home</a></li>
+      <li><a href="{% url 'main:feed' %}" {% if request.resolver_match.url_name == 'feed' %}class="nav-current"{% endif %} data-i18n="feed">Feed</a></li>
+      <li><a href="{% url 'main:menu' %}" {% if request.resolver_match.url_name == 'menu' %}class="nav-current"{% endif %} data-i18n="menu">Menu</a></li>
+      <li><a href="{% url 'main:location' %}" {% if request.resolver_match.url_name == 'location' %}class="nav-current"{% endif %} data-i18n="location">Location</a></li>
+      <li><a href="{% url 'main:reservation' %}" {% if request.resolver_match.url_name == 'reservation' %}class="nav-current"{% endif %} data-i18n="reservations">Reservations</a></li>
+      <li><a href="{% url 'main:events' %}" {% if request.resolver_match.url_name == 'events' %}class="nav-current"{% endif %} data-i18n="promos_merch">Promos &amp; Merch</a></li>
+      <li><a href="{% url 'main:about' %}" {% if request.resolver_match.url_name == 'about' %}class="nav-current"{% endif %} data-i18n="about_us">About Us</a></li>
+>>>>>>> 6e55ad62e7796fcef245a89f1d0bbbd06ecd5a50
     </ul>
   </div>
 </nav>
