@@ -8,6 +8,10 @@ app_name = 'main'
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('feed/', views.feed, name='feed'),
+    path('feed/add/', views.feed_add_post, name='feed_add_post'),
+    path('feed/album/add/', views.feed_add_album, name='feed_add_album'),
+    path('feed/post/<int:pk>/like/', views.feed_like_post, name='feed_like_post'),
     path('menu/', views.menu, name='menu'),
     path('location/', views.location, name='location'),
     path('reservation/', views.reservation, name='reservation'),

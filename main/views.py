@@ -8,11 +8,79 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from .models import AdminActivity, Reservation
+from django.conf import settings
+from .models import AdminActivity, Album, AlbumPhoto, FeedPost, Reservation
 
 
 def home(request):
     return render(request, 'main/homepage.html')
+
+
+def feed(request):
+    posts = FeedPost.objects.all()
+    albums = Album.objects.prefetch_related("photos")
+    return render(request, "main/feed.html", {
+        "posts": posts,
+        "albums": albums,
+        "cloud_media_base_url": settings.CLOUD_MEDIA_BASE_URL,
+    })
+
+
+@require_POST
+def feed_add_post(request):
+    name = request.POST.get("author_name", "").strip()
+    content = request.POST.get("content", "").strip()
+    if not name or not content:
+        messages.error(request, "Please enter your name and message.")
+        return redirect("main:feed")
+    FeedPost.objects.create(
+        author_name=name,
+        author_initial=(name[:1] or "?").upper(),
+        content=content,
+    )
+    messages.success(request, "Your moment has been shared!")
+    return redirect("main:feed")
+
+
+@require_POST
+def feed_add_album(request):
+    title = request.POST.get("title", "").strip()
+    description = request.POST.get("description", "").strip()
+    cover_url = request.POST.get("cover_url", "").strip()
+    photo_urls_raw = request.POST.get("photo_urls", "").strip()
+
+    if not title:
+        messages.error(request, "Please enter an album title.")
+        return redirect("main:feed")
+
+    photo_urls = [u.strip() for u in photo_urls_raw.splitlines() if u.strip()]
+    if not photo_urls and not cover_url:
+        messages.error(request, "Add at least one cloud photo URL or a cover URL.")
+        return redirect("main:feed")
+
+    album = Album.objects.create(
+        title=title,
+        description=description,
+        cover_url=cover_url or (photo_urls[0] if photo_urls else ""),
+    )
+    for index, url in enumerate(photo_urls):
+        AlbumPhoto.objects.create(
+            album=album,
+            cloud_url=url,
+            sort_order=index,
+        )
+    messages.success(request, f'Album "{title}" has been added!')
+    return redirect("main:feed")
+
+
+@require_POST
+def feed_like_post(request, pk):
+    post = get_object_or_404(FeedPost, pk=pk)
+    post.likes += 1
+    post.save(update_fields=["likes"])
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return JsonResponse({"ok": True, "likes": post.likes})
+    return redirect("main:feed")
 
 
 def menu(request):

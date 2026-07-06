@@ -35,6 +35,7 @@
 
     <ul class="nav-links">
       <li><a href="{% url 'main:home' %}" {% if request.resolver_match.url_name == 'home' %}class="nav-current"{% endif %}>Home</a></li>
+      <li><a href="{% url 'main:feed' %}" {% if request.resolver_match.url_name == 'feed' %}class="nav-current"{% endif %}>Feed/Gallery</a></li>
       <li><a href="{% url 'main:menu' %}" {% if request.resolver_match.url_name == 'menu' %}class="nav-current"{% endif %}>Menu</a></li>
       <li><a href="{% url 'main:location' %}" {% if request.resolver_match.url_name == 'location' %}class="nav-current"{% endif %}>Location</a></li>
       <li><a href="{% url 'main:reservation' %}" {% if request.resolver_match.url_name == 'reservation' %}class="nav-current"{% endif %}>Reservations</a></li>

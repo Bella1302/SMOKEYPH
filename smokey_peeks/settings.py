@@ -75,6 +75,13 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# Base URL for cloud-hosted album/gallery images (Cloudinary, S3, Firebase Storage, etc.)
+# Example: https://res.cloudinary.com/your-cloud/image/upload/smokey-peeks
+CLOUD_MEDIA_BASE_URL = os.environ.get('CLOUD_MEDIA_BASE_URL', '').rstrip('/')
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email (console backend for development; configure SMTP for production)

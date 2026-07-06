@@ -77,3 +77,81 @@ class AdminActivity(models.Model):
 
     def __str__(self):
         return f"{self.get_action_display()} - {self.reservation_name} at {self.created_at}"
+
+
+class FeedPost(models.Model):
+    """User moment or team update shown on the feed."""
+
+    author_name = models.CharField(max_length=120)
+    author_initial = models.CharField(max_length=1, blank=True)
+    content = models.TextField()
+    is_team_update = models.BooleanField(default=False)
+    likes = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Feed Post"
+        verbose_name_plural = "Feed Posts"
+
+    def __str__(self):
+        return f"{self.author_name}: {self.content[:50]}"
+
+    @property
+    def avatar_initial(self):
+        if self.author_initial:
+            return self.author_initial.upper()
+        return (self.author_name[:1] or "?").upper()
+
+
+class Album(models.Model):
+    """Photo album displayed in the feed/gallery section."""
+
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    cover_url = models.CharField(max_length=500, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Album"
+        verbose_name_plural = "Albums"
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def cover_image_url(self):
+        from .cloud_media import resolve_cloud_url
+
+        if self.cover_url:
+            return resolve_cloud_url(self.cover_url)
+        first = self.photos.order_by("sort_order", "id").first()
+        return resolve_cloud_url(first.cloud_url) if first else ""
+
+
+class AlbumPhoto(models.Model):
+    """Single photo in an album, stored at a cloud URL."""
+
+    album = models.ForeignKey(
+        Album,
+        on_delete=models.CASCADE,
+        related_name="photos",
+    )
+    cloud_url = models.CharField(max_length=500)
+    caption = models.CharField(max_length=200, blank=True)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order", "id"]
+        verbose_name = "Album Photo"
+        verbose_name_plural = "Album Photos"
+
+    def __str__(self):
+        return self.caption or self.cloud_url
+
+    @property
+    def image_url(self):
+        from .cloud_media import resolve_cloud_url
+
+        return resolve_cloud_url(self.cloud_url)
