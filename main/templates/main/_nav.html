@@ -21,7 +21,7 @@
 <nav class="main-nav">
   <div class="nav-inner">
     <a href="{% url 'main:logadmin' %}" class="brand" title="Admin login">
-      <img src="{% static 'main/img/logoorg.png' %}" alt="Smokey Peeks logo" class="brand-logo" />
+      <img src="{% static 'main/img/logoload.png' %}" alt="Smokey Peeks logo" class="brand-logo" />
       <span class="brand-text">
         <span class="brand-name">Smokey Peeks</span>
         <span class="brand-tagline" data-i18n="tagline">Smoke, Sizzle, and Sip the Night Away. </span>
@@ -35,6 +35,7 @@
 
     <ul class="nav-links">
       <li><a href="{% url 'main:home' %}" {% if request.resolver_match.url_name == 'home' %}class="nav-current"{% endif %} data-i18n="home">Home</a></li>
+      <li><a href="{% url 'main:feed' %}" {% if request.resolver_match.url_name == 'feed' %}class="nav-current"{% endif %} data-i18n="feed">Feed</a></li>
       <li><a href="{% url 'main:menu' %}" {% if request.resolver_match.url_name == 'menu' %}class="nav-current"{% endif %} data-i18n="menu">Menu</a></li>
       <li><a href="{% url 'main:location' %}" {% if request.resolver_match.url_name == 'location' %}class="nav-current"{% endif %} data-i18n="location">Location</a></li>
       <li><a href="{% url 'main:reservation' %}" {% if request.resolver_match.url_name == 'reservation' %}class="nav-current"{% endif %} data-i18n="reservations">Reservations</a></li>

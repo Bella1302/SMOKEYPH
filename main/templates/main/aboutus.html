@@ -13,7 +13,7 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Dancing+Script:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Shadows+Into+Light&display=swap"
       rel="stylesheet"
     />
-    <script src="{% static 'main/js/i18n.js' %}"></script>
+    <script src="{% static 'main/js/i18n.js' %}?v=2"></script>
   </head>
   <body>
         {% include 'main/_nav.html' %}
@@ -38,7 +38,7 @@
               So we decided to bring the two worlds together. Smokey Peeks was created to blend Chicago smokehouse tradition with Cebu warmth and island hospitality. Every recipe, every detail, and every plate that leaves our kitchen represents that story. Slow-smoked meats, crafted flavors, great drinks, music, and an atmosphere where people can relax, celebrate, and enjoy the moment.
             </p>
             <p class="about-story-p">
-              From our first location at One Pavilion Mall to our seaside destination at IL Corso, Smokey Peeks continues to grow because of the amazing community around us.
+              At our seaside destination at Il Corso South Food Park, Smokey Peeks continues to grow because of the amazing community around us.
             </p>
             <p class="about-story-p">
               We're proud to bring something new to Cebu — a place where Chicago flavor meets island life.
@@ -55,50 +55,7 @@
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-accent"></div>
-      <div class="footer-inner">
-          <div class="footer-grid">
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="opening_hours">Opening Hours</h3>
-              <p class="footer-text" data-i18n="happy_hour">HAPPY HOUR FROM 2PM-5PM</p>
-            </div>
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="for_reservations">For Reservations</h3>
-            <ul class="footer-list">
-              <li><a href="tel:09675867197">0967 586 7197</a></li>
-              <li><a href="tel:09776564225">0977 654 4225</a></li>
-              <li><a href="mailto:admin@smokeypeeks-ph.com">admin@smokeypeeks-ph.com</a></li>
-            </ul>
-          </div>
-            <div class="footer-col">
-              <h3 class="footer-heading" data-i18n="follow_us">Follow Us</h3>
-              <p class="footer-text" data-i18n="events_promos">Events, promos &amp; daily specials.</p>
-            <div class="footer-social">
-              <a
-                href="https://www.facebook.com/people/Smokey-Peeks-BBQ-Restobar/61585040055392/"
-                class="footer-social-link"
-                aria-label="Facebook"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Facebook</a
-              >
-              <a
-                href="https://www.instagram.com/smokeypeeksph"
-                class="footer-social-link"
-                aria-label="Instagram"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Instagram</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p class="footer-copy">&copy; <span id="year"></span> Smokey Peeks. <span data-i18n="rights_reserved">All rights reserved.</span></p>
-        </div>
-      </div>
-    </footer>
+    {% include 'main/_footer.html' %}
 
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();

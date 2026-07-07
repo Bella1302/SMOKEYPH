@@ -3,6 +3,7 @@ Models for Smokey Peeks website.
 """
 from django.conf import settings
 from django.db import models
+from django.db.models import F
 
 
 class Reservation(models.Model):
@@ -94,3 +95,125 @@ class CustomerReview(models.Model):
 
     def __str__(self):
         return f"{self.email} at {self.created_at}"
+
+
+class FeedPost(models.Model):
+    """Customer photos and management updates shown on the Feed page."""
+
+    POST_TYPE_CHOICES = [
+        ("customer", "Customer Experience"),
+        ("update", "Management Update"),
+    ]
+
+    post_type = models.CharField(max_length=20, choices=POST_TYPE_CHOICES, default="customer")
+    author_name = models.CharField(max_length=120, blank=True)
+    email = models.EmailField(blank=True)
+    caption = models.TextField(max_length=1000, blank=True)
+    image = models.ImageField(upload_to="feed/%Y/%m/", blank=True, null=True)
+    approved = models.BooleanField(default=False)
+    pinned = models.BooleanField(default=False)
+    like_count = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="feed_posts",
+    )
+
+    class Meta:
+        ordering = ["-pinned", "-created_at"]
+        verbose_name = "Feed Post"
+        verbose_name_plural = "Feed Posts"
+
+    def __str__(self):
+        label = self.author_name or self.email or "Post"
+        return f"{label} ({self.get_post_type_display()})"
+
+
+class FeedLike(models.Model):
+    """One heart per browser session per post."""
+
+    post = models.ForeignKey(FeedPost, on_delete=models.CASCADE, related_name="likes")
+    session_key = models.CharField(max_length=64)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["post", "session_key"], name="unique_feed_like_per_session"),
+        ]
+
+    def __str__(self):
+        return f"Like on post {self.post_id}"
+
+
+class Album(models.Model):
+    """Customer photo album displayed in the feed/gallery section."""
+
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    author_name = models.CharField(max_length=120, blank=True)
+    email = models.EmailField(blank=True)
+    approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Album"
+        verbose_name_plural = "Albums"
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def cover_image_url(self):
+        first = self.photos.order_by("sort_order", "id").first()
+        return first.image_url if first else ""
+
+
+class AlbumPhoto(models.Model):
+    """Single photo in an album, stored via Cloudinary or local media."""
+
+    album = models.ForeignKey(
+        Album,
+        on_delete=models.CASCADE,
+        related_name="photos",
+    )
+    image = models.ImageField(upload_to="albums/%Y/%m/")
+    caption = models.CharField(max_length=200, blank=True)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order", "id"]
+        verbose_name = "Album Photo"
+        verbose_name_plural = "Album Photos"
+
+    def __str__(self):
+        return self.caption or f"Photo {self.pk}"
+
+    @property
+    def image_url(self):
+        return self.image.url if self.image else ""
+
+
+class SiteVisitCounter(models.Model):
+    """Singleton counter for website visits (one count per session)."""
+
+    total_visits = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Site Visit Counter"
+        verbose_name_plural = "Site Visit Counter"
+
+    @classmethod
+    def get_total(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj.total_visits
+
+    @classmethod
+    def increment(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        cls.objects.filter(pk=1).update(total_visits=F("total_visits") + 1)
+        obj.refresh_from_db()
+        return obj.total_visits

@@ -191,10 +191,10 @@ body {
   padding: 4.5rem 1.25rem 3.5rem;
   background-image: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.4),
-      rgba(0, 0, 0, 0.8)
+      rgba(0, 0, 0, 0.35),
+      rgba(0, 0, 0, 0.65)
     ),
-    url("img/fd.jpg");
+    url("img/coverphoto.png");
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
@@ -341,6 +341,105 @@ body {
   max-width: 700px;
 }
 
+.menu-carousel {
+  margin: 0 auto 1.6rem;
+  max-width: 900px;
+}
+
+.menu-carousel-shell {
+  position: relative;
+  padding: 0 2.8rem;
+}
+
+.menu-carousel-viewport {
+  overflow: hidden;
+  width: 100%;
+  border-radius: 14px;
+}
+
+.menu-carousel-track {
+  display: flex;
+  gap: 1.2rem;
+  transform: translateX(0);
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.menu-carousel-track .menu-card {
+  flex: 0 0 var(--menu-slide-width, 260px);
+  min-width: 0;
+}
+
+.menu-carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(242, 93, 75, 0.55);
+  background: rgba(0, 0, 0, 0.82);
+  color: #f8f6f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.35rem;
+  line-height: 1;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
+  transition: background-color 0.18s ease, border-color 0.18s ease,
+    transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.menu-carousel-btn:hover:not(:disabled) {
+  background: rgba(242, 93, 75, 0.22);
+  border-color: #f25d4b;
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7);
+}
+
+.menu-carousel-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.menu-carousel-btn.prev {
+  left: 0;
+}
+
+.menu-carousel-btn.next {
+  right: 0;
+}
+
+.menu-carousel-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1.35rem;
+}
+
+.menu-carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+  transition: width 0.25s ease, background-color 0.25s ease;
+}
+
+.menu-carousel-dot.is-active {
+  width: 24px;
+  background: #f25d4b;
+}
+
+.menu-carousel-dot:hover:not(.is-active) {
+  background: rgba(244, 178, 95, 0.75);
+}
+
 .menu-card {
   background: radial-gradient(circle at top, #3a1c12, #111);
   border-radius: 12px;
@@ -351,18 +450,29 @@ body {
     border-color 0.16s ease;
 }
 
+.menu-card-image {
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 9px;
+}
+
 .menu-card img {
   width: 100%;
   height: 100%;
   display: block;
   border-radius: 9px;
   object-fit: cover;
+  transition: transform 0.3s ease;
 }
 
 .menu-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
   border-color: rgba(244, 178, 95, 0.8);
+}
+
+.menu-card:hover img {
+  transform: scale(1.04);
 }
 
 .menu-actions {
@@ -843,6 +953,19 @@ body {
   box-shadow: var(--shadow-soft);
 }
 
+.celebrate-left-banner {
+  display: block;
+  grid-template-columns: unset;
+  gap: 0;
+}
+
+.celebrate-banner-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
 .celebrate-photo-frame {
   position: relative;
   overflow: hidden;
@@ -1158,9 +1281,12 @@ body {
     padding-inline: 1rem;
   }
 
-  .menu-grid {
-    max-width: 620px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .menu-carousel {
+    max-width: 100%;
+  }
+
+  .menu-carousel-shell {
+    padding-inline: 2.4rem;
   }
 
   .reviews-inner {
@@ -1316,10 +1442,14 @@ body {
     padding-inline: 1.1rem;
   }
 
-  .menu-grid {
-    max-width: 100%;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.9rem;
+  .menu-carousel-shell {
+    padding-inline: 2.2rem;
+  }
+
+  .menu-carousel-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
   }
 
   .reviews-inner {

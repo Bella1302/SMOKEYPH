@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feed - Smokey Peeks</title>
+    <link rel="icon" type="image/png" href="{% static 'main/img/logoload.png' %}" />
+    <link rel="stylesheet" href="{% static 'main/css/homepage.css' %}?v=20260623" />
+    <link rel="stylesheet" href="{% static 'main/css/feed.css' %}?v=20260707" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Shadows+Into+Light&display=swap"
+      rel="stylesheet"
+    />
+    <script src="{% static 'main/js/i18n.js' %}?v=2"></script>
+  </head>
+  <body>
+    {% include 'main/_nav.html' %}
+
+    <main class="feed-main">
+      <div class="feed-page">
+        <header class="feed-toolbar">
+          <div class="feed-toolbar-actions">
+            <button type="button" class="feed-add-yours-btn" id="feed-add-yours-btn" data-i18n="feed_add_yours">
+              + Add yours
+            </button>
+            <button type="button" class="feed-add-album-btn" id="feed-add-album-btn">
+              + Add album
+            </button>
+          </div>
+          <div class="feed-toolbar-title">
+            <h1 data-i18n="feed_title">Community Feed</h1>
+            <p data-i18n="feed_subtitle">Share moments, see reviews, and catch updates from Smokey Peeks.</p>
+          </div>
+        </header>
+
+        <div id="feed-status-banner" class="feed-status-banner" role="status" hidden></div>
+
+        <section class="feed-stream" aria-label="Feed posts">
+          {% if feed_items %}
+            {% for item in feed_items %}
+              {% if item.kind == "post" %}
+                {% with post=item.obj %}
+                <article class="feed-post{% if post.pinned %} feed-post-pinned{% endif %}{% if item.pending %} feed-post-pending{% endif %}" data-post-id="{{ post.id }}">
+                  <header class="feed-post-head">
+                    <div class="feed-post-user">
+                      {% if post.post_type == "update" %}
+                        <div class="feed-avatar feed-avatar-team">
+                          <img src="{% static 'main/img/logoload.png' %}" alt="" />
+                        </div>
+                      {% else %}
+                        <div class="feed-avatar" aria-hidden="true">{{ post.author_name|default:"G"|slice:":1"|upper }}</div>
+                      {% endif %}
+                      <div class="feed-post-user-info">
+                        <span class="feed-post-name">{{ post.author_name|default:"Guest" }}</span>
+                        <span class="feed-post-meta">
+                          {{ post.created_at|timesince }} ago
+                          {% if post.post_type == "update" %}
+                            <span class="feed-post-meta-dot" data-i18n="feed_team_update">Team update</span>
+                          {% else %}
+                            <span class="feed-post-meta-dot">Smokey Peeks</span>
+                          {% endif %}
+                        </span>
+                      </div>
+                    </div>
+                    {% if post.pinned %}
+                      <span class="feed-pin-label" data-i18n="feed_pinned">Pinned</span>
+                    {% elif item.pending %}
+                      <span class="feed-pending-label" data-i18n="feed_pending">Awaiting approval</span>
+                    {% endif %}
+                  </header>
+
+                  {% if post.caption %}
+                    <p class="feed-post-text">{{ post.caption }}</p>
+                  {% endif %}
+
+                  {% if post.image %}
+                    <figure class="feed-post-media">
+                      <img src="{{ post.image.url }}" alt="Experience at Smokey Peeks by {{ post.author_name }}" loading="lazy" />
+                    </figure>
+                  {% endif %}
+
+                  <div class="feed-post-stats">
+                    {% if post.like_count and not item.pending %}<span>♥ {{ post.like_count }}</span>{% endif %}
+                  </div>
+                  {% if not item.pending %}
+                  <footer class="feed-post-footer">
+                    <div class="feed-post-actions">
+                      <button
+                        type="button"
+                        class="feed-heart-btn{% if item.liked %} is-liked{% endif %}"
+                        data-post-id="{{ post.id }}"
+                        aria-label="Love this post"
+                        {% if item.liked %}disabled{% endif %}
+                      >
+                        <span class="feed-heart-icon" aria-hidden="true">♥</span>
+                        <span data-i18n="feed_love">Love</span>
+                        {% if post.like_count %}<span class="feed-like-count">({{ post.like_count }})</span>{% endif %}
+                      </button>
+                    </div>
+                  </footer>
+                  {% endif %}
+                </article>
+                {% endwith %}
+              {% else %}
+                {% with review=item.obj %}
+                <article class="feed-post feed-post-review">
+                  <header class="feed-post-head">
+                    <div class="feed-post-user">
+                      <div class="feed-avatar" aria-hidden="true">{{ review.email|slice:":1"|upper }}</div>
+                      <div class="feed-post-user-info">
+                        <span class="feed-post-name">{{ review.email|cut:"@gmail.com" }}</span>
+                        <span class="feed-post-meta">
+                          {{ review.created_at|timesince }} ago
+                          <span class="feed-post-meta-dot" data-i18n="feed_review">Review</span>
+                        </span>
+                      </div>
+                    </div>
+                  </header>
+                  <div class="feed-post-review-body">
+                    <blockquote>"{{ review.comment }}"</blockquote>
+                  </div>
+                </article>
+                {% endwith %}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <p class="feed-empty" data-i18n="feed_empty">No posts yet. Be the first to share your Smokey Peeks experience!</p>
+          {% endif %}
+        </section>
+
+        {% if albums %}
+        <section class="feed-albums" aria-label="Photo albums">
+          <h2 class="feed-albums-title">Albums</h2>
+          <div class="feed-albums-grid">
+            {% for item in albums %}
+            {% with album=item.obj %}
+            <article class="feed-album-card{% if item.pending %} feed-album-pending{% endif %}">
+              {% if album.cover_image_url %}
+              <div class="feed-album-cover">
+                <img src="{{ album.cover_image_url }}" alt="{{ album.title }}" loading="lazy" />
+              </div>
+              {% endif %}
+              <div class="feed-album-body">
+                <h3 class="feed-album-name">{{ album.title }}</h3>
+                {% if album.description %}
+                <p class="feed-album-desc">{{ album.description }}</p>
+                {% endif %}
+                {% if item.pending %}
+                <span class="feed-pending-label">Awaiting approval</span>
+                {% endif %}
+                {% if album.photos.count > 1 %}
+                <div class="feed-album-thumbs">
+                  {% for photo in album.photos.all %}
+                  {% if photo.image_url != album.cover_image_url %}
+                  <img src="{{ photo.image_url }}" alt="{{ photo.caption|default:album.title }}" loading="lazy" />
+                  {% endif %}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </article>
+            {% endwith %}
+            {% endfor %}
+          </div>
+        </section>
+        {% endif %}
+      </div>
+    </main>
+
+    <div id="feed-modal" class="feed-modal" role="dialog" aria-modal="true" aria-labelledby="feed-modal-title" hidden>
+      <div class="feed-modal-backdrop" data-feed-modal-close></div>
+      <div class="feed-modal-box">
+        <div class="feed-modal-header">
+          <h2 id="feed-modal-title" data-i18n="feed_modal_title">Share your moment</h2>
+          <button type="button" class="feed-modal-close" data-feed-modal-close aria-label="Close">&times;</button>
+        </div>
+        <p class="feed-modal-note" data-i18n="feed_modal_note">Photo is optional — write a message, add a photo, or both.</p>
+        <div id="feed-modal-status" class="feed-modal-status" role="status" hidden></div>
+        <form
+          class="feed-modal-form"
+          id="feed-upload-form"
+          method="post"
+          action="{% url 'main:submit_feed_post' %}"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <div class="form-row">
+            <label for="feed-name" data-i18n="feed_your_name">Your name</label>
+            <input type="text" id="feed-name" name="author_name" required maxlength="120" placeholder="Your name" />
+          </div>
+          <div class="form-row">
+            <label for="feed-email" data-i18n="email">Email</label>
+            <input type="email" id="feed-email" name="email" required placeholder="you@example.com" />
+          </div>
+          <div class="form-row">
+            <label for="feed-caption" data-i18n="feed_caption">What's on your mind?</label>
+            <textarea
+              id="feed-caption"
+              name="caption"
+              rows="3"
+              maxlength="1000"
+              placeholder="Tell everyone about your visit…"
+              data-i18n-placeholder="feed_caption_placeholder"
+            ></textarea>
+          </div>
+          <div class="form-row">
+            <label for="feed-photo" data-i18n="feed_photo_optional">Photo (optional)</label>
+            <input type="file" id="feed-photo" name="image" accept="image/*" />
+            <div class="feed-photo-preview" id="feed-photo-preview" aria-hidden="true">
+              <img id="feed-photo-preview-img" alt="" />
+            </div>
+          </div>
+          <div class="feed-modal-actions">
+            <button type="button" class="btn btn-secondary feed-modal-cancel" data-feed-modal-close data-i18n="feed_cancel">Cancel</button>
+            <button type="submit" class="btn btn-primary feed-modal-submit" data-i18n="feed_submit">Post</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="feed-album-modal" class="feed-modal" role="dialog" aria-modal="true" aria-labelledby="feed-album-modal-title" hidden>
+      <div class="feed-modal-backdrop" data-album-modal-close></div>
+      <div class="feed-modal-box">
+        <div class="feed-modal-header">
+          <h2 id="feed-album-modal-title">Create an album</h2>
+          <button type="button" class="feed-modal-close" data-album-modal-close aria-label="Close">&times;</button>
+        </div>
+        <p class="feed-modal-note">Upload multiple photos from your visit. Albums appear in the gallery after approval.</p>
+        <div id="feed-album-modal-status" class="feed-modal-status" role="status" hidden></div>
+        <form
+          class="feed-modal-form"
+          id="feed-album-form"
+          method="post"
+          action="{% url 'main:submit_feed_album' %}"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <div class="form-row">
+            <label for="feed-album-title-input">Album title</label>
+            <input type="text" id="feed-album-title-input" name="title" required maxlength="200" placeholder="Weekend BBQ Night" />
+          </div>
+          <div class="form-row">
+            <label for="feed-album-author">Your name</label>
+            <input type="text" id="feed-album-author" name="author_name" required maxlength="120" placeholder="Your name" />
+          </div>
+          <div class="form-row">
+            <label for="feed-album-email">Email</label>
+            <input type="email" id="feed-album-email" name="email" required placeholder="you@example.com" />
+          </div>
+          <div class="form-row">
+            <label for="feed-album-desc-input">Description (optional)</label>
+            <textarea id="feed-album-desc-input" name="description" rows="2" maxlength="1000" placeholder="A short caption for this album"></textarea>
+          </div>
+          <div class="form-row">
+            <label for="feed-album-photos-input">Photos (up to 12)</label>
+            <input type="file" id="feed-album-photos-input" name="images" accept="image/*" multiple required />
+            <div class="feed-album-preview" id="feed-album-preview" aria-hidden="true"></div>
+          </div>
+          <div class="feed-modal-actions">
+            <button type="button" class="btn btn-secondary feed-modal-cancel" data-album-modal-close>Cancel</button>
+            <button type="submit" class="btn btn-primary feed-modal-submit">Create album</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% include 'main/_footer.html' %}
+    <script src="{% static 'main/js/feed.js' %}?v=20260707"></script>
+  </body>
+</html>
