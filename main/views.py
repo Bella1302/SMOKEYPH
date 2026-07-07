@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.db.models import F
 from django.http import FileResponse, Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -259,23 +260,24 @@ def submit_feed_album(request):
             return JsonResponse({"ok": False, "error": "Each photo must be 8 MB or smaller."}, status=400)
 
     try:
-        album = Album.objects.create(
-            title=title,
-            description=description,
-            author_name=author_name,
-            email=email,
-            approved=False,
-        )
-        for index, photo in enumerate(photos):
-            AlbumPhoto.objects.create(
-                album=album,
-                image=photo,
-                sort_order=index,
+        with transaction.atomic():
+            album = Album.objects.create(
+                title=title,
+                description=description,
+                author_name=author_name,
+                email=email,
+                approved=False,
             )
-        pending_ids = request.session.get("pending_album_ids", [])
-        pending_ids.append(album.id)
-        request.session["pending_album_ids"] = pending_ids[-10:]
-        request.session.modified = True
+            for index, photo in enumerate(photos):
+                AlbumPhoto.objects.create(
+                    album=album,
+                    image=photo,
+                    sort_order=index,
+                )
+            pending_ids = request.session.get("pending_album_ids", [])
+            pending_ids.append(album.id)
+            request.session["pending_album_ids"] = pending_ids[-10:]
+            request.session.modified = True
     except Exception:
         return JsonResponse(
             {"ok": False, "error": "Album upload failed. Please try again with smaller JPG or PNG photos."},
@@ -477,14 +479,22 @@ def admin_create_feed_update(request):
     image = request.FILES.get("image")
     if not caption and not image:
         return JsonResponse({"ok": False, "error": "Add a message or photo for the update."}, status=400)
-    FeedPost.objects.create(
-        post_type="update",
-        author_name="Smokey Peeks",
-        caption=caption,
-        image=image,
-        approved=True,
-        created_by=request.user,
-    )
+    if image and image.size > _MAX_UPLOAD_BYTES:
+        return JsonResponse({"ok": False, "error": "Photo must be 8 MB or smaller."}, status=400)
+    try:
+        FeedPost.objects.create(
+            post_type="update",
+            author_name="Smokey Peeks",
+            caption=caption,
+            image=image if image else None,
+            approved=True,
+            created_by=request.user,
+        )
+    except Exception:
+        return JsonResponse(
+            {"ok": False, "error": "Upload failed. Please try a smaller JPG or PNG photo."},
+            status=500,
+        )
     return JsonResponse({"ok": True, "message": "Update posted to the Feed."})
 
 
