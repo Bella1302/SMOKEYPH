@@ -8,21 +8,22 @@ from .models import Album, AlbumPhoto, FeedPost, Reservation
 class AlbumPhotoInline(admin.TabularInline):
     model = AlbumPhoto
     extra = 1
-    fields = ["cloud_url", "caption", "sort_order"]
+    fields = ["image", "caption", "sort_order"]
 
 
 @admin.register(Album)
 class AlbumAdmin(admin.ModelAdmin):
-    list_display = ["title", "created_at"]
-    search_fields = ["title", "description"]
+    list_display = ["title", "author_name", "approved", "created_at"]
+    list_filter = ["approved"]
+    search_fields = ["title", "description", "author_name", "email"]
     inlines = [AlbumPhotoInline]
 
 
 @admin.register(FeedPost)
 class FeedPostAdmin(admin.ModelAdmin):
-    list_display = ["author_name", "is_team_update", "likes", "created_at"]
-    list_filter = ["is_team_update"]
-    search_fields = ["author_name", "content"]
+    list_display = ["author_name", "post_type", "approved", "pinned", "like_count", "created_at"]
+    list_filter = ["post_type", "approved", "pinned"]
+    search_fields = ["author_name", "email", "caption"]
 
 
 @admin.register(Reservation)

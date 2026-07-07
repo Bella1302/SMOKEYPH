@@ -34,15 +34,6 @@
     </button>
 
     <ul class="nav-links">
-<<<<<<< HEAD
-      <li><a href="{% url 'main:home' %}" {% if request.resolver_match.url_name == 'home' %}class="nav-current"{% endif %}>Home</a></li>
-      <li><a href="{% url 'main:feed' %}" {% if request.resolver_match.url_name == 'feed' %}class="nav-current"{% endif %}>Feed/Gallery</a></li>
-      <li><a href="{% url 'main:menu' %}" {% if request.resolver_match.url_name == 'menu' %}class="nav-current"{% endif %}>Menu</a></li>
-      <li><a href="{% url 'main:location' %}" {% if request.resolver_match.url_name == 'location' %}class="nav-current"{% endif %}>Location</a></li>
-      <li><a href="{% url 'main:reservation' %}" {% if request.resolver_match.url_name == 'reservation' %}class="nav-current"{% endif %}>Reservations</a></li>
-      <li><a href="{% url 'main:events' %}" {% if request.resolver_match.url_name == 'events' %}class="nav-current"{% endif %}>Promos &amp; Merch</a></li>
-      <li><a href="{% url 'main:about' %}" {% if request.resolver_match.url_name == 'about' %}class="nav-current"{% endif %}>About Us</a></li>
-=======
       <li><a href="{% url 'main:home' %}" {% if request.resolver_match.url_name == 'home' %}class="nav-current"{% endif %} data-i18n="home">Home</a></li>
       <li><a href="{% url 'main:feed' %}" {% if request.resolver_match.url_name == 'feed' %}class="nav-current"{% endif %} data-i18n="feed">Feed</a></li>
       <li><a href="{% url 'main:menu' %}" {% if request.resolver_match.url_name == 'menu' %}class="nav-current"{% endif %} data-i18n="menu">Menu</a></li>
@@ -50,7 +41,6 @@
       <li><a href="{% url 'main:reservation' %}" {% if request.resolver_match.url_name == 'reservation' %}class="nav-current"{% endif %} data-i18n="reservations">Reservations</a></li>
       <li><a href="{% url 'main:events' %}" {% if request.resolver_match.url_name == 'events' %}class="nav-current"{% endif %} data-i18n="promos_merch">Promos &amp; Merch</a></li>
       <li><a href="{% url 'main:about' %}" {% if request.resolver_match.url_name == 'about' %}class="nav-current"{% endif %} data-i18n="about_us">About Us</a></li>
->>>>>>> 6e55ad62e7796fcef245a89f1d0bbbd06ecd5a50
     </ul>
   </div>
 </nav>

@@ -96,21 +96,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smokey_peeks.wsgi.application'
 
-# DATABASE_URL = os.environ.get("DATABASE_URL")
-
-# if DATABASE_URL:
-#     DATABASES = {
-#         "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)
-#     }
-# else:
-#     # fallback for local dev
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.sqlite3",
-#             "NAME": BASE_DIR / "db.sqlite3",
-#         }
-#     }
-
 if os.environ.get('DATABASE_URL'):
     db_url = os.environ.get('DATABASE_URL')
     if db_url and db_url.startswith('postgres://'):
@@ -123,7 +108,6 @@ if os.environ.get('DATABASE_URL'):
         )
     }
 else:
-    # fallback for local dev
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -147,14 +131,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-<<<<<<< HEAD
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-# Base URL for cloud-hosted album/gallery images (Cloudinary, S3, Firebase Storage, etc.)
-# Example: https://res.cloudinary.com/your-cloud/image/upload/smokey-peeks
-CLOUD_MEDIA_BASE_URL = os.environ.get('CLOUD_MEDIA_BASE_URL', '').rstrip('/')
-=======
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -189,11 +165,9 @@ else:
             'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
         },
     }
->>>>>>> 6e55ad62e7796fcef245a89f1d0bbbd06ecd5a50
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Email (console backend for development; configure SMTP for production)
 EMAIL_BACKEND = os.environ.get(
     'EMAIL_BACKEND',
     'django.core.mail.backends.console.EmailBackend'

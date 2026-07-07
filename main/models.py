@@ -80,20 +80,6 @@ class AdminActivity(models.Model):
         return f"{self.get_action_display()} - {self.reservation_name} at {self.created_at}"
 
 
-<<<<<<< HEAD
-class FeedPost(models.Model):
-    """User moment or team update shown on the feed."""
-
-    author_name = models.CharField(max_length=120)
-    author_initial = models.CharField(max_length=1, blank=True)
-    content = models.TextField()
-    is_team_update = models.BooleanField(default=False)
-    likes = models.PositiveIntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["-created_at"]
-=======
 class CustomerReview(models.Model):
     """Customer reviews shown on the homepage."""
 
@@ -138,73 +124,10 @@ class FeedPost(models.Model):
 
     class Meta:
         ordering = ["-pinned", "-created_at"]
->>>>>>> 6e55ad62e7796fcef245a89f1d0bbbd06ecd5a50
         verbose_name = "Feed Post"
         verbose_name_plural = "Feed Posts"
 
     def __str__(self):
-<<<<<<< HEAD
-        return f"{self.author_name}: {self.content[:50]}"
-
-    @property
-    def avatar_initial(self):
-        if self.author_initial:
-            return self.author_initial.upper()
-        return (self.author_name[:1] or "?").upper()
-
-
-class Album(models.Model):
-    """Photo album displayed in the feed/gallery section."""
-
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    cover_url = models.CharField(max_length=500, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["-created_at"]
-        verbose_name = "Album"
-        verbose_name_plural = "Albums"
-
-    def __str__(self):
-        return self.title
-
-    @property
-    def cover_image_url(self):
-        from .cloud_media import resolve_cloud_url
-
-        if self.cover_url:
-            return resolve_cloud_url(self.cover_url)
-        first = self.photos.order_by("sort_order", "id").first()
-        return resolve_cloud_url(first.cloud_url) if first else ""
-
-
-class AlbumPhoto(models.Model):
-    """Single photo in an album, stored at a cloud URL."""
-
-    album = models.ForeignKey(
-        Album,
-        on_delete=models.CASCADE,
-        related_name="photos",
-    )
-    cloud_url = models.CharField(max_length=500)
-    caption = models.CharField(max_length=200, blank=True)
-    sort_order = models.PositiveIntegerField(default=0)
-
-    class Meta:
-        ordering = ["sort_order", "id"]
-        verbose_name = "Album Photo"
-        verbose_name_plural = "Album Photos"
-
-    def __str__(self):
-        return self.caption or self.cloud_url
-
-    @property
-    def image_url(self):
-        from .cloud_media import resolve_cloud_url
-
-        return resolve_cloud_url(self.cloud_url)
-=======
         label = self.author_name or self.email or "Post"
         return f"{label} ({self.get_post_type_display()})"
 
@@ -223,6 +146,55 @@ class FeedLike(models.Model):
 
     def __str__(self):
         return f"Like on post {self.post_id}"
+
+
+class Album(models.Model):
+    """Customer photo album displayed in the feed/gallery section."""
+
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    author_name = models.CharField(max_length=120, blank=True)
+    email = models.EmailField(blank=True)
+    approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Album"
+        verbose_name_plural = "Albums"
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def cover_image_url(self):
+        first = self.photos.order_by("sort_order", "id").first()
+        return first.image_url if first else ""
+
+
+class AlbumPhoto(models.Model):
+    """Single photo in an album, stored via Cloudinary or local media."""
+
+    album = models.ForeignKey(
+        Album,
+        on_delete=models.CASCADE,
+        related_name="photos",
+    )
+    image = models.ImageField(upload_to="albums/%Y/%m/")
+    caption = models.CharField(max_length=200, blank=True)
+    sort_order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort_order", "id"]
+        verbose_name = "Album Photo"
+        verbose_name_plural = "Album Photos"
+
+    def __str__(self):
+        return self.caption or f"Photo {self.pk}"
+
+    @property
+    def image_url(self):
+        return self.image.url if self.image else ""
 
 
 class SiteVisitCounter(models.Model):
@@ -245,4 +217,3 @@ class SiteVisitCounter(models.Model):
         cls.objects.filter(pk=1).update(total_visits=F("total_visits") + 1)
         obj.refresh_from_db()
         return obj.total_visits
->>>>>>> 6e55ad62e7796fcef245a89f1d0bbbd06ecd5a50

@@ -1,291 +1,3 @@
-<<<<<<< HEAD
-.feed-main {
-  background: #000;
-  min-height: calc(100vh - 120px);
-}
-
-.feed-section {
-  padding: 2.5rem 0 4rem;
-}
-
-.feed-inner {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 0 1.25rem;
-}
-
-.feed-toolbar {
-  margin-bottom: 1.5rem;
-}
-
-.feed-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.feed-add-btn {
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--accent);
-  background: transparent;
-  color: var(--accent);
-  padding: 0.45rem 1.1rem;
-  font-family: inherit;
-  font-size: 0.88rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.feed-add-btn:hover {
-  background: var(--accent-soft);
-  transform: translateY(-1px);
-}
-
-.feed-add-btn-secondary {
-  border-color: rgba(255, 255, 255, 0.25);
-  color: var(--text);
-}
-
-.feed-add-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.feed-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.feed-title {
-  margin: 0 0 0.5rem;
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.04em;
-}
-
-.feed-subtitle {
-  margin: 0;
-  font-size: 0.92rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-  max-width: 520px;
-  margin-inline: auto;
-}
-
-.feed-messages {
-  margin-bottom: 1.25rem;
-}
-
-.feed-message {
-  margin: 0 0 0.5rem;
-  padding: 0.65rem 0.9rem;
-  border-radius: 10px;
-  font-size: 0.88rem;
-}
-
-.feed-message-success {
-  background: rgba(76, 175, 80, 0.15);
-  border: 1px solid rgba(76, 175, 80, 0.35);
-  color: #a5d6a7;
-}
-
-.feed-message-error {
-  background: rgba(244, 67, 54, 0.12);
-  border: 1px solid rgba(244, 67, 54, 0.35);
-  color: #ef9a9a;
-}
-
-.feed-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.feed-card {
-  background: #181818;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 1.15rem 1.25rem 1rem;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7);
-}
-
-.feed-card-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.85rem;
-}
-
-.feed-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #5c3d2e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 1rem;
-  color: #f8f6f2;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.feed-avatar-team {
-  background: #111;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.feed-avatar-logo {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  padding: 4px;
-}
-
-.feed-card-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.feed-author {
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.feed-timestamp {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-
-.feed-card-body {
-  margin: 0 0 0.9rem;
-  font-size: 0.92rem;
-  color: var(--text-muted);
-  line-height: 1.55;
-}
-
-.feed-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.feed-like-count {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-
-.feed-love-btn {
-  border: none;
-  background: transparent;
-  color: #f48fb1;
-  font-family: inherit;
-  font-size: 0.88rem;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  transition: background 0.2s ease;
-}
-
-.feed-love-btn:hover {
-  background: rgba(244, 143, 177, 0.12);
-}
-
-.feed-love-icon {
-  font-size: 1.1rem;
-}
-
-.feed-empty {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 0.92rem;
-  padding: 2rem 0;
-}
-
-.feed-albums {
-  margin-top: 2.5rem;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.feed-albums-title {
-  margin: 0 0 1.25rem;
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--accent);
-  text-align: center;
-}
-
-.feed-albums-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1.1rem;
-}
-
-.feed-album-card {
-  background: #181818;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7);
-}
-
-.feed-album-cover img {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  display: block;
-}
-
-.feed-album-body {
-  padding: 0.9rem 1rem 1rem;
-}
-
-.feed-album-name {
-  margin: 0 0 0.35rem;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.feed-album-desc {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.45;
-}
-
-.feed-album-thumbs {
-  display: flex;
-  gap: 0.4rem;
-  margin-top: 0.65rem;
-  flex-wrap: wrap;
-}
-
-.feed-album-thumbs img {
-  width: 52px;
-  height: 52px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.feed-modal[hidden] {
-  display: none;
-}
-
-.feed-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-=======
 /* Feed page – posts first, Add yours modal */
 .feed-main {
   background: #0d0d0d;
@@ -309,13 +21,17 @@
   padding: 0.15rem 0 0.35rem;
 }
 
-.feed-add-yours-btn {
+.feed-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
   align-self: center;
+}
+
+.feed-add-yours-btn,
+.feed-add-album-btn {
   padding: 0.5rem 0.85rem;
   border-radius: 999px;
-  border: 1px solid rgba(244, 178, 95, 0.45);
-  background: rgba(244, 178, 95, 0.12);
-  color: #f2b46a;
   font-family: inherit;
   font-size: 0.78rem;
   font-weight: 600;
@@ -325,9 +41,26 @@
   transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
 
+.feed-add-yours-btn {
+  border: 1px solid rgba(244, 178, 95, 0.45);
+  background: rgba(244, 178, 95, 0.12);
+  color: #f2b46a;
+}
+
 .feed-add-yours-btn:hover {
   background: rgba(244, 178, 95, 0.22);
   border-color: rgba(244, 178, 95, 0.65);
+}
+
+.feed-add-album-btn {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ddd;
+}
+
+.feed-add-album-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.35);
 }
 
 .feed-toolbar-title {
@@ -372,24 +105,16 @@
   color: #b9f6ca;
 }
 
-/* —— Modal —— */
 .feed-modal {
   position: fixed;
   inset: 0;
   z-index: 9999;
->>>>>>> 6e55ad62e7796fcef245a89f1d0bbbd06ecd5a50
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
 }
 
-<<<<<<< HEAD
-.feed-modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-=======
 .feed-modal[hidden] {
   display: none;
 }
@@ -399,68 +124,11 @@
   inset: 0;
   background: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(4px);
->>>>>>> 6e55ad62e7796fcef245a89f1d0bbbd06ecd5a50
 }
 
 .feed-modal-box {
   position: relative;
   width: 100%;
-<<<<<<< HEAD
-  max-width: 480px;
-  background: #181818;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1.5rem 1.6rem 1.6rem;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
-}
-
-.feed-modal-title {
-  margin: 0 0 0.75rem;
-  font-size: 1.15rem;
-}
-
-.feed-modal-hint {
-  margin: 0 0 1rem;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  line-height: 1.45;
-}
-
-.feed-modal-hint code {
-  font-size: 0.78rem;
-  color: var(--accent);
-  word-break: break-all;
-}
-
-.feed-form-row {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 0.85rem;
-}
-
-.feed-form-row label {
-  margin-bottom: 0.3rem;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.feed-form-row input,
-.feed-form-row textarea {
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: #101010;
-  color: var(--text);
-  padding: 0.55rem 0.75rem;
-  font-family: inherit;
-  font-size: 0.9rem;
-  resize: vertical;
-}
-
-.feed-form-row input:focus,
-.feed-form-row textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-=======
   max-width: 420px;
   max-height: min(90vh, 640px);
   overflow-y: auto;
@@ -582,47 +250,30 @@
   width: 100%;
   max-height: 180px;
   object-fit: cover;
->>>>>>> 6e55ad62e7796fcef245a89f1d0bbbd06ecd5a50
+}
+
+.feed-album-preview {
+  display: none;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+}
+
+.feed-album-preview.has-images {
+  display: flex;
+}
+
+.feed-album-preview img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .feed-modal-actions {
   display: flex;
   justify-content: flex-end;
-<<<<<<< HEAD
-  gap: 0.65rem;
-  margin-top: 0.5rem;
-}
-
-.feed-modal-cancel,
-.feed-modal-submit {
-  border-radius: var(--radius-pill);
-  padding: 0.5rem 1.1rem;
-  font-family: inherit;
-  font-size: 0.88rem;
-  cursor: pointer;
-}
-
-.feed-modal-cancel {
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: transparent;
-  color: var(--text-muted);
-}
-
-.feed-modal-submit {
-  border: none;
-  background: var(--accent);
-  color: #111;
-  font-weight: 600;
-}
-
-@media (max-width: 720px) {
-  .feed-title {
-    font-size: 1.65rem;
-  }
-
-  .feed-actions {
-    justify-content: center;
-=======
   gap: 0.55rem;
   margin-top: 0.85rem;
 }
@@ -638,7 +289,6 @@
   color: #fff;
 }
 
-/* —— Avatars —— */
 .feed-avatar {
   width: 40px;
   height: 40px;
@@ -667,7 +317,6 @@
   background: #111;
 }
 
-/* —— Post stream —— */
 .feed-stream {
   display: flex;
   flex-direction: column;
@@ -864,6 +513,79 @@
   line-height: 1;
 }
 
+.feed-albums {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.feed-albums-title {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f2b46a;
+  text-align: center;
+}
+
+.feed-albums-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.feed-album-card {
+  background: #161616;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.feed-album-pending {
+  border-style: dashed;
+  opacity: 0.92;
+}
+
+.feed-album-cover img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+.feed-album-body {
+  padding: 0.85rem 0.95rem 1rem;
+}
+
+.feed-album-name {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f5f5f5;
+}
+
+.feed-album-desc {
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+  color: #999;
+  line-height: 1.45;
+}
+
+.feed-album-thumbs {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.feed-album-thumbs img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 @media (max-width: 600px) {
   .feed-main {
     padding-inline: 0.65rem;
@@ -874,12 +596,11 @@
     gap: 0.55rem;
   }
 
-  .feed-add-yours-btn {
+  .feed-toolbar-actions {
     justify-self: start;
   }
 
   .feed-toolbar-title {
     text-align: left;
->>>>>>> 6e55ad62e7796fcef245a89f1d0bbbd06ecd5a50
   }
 }

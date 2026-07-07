@@ -4,22 +4,29 @@ Views for Smokey Peeks website.
 import mimetypes
 from datetime import datetime
 from pathlib import Path
+
 from django.conf import settings
-from django.db.models import F
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-<<<<<<< HEAD
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from django.conf import settings
-from .models import AdminActivity, Album, AlbumPhoto, FeedPost, Reservation
-=======
+from django.db.models import F
 from django.http import FileResponse, Http404, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_GET, require_POST
-from django.utils import timezone
-from .models import AdminActivity, CustomerReview, FeedLike, FeedPost, Reservation, SiteVisitCounter
+
+from .models import (
+    AdminActivity,
+    Album,
+    AlbumPhoto,
+    CustomerReview,
+    FeedLike,
+    FeedPost,
+    Reservation,
+    SiteVisitCounter,
+)
+
+_MAX_UPLOAD_BYTES = 8 * 1024 * 1024
+_MAX_ALBUM_PHOTOS = 12
 
 
 def _build_admin_notifications(limit=15):
@@ -63,12 +70,22 @@ def _build_admin_notifications(limit=15):
             'created_at': post.created_at.isoformat(),
         })
 
+    for album in Album.objects.filter(approved=False).order_by('-created_at'):
+        author = album.author_name or album.email or 'Customer'
+        items.append({
+            'id': f'album-{album.id}',
+            'type': 'album',
+            'title': f'New album from {author}',
+            'message': album.title,
+            'href': '#admin-albums-pending',
+            'created_at': album.created_at.isoformat(),
+        })
+
     items.sort(key=lambda item: item['created_at'], reverse=True)
     pending_reservations_count = Reservation.objects.filter(status='pending').count()
-    total_count = len(items)
 
     return {
-        'count': total_count,
+        'count': len(items),
         'items': items[:limit],
         'pending_count': pending_reservations_count,
         'all_confirmed': pending_reservations_count == 0,
@@ -77,7 +94,7 @@ def _build_admin_notifications(limit=15):
 
 @require_GET
 def serve_media(request, path):
-    """Serve uploaded files in production (Django's static.serve refuses when DEBUG=False)."""
+    """Serve uploaded files in production when not using Cloudinary."""
     media_root = Path(settings.MEDIA_ROOT).resolve()
     safe_path = path.replace("\\", "/").lstrip("/")
     full_path = (media_root / safe_path).resolve()
@@ -144,7 +161,24 @@ def _build_feed_items(request):
         })
     items.sort(key=lambda x: (not x["pinned"], -x["date"].timestamp()))
     return items
->>>>>>> 6e55ad62e7796fcef245a89f1d0bbbd06ecd5a50
+
+
+def _build_feed_albums(request):
+    """Approved albums plus this session's pending submissions."""
+    pending_ids = request.session.get("pending_album_ids", [])
+    seen = set()
+    albums = []
+
+    for album in Album.objects.filter(approved=True).prefetch_related("photos"):
+        seen.add(album.id)
+        albums.append({"obj": album, "pending": False})
+
+    for album in Album.objects.filter(pk__in=pending_ids, approved=False).prefetch_related("photos"):
+        if album.id in seen:
+            continue
+        albums.append({"obj": album, "pending": True})
+
+    return albums
 
 
 def home(request):
@@ -153,56 +187,24 @@ def home(request):
 
 
 def feed(request):
-    return render(request, "main/feed.html", {"feed_items": _build_feed_items(request)})
+    return render(request, "main/feed.html", {
+        "feed_items": _build_feed_items(request),
+        "albums": _build_feed_albums(request),
+    })
 
 
 @require_POST
 def submit_feed_post(request):
-    import json
-    import time
-
-    def _debug_log(message, data=None, hypothesis_id="H1"):
-        # #region agent log
-        try:
-            payload = {
-                "sessionId": "5b3a1b",
-                "runId": "feed-upload",
-                "hypothesisId": hypothesis_id,
-                "location": "main/views.py:submit_feed_post",
-                "message": message,
-                "data": data or {},
-                "timestamp": int(time.time() * 1000),
-            }
-            with open(
-                Path(__file__).resolve().parent.parent.parent / "debug-5b3a1b.log",
-                "a",
-                encoding="utf-8",
-            ) as fh:
-                fh.write(json.dumps(payload) + "\n")
-        except OSError:
-            pass
-        # #endregion
-
     author_name = request.POST.get("author_name", "").strip()
     email = request.POST.get("email", "").strip()
     caption = request.POST.get("caption", "").strip()
     image = request.FILES.get("image")
 
-    _debug_log("submit_feed_post called", {
-        "has_name": bool(author_name),
-        "has_email": bool(email),
-        "has_image": bool(image),
-        "image_size": getattr(image, "size", 0),
-    }, "H1")
-
     if not author_name or not email:
-        _debug_log("validation failed missing identity", hypothesis_id="H2")
         return JsonResponse({"ok": False, "error": "Name and email are required."}, status=400)
     if not caption and not image:
-        _debug_log("validation failed empty post", hypothesis_id="H2")
         return JsonResponse({"ok": False, "error": "Write a message or add a photo before posting."}, status=400)
-    if image and image.size > 8 * 1024 * 1024:
-        _debug_log("validation failed image too large", {"size": image.size}, "H2")
+    if image and image.size > _MAX_UPLOAD_BYTES:
         return JsonResponse({"ok": False, "error": "Photo must be 8 MB or smaller."}, status=400)
 
     try:
@@ -218,9 +220,7 @@ def submit_feed_post(request):
         pending_ids.append(post.id)
         request.session["pending_feed_post_ids"] = pending_ids[-20:]
         request.session.modified = True
-        _debug_log("post created", {"post_id": post.id, "approved": post.approved}, "H3")
-    except Exception as exc:
-        _debug_log("post create failed", {"error": str(exc)}, "H4")
+    except Exception:
         return JsonResponse(
             {"ok": False, "error": "Upload failed. Please try a smaller JPG or PNG photo."},
             status=500,
@@ -231,6 +231,62 @@ def submit_feed_post(request):
         "pending": True,
         "post_id": post.id,
         "message": "Post submitted! It will appear here with “Awaiting approval” until management approves it.",
+    })
+
+
+@require_POST
+def submit_feed_album(request):
+    title = request.POST.get("title", "").strip()
+    description = request.POST.get("description", "").strip()
+    author_name = request.POST.get("author_name", "").strip()
+    email = request.POST.get("email", "").strip()
+    photos = request.FILES.getlist("images")
+
+    if not title:
+        return JsonResponse({"ok": False, "error": "Album title is required."}, status=400)
+    if not author_name or not email:
+        return JsonResponse({"ok": False, "error": "Name and email are required."}, status=400)
+    if not photos:
+        return JsonResponse({"ok": False, "error": "Add at least one photo to your album."}, status=400)
+    if len(photos) > _MAX_ALBUM_PHOTOS:
+        return JsonResponse(
+            {"ok": False, "error": f"You can upload up to {_MAX_ALBUM_PHOTOS} photos per album."},
+            status=400,
+        )
+
+    for photo in photos:
+        if photo.size > _MAX_UPLOAD_BYTES:
+            return JsonResponse({"ok": False, "error": "Each photo must be 8 MB or smaller."}, status=400)
+
+    try:
+        album = Album.objects.create(
+            title=title,
+            description=description,
+            author_name=author_name,
+            email=email,
+            approved=False,
+        )
+        for index, photo in enumerate(photos):
+            AlbumPhoto.objects.create(
+                album=album,
+                image=photo,
+                sort_order=index,
+            )
+        pending_ids = request.session.get("pending_album_ids", [])
+        pending_ids.append(album.id)
+        request.session["pending_album_ids"] = pending_ids[-10:]
+        request.session.modified = True
+    except Exception:
+        return JsonResponse(
+            {"ok": False, "error": "Album upload failed. Please try again with smaller JPG or PNG photos."},
+            status=500,
+        )
+
+    return JsonResponse({
+        "ok": True,
+        "pending": True,
+        "album_id": album.id,
+        "message": "Album submitted! It will appear here with “Awaiting approval” until management approves it.",
     })
 
 
@@ -262,73 +318,6 @@ def submit_review(request):
             "message": "Thank you! Your review will appear on the site after an admin approves it.",
         }
     )
-
-
-def feed(request):
-    posts = FeedPost.objects.all()
-    albums = Album.objects.prefetch_related("photos")
-    return render(request, "main/feed.html", {
-        "posts": posts,
-        "albums": albums,
-        "cloud_media_base_url": settings.CLOUD_MEDIA_BASE_URL,
-    })
-
-
-@require_POST
-def feed_add_post(request):
-    name = request.POST.get("author_name", "").strip()
-    content = request.POST.get("content", "").strip()
-    if not name or not content:
-        messages.error(request, "Please enter your name and message.")
-        return redirect("main:feed")
-    FeedPost.objects.create(
-        author_name=name,
-        author_initial=(name[:1] or "?").upper(),
-        content=content,
-    )
-    messages.success(request, "Your moment has been shared!")
-    return redirect("main:feed")
-
-
-@require_POST
-def feed_add_album(request):
-    title = request.POST.get("title", "").strip()
-    description = request.POST.get("description", "").strip()
-    cover_url = request.POST.get("cover_url", "").strip()
-    photo_urls_raw = request.POST.get("photo_urls", "").strip()
-
-    if not title:
-        messages.error(request, "Please enter an album title.")
-        return redirect("main:feed")
-
-    photo_urls = [u.strip() for u in photo_urls_raw.splitlines() if u.strip()]
-    if not photo_urls and not cover_url:
-        messages.error(request, "Add at least one cloud photo URL or a cover URL.")
-        return redirect("main:feed")
-
-    album = Album.objects.create(
-        title=title,
-        description=description,
-        cover_url=cover_url or (photo_urls[0] if photo_urls else ""),
-    )
-    for index, url in enumerate(photo_urls):
-        AlbumPhoto.objects.create(
-            album=album,
-            cloud_url=url,
-            sort_order=index,
-        )
-    messages.success(request, f'Album "{title}" has been added!')
-    return redirect("main:feed")
-
-
-@require_POST
-def feed_like_post(request, pk):
-    post = get_object_or_404(FeedPost, pk=pk)
-    post.likes += 1
-    post.save(update_fields=["likes"])
-    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-        return JsonResponse({"ok": True, "likes": post.likes})
-    return redirect("main:feed")
 
 
 def menu(request):
@@ -396,35 +385,6 @@ def admin_page(request):
         status='confirmed',
     )
     month_count = month_qs.count()
-    # #region agent log
-    try:
-        import json
-        from pathlib import Path
-        _log_path = Path(__file__).resolve().parent.parent.parent / 'debug-628fad.log'
-        _server_order = list(
-            reservations.values('id', 'date', 'time', 'status', 'created_at')[:10]
-        )
-        for _row in _server_order:
-            _row['date'] = _row['date'].isoformat()
-            _row['time'] = _row['time'].isoformat()
-            _row['created_at'] = _row['created_at'].isoformat()
-        with open(_log_path, 'a', encoding='utf-8') as _f:
-            _f.write(json.dumps({
-                'sessionId': '628fad',
-                'runId': 'pre-fix',
-                'hypothesisId': 'A',
-                'location': 'views.py:admin_page',
-                'message': 'Server reservation order before template render',
-                'data': {
-                    'total_count': reservations.count(),
-                    'first_ten': _server_order,
-                    'order_by': '-date,-time',
-                },
-                'timestamp': int(now.timestamp() * 1000),
-            }) + '\n')
-    except Exception:
-        pass
-    # #endregion
     current_month_name = now.strftime('%B')
     notifications = _build_admin_notifications()
     pending_reservations_count = notifications['pending_count']
@@ -432,6 +392,8 @@ def admin_page(request):
     reviews_approved = CustomerReview.objects.filter(approved=True).order_by("-created_at")[:50]
     feed_pending = FeedPost.objects.filter(approved=False).order_by("-created_at")
     feed_approved = FeedPost.objects.filter(approved=True).order_by("-pinned", "-created_at")[:50]
+    albums_pending = Album.objects.filter(approved=False).prefetch_related("photos").order_by("-created_at")
+    albums_approved = Album.objects.filter(approved=True).prefetch_related("photos").order_by("-created_at")[:50]
     total_visits = SiteVisitCounter.get_total()
     return render(request, 'main/adminpage.html', {
         'reservations': reservations,
@@ -443,6 +405,8 @@ def admin_page(request):
         'reviews_approved': reviews_approved,
         'feed_pending': feed_pending,
         'feed_approved': feed_approved,
+        'albums_pending': albums_pending,
+        'albums_approved': albums_approved,
         'total_visits': total_visits,
         'month_count': month_count,
         'current_month_name': current_month_name,
@@ -525,6 +489,24 @@ def admin_create_feed_update(request):
 
 
 @login_required(login_url='main:logadmin')
+@require_POST
+def admin_approve_album(request, pk):
+    album = get_object_or_404(Album, pk=pk)
+    if not album.approved:
+        album.approved = True
+        album.save(update_fields=["approved"])
+    return JsonResponse({"ok": True})
+
+
+@login_required(login_url='main:logadmin')
+@require_POST
+def admin_remove_album(request, pk):
+    album = get_object_or_404(Album, pk=pk)
+    album.delete()
+    return JsonResponse({"ok": True})
+
+
+@login_required(login_url='main:logadmin')
 def admin_reservations_recent_json(request):
     """Return recent reservations by status for realtime dashboard boxes."""
     def format_reservation(r):
@@ -557,33 +539,6 @@ def admin_reservations_recent_json(request):
         status='confirmed',
     )
     month_data = {'total': month_qs.count()}
-    # #region agent log
-    try:
-        import json
-        from pathlib import Path
-        _all_month = Reservation.objects.filter(
-            created_at__year=now.year,
-            created_at__month=now.month,
-        ).count()
-        _log_path = Path(__file__).resolve().parent.parent.parent / 'debug-0292ec.log'
-        with open(_log_path, 'a', encoding='utf-8') as _f:
-            _f.write(json.dumps({
-                'sessionId': '0292ec',
-                'runId': 'month-confirmed',
-                'hypothesisId': 'M1',
-                'location': 'views.py:admin_reservations_recent_json',
-                'message': 'Monthly JSON reservation counts',
-                'data': {
-                    'all_statuses': _all_month,
-                    'confirmed_only': month_data['total'],
-                    'month': now.month,
-                    'year': now.year,
-                },
-                'timestamp': int(now.timestamp() * 1000),
-            }) + '\n')
-    except Exception:
-        pass
-    # #endregion
     notification_data = _build_admin_notifications()
 
     upcoming = [
@@ -611,33 +566,6 @@ def admin_reservations_recent_json(request):
         .order_by('-created_at')[:15]
         .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status', 'notes')
     ]
-    # #region agent log
-    try:
-        import json
-        from pathlib import Path
-        _log_path = Path(__file__).resolve().parent.parent.parent / 'debug-628fad.log'
-        with open(_log_path, 'a', encoding='utf-8') as _f:
-            _f.write(json.dumps({
-                'sessionId': '628fad',
-                'runId': 'pre-fix',
-                'hypothesisId': 'C',
-                'location': 'views.py:admin_reservations_recent_json',
-                'message': 'Recent box counts vs total available',
-                'data': {
-                    'returned_upcoming': len(upcoming),
-                    'returned_confirmed': len(recent_confirmed),
-                    'returned_pending': len(recent_pending),
-                    'returned_cancelled': len(recent_cancelled),
-                    'total_confirmed': Reservation.objects.filter(status='confirmed').count(),
-                    'total_pending': Reservation.objects.filter(status='pending').count(),
-                    'total_cancelled': Reservation.objects.filter(status='cancelled').count(),
-                    'limit': 15,
-                },
-                'timestamp': int(now.timestamp() * 1000),
-            }) + '\n')
-    except Exception:
-        pass
-    # #endregion
 
     return JsonResponse({
         'upcoming': upcoming,
