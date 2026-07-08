@@ -59,29 +59,6 @@ def _build_admin_notifications(limit=15):
             'created_at': review.created_at.isoformat(),
         })
 
-    for post in FeedPost.objects.filter(approved=False).order_by('-created_at'):
-        author = post.author_name or post.email or 'Customer'
-        preview = post.caption[:80] + ('…' if len(post.caption) > 80 else '') if post.caption else 'New feed submission'
-        items.append({
-            'id': f'feed-{post.id}',
-            'type': 'feed',
-            'title': f'New feed post from {author}',
-            'message': preview,
-            'href': '#admin-feed-pending',
-            'created_at': post.created_at.isoformat(),
-        })
-
-    for album in Album.objects.filter(approved=False).order_by('-created_at'):
-        author = album.author_name or album.email or 'Customer'
-        items.append({
-            'id': f'album-{album.id}',
-            'type': 'album',
-            'title': f'New album from {author}',
-            'message': album.title,
-            'href': '#admin-albums-pending',
-            'created_at': album.created_at.isoformat(),
-        })
-
     items.sort(key=lambda item: item['created_at'], reverse=True)
     pending_reservations_count = Reservation.objects.filter(status='pending').count()
 
@@ -392,10 +369,6 @@ def admin_page(request):
     pending_reservations_count = notifications['pending_count']
     reviews_pending = CustomerReview.objects.filter(approved=False).order_by("-created_at")
     reviews_approved = CustomerReview.objects.filter(approved=True).order_by("-created_at")[:50]
-    feed_pending = FeedPost.objects.filter(approved=False).order_by("-created_at")
-    feed_approved = FeedPost.objects.filter(approved=True).order_by("-pinned", "-created_at")[:50]
-    albums_pending = Album.objects.filter(approved=False).prefetch_related("photos").order_by("-created_at")
-    albums_approved = Album.objects.filter(approved=True).prefetch_related("photos").order_by("-created_at")[:50]
     total_visits = SiteVisitCounter.get_total()
     return render(request, 'main/adminpage.html', {
         'reservations': reservations,
@@ -405,10 +378,6 @@ def admin_page(request):
         'today_cancelled': today_cancelled,
         'reviews_pending': reviews_pending,
         'reviews_approved': reviews_approved,
-        'feed_pending': feed_pending,
-        'feed_approved': feed_approved,
-        'albums_pending': albums_pending,
-        'albums_approved': albums_approved,
         'total_visits': total_visits,
         'month_count': month_count,
         'current_month_name': current_month_name,
