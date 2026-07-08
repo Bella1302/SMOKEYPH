@@ -95,7 +95,7 @@ def _build_admin_notifications(limit=15):
 
 @require_GET
 def serve_media(request, path):
-    """Serve uploaded files in production when not using Cloudinary."""
+    """Serve uploaded files in production (DEBUG=False)."""
     media_root = Path(settings.MEDIA_ROOT).resolve()
     safe_path = path.replace("\\", "/").lstrip("/")
     full_path = (media_root / safe_path).resolve()

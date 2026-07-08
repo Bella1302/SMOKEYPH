@@ -1,4 +1,4 @@
-# Generated migration for Album models with Cloudinary/local image storage
+# Generated migration for Album models with local image storage
 
 from django.db import migrations, models
 import django.db.models.deletion

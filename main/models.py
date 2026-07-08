@@ -173,7 +173,7 @@ class Album(models.Model):
 
 
 class AlbumPhoto(models.Model):
-    """Single photo in an album, stored via Cloudinary or local media."""
+    """Single photo in an album, stored in local media."""
 
     album = models.ForeignKey(
         Album,

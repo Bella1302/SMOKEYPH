@@ -61,9 +61,6 @@ INSTALLED_APPS = [
     'main',
 ]
 
-if os.environ.get('CLOUDINARY_URL'):
-    INSTALLED_APPS = ['cloudinary_storage', 'cloudinary'] + INSTALLED_APPS
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -134,20 +131,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-if os.environ.get('CLOUDINARY_URL'):
-    STORAGES = {
-        'default': {
-            'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
-        },
-        'staticfiles': {
-            'BACKEND': (
-                'whitenoise.storage.CompressedStaticFilesStorage'
-                if not DEBUG
-                else 'django.contrib.staticfiles.storage.StaticFilesStorage'
-            ),
-        },
-    }
-elif not DEBUG:
+if not DEBUG:
     STORAGES = {
         'default': {
             'BACKEND': 'django.core.files.storage.FileSystemStorage',
