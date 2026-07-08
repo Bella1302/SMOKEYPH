@@ -28,6 +28,63 @@ from .models import (
 
 _MAX_UPLOAD_BYTES = 8 * 1024 * 1024
 _MAX_ALBUM_PHOTOS = 12
+_DASHBOARD_RECENT_DAYS = 7
+_RESERVATION_ROW_FIELDS = (
+    'id', 'name', 'phone', 'email', 'guests', 'location', 'date', 'time', 'status', 'notes',
+)
+
+
+def _auto_complete_past_reservations(today):
+    """Mark confirmed reservations whose date has passed as completed."""
+    Reservation.objects.filter(status='confirmed', date__lt=today).update(status='completed')
+
+
+def _dashboard_reservations_queryset(today):
+    """Reservations from the last week through all upcoming dates."""
+    from datetime import timedelta
+
+    recent_cutoff = today - timedelta(days=_DASHBOARD_RECENT_DAYS)
+    return Reservation.objects.filter(date__gte=recent_cutoff).order_by('-date', '-time')
+
+
+def _format_reservation_row(reservation):
+    """Format a reservation for the admin dashboard table."""
+    if isinstance(reservation, dict):
+        data = reservation
+        date_val = data['date']
+        time_val = data['time']
+    else:
+        data = {
+            'id': reservation.id,
+            'name': reservation.name,
+            'phone': reservation.phone,
+            'email': reservation.email,
+            'guests': reservation.guests,
+            'location': reservation.location,
+            'date': reservation.date,
+            'time': reservation.time,
+            'status': reservation.status,
+            'notes': reservation.notes,
+        }
+        date_val = reservation.date
+        time_val = reservation.time
+
+    date_str = date_val.strftime('%b %d, %Y') if hasattr(date_val, 'strftime') else str(date_val)
+    time_str = time_val.strftime('%I:%M %p') if hasattr(time_val, 'strftime') else str(time_val)
+    date_iso = date_val.isoformat() if hasattr(date_val, 'isoformat') else str(date_val)
+    time_iso = time_val.strftime('%H:%M') if hasattr(time_val, 'strftime') else str(time_val)[:5]
+    location_display = dict(Reservation.LOCATION_CHOICES).get(data.get('location', ''), data.get('location', ''))
+    status_display = dict(Reservation.STATUS_CHOICES).get(data['status'], data['status'])
+
+    return {
+        **data,
+        'date': date_str,
+        'date_iso': date_iso,
+        'time': time_str,
+        'time_iso': time_iso,
+        'status_display': status_display,
+        'location_display': location_display,
+    }
 
 
 def _build_admin_notifications(limit=15):
@@ -352,7 +409,8 @@ def admin_page(request):
     from django.utils import timezone
     now = timezone.localtime()
     today = now.date()
-    reservations = Reservation.objects.all().order_by('-date', '-time')
+    _auto_complete_past_reservations(today)
+    reservations = _dashboard_reservations_queryset(today)
     today_qs = Reservation.objects.filter(created_at__date=today)
     today_count = today_qs.count()
     today_confirmed = today_qs.filter(status='confirmed').count()
@@ -487,23 +545,12 @@ def admin_remove_album(request, pk):
 
 @login_required(login_url='main:logadmin')
 def admin_reservations_recent_json(request):
-    """Return recent reservations by status for realtime dashboard boxes."""
-    def format_reservation(r):
-        date_str = r['date'].strftime('%b %d, %Y') if hasattr(r['date'], 'strftime') else str(r['date'])
-        time_str = r['time'].strftime('%I:%M %p') if hasattr(r['time'], 'strftime') else str(r['time'])
-        location_display = dict(Reservation.LOCATION_CHOICES).get(r.get('location', ''), r.get('location', ''))
-        return {
-            **r,
-            'date': date_str,
-            'time': time_str,
-            'status_display': dict(Reservation.STATUS_CHOICES).get(r['status'], r['status']),
-            'location_display': location_display,
-        }
-
+    """Return recent/upcoming reservations and stats for the realtime dashboard."""
     from django.utils import timezone
 
     now = timezone.localtime()
     today = now.date()
+    _auto_complete_past_reservations(today)
 
     today_qs = Reservation.objects.filter(created_at__date=today)
     today_data = {
@@ -520,33 +567,40 @@ def admin_reservations_recent_json(request):
     month_data = {'total': month_qs.count()}
     notification_data = _build_admin_notifications()
 
+    dashboard_rows = [
+        _format_reservation_row(dict(r))
+        for r in _dashboard_reservations_queryset(today)
+        .values(*_RESERVATION_ROW_FIELDS)
+    ]
+
     upcoming = [
-        format_reservation(dict(r))
+        _format_reservation_row(dict(r))
         for r in Reservation.objects.exclude(status='cancelled')
         .filter(date__gte=today)
         .order_by('date', 'time')[:15]
-        .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status', 'notes')
+        .values(*_RESERVATION_ROW_FIELDS)
     ]
     recent_cancelled = [
-        format_reservation(dict(r))
+        _format_reservation_row(dict(r))
         for r in Reservation.objects.filter(status='cancelled')
         .order_by('-created_at')[:15]
-        .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status', 'notes')
+        .values(*_RESERVATION_ROW_FIELDS)
     ]
     recent_confirmed = [
-        format_reservation(dict(r))
+        _format_reservation_row(dict(r))
         for r in Reservation.objects.filter(status='confirmed')
         .order_by('-created_at')[:15]
-        .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status', 'notes')
+        .values(*_RESERVATION_ROW_FIELDS)
     ]
     recent_pending = [
-        format_reservation(dict(r))
+        _format_reservation_row(dict(r))
         for r in Reservation.objects.filter(status='pending')
         .order_by('-created_at')[:15]
-        .values('id', 'name', 'phone', 'guests', 'location', 'date', 'time', 'status', 'notes')
+        .values(*_RESERVATION_ROW_FIELDS)
     ]
 
     return JsonResponse({
+        'reservations': dashboard_rows,
         'upcoming': upcoming,
         'recent_cancelled': recent_cancelled,
         'recent_confirmed': recent_confirmed,
@@ -607,6 +661,9 @@ def admin_edit_reservation(request, pk):
                 res.time = datetime.strptime(t, "%H:%M:%S").time()
         res.status = request.POST.get("status", res.status)
         res.notes = request.POST.get("notes", res.notes).strip()
+        from django.utils import timezone
+        if res.status == "confirmed" and res.date < timezone.localdate():
+            res.status = "completed"
         res.save()
         action = "cancelled" if res.status == "cancelled" else "edited"
         details = f"Status: {old_status} → {res.status}" if old_status != res.status else "Updated reservation details"
@@ -626,8 +683,11 @@ def admin_edit_reservation(request, pk):
 @require_POST
 def admin_confirm_reservation(request, pk):
     """Set reservation status to confirmed."""
+    from django.utils import timezone
+
     res = get_object_or_404(Reservation, pk=pk)
-    res.status = "confirmed"
+    today = timezone.localdate()
+    res.status = "completed" if res.date < today else "confirmed"
     res.save()
     AdminActivity.objects.create(
         action="confirmed",

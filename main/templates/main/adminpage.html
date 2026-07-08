@@ -104,7 +104,7 @@
       <h1 class="admin-dashboard-title">Admin Dashboard</h1>
 
       <section class="admin-card admin-card-all" id="all-reservations" aria-labelledby="all-heading">
-        <h2 id="all-heading" class="admin-card-title">All Reservations</h2>
+        <h2 id="all-heading" class="admin-card-title">Recent &amp; Upcoming Reservations</h2>
         <div class="admin-toolbar">
           <label for="admin-search" class="admin-search-wrap">
             <span class="admin-search-icon" aria-hidden="true">&#128269;</span>
@@ -117,6 +117,7 @@
                 <button type="button" role="menuitem" data-value="">All</button>
                 <button type="button" role="menuitem" data-value="pending">Pending</button>
                 <button type="button" role="menuitem" data-value="confirmed">Confirmed</button>
+                <button type="button" role="menuitem" data-value="completed">Completed</button>
                 <button type="button" role="menuitem" data-value="cancelled">Cancelled</button>
               </div>
             </div>
@@ -171,7 +172,7 @@
                 </td>
               </tr>
               {% empty %}
-              <tr><td colspan="9">No reservations yet</td></tr>
+              <tr><td colspan="9">No recent or upcoming reservations</td></tr>
               {% endfor %}
             </tbody>
           </table>
@@ -332,6 +333,7 @@
               <select id="admin-edit-status" name="status" class="admin-edit-select">
                 <option value="pending">Pending</option>
                 <option value="confirmed">Confirmed</option>
+                <option value="completed">Completed</option>
                 <option value="cancelled">Cancelled</option>
               </select>
             </div>
@@ -897,6 +899,77 @@
 
       (function () {
         var STATS_POLL_INTERVAL = 5000;
+        var tbody = document.getElementById("admin-reservations-tbody");
+        var editModal = document.getElementById("admin-edit-modal");
+
+        function escapeHtml(text) {
+          return String(text || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+        }
+
+        function truncateText(text, maxLen) {
+          var value = String(text || "").trim();
+          if (value.length <= maxLen) return value;
+          return value.slice(0, maxLen) + "…";
+        }
+
+        function buildReservationRow(res) {
+          var row = document.createElement("tr");
+          row.setAttribute("data-id", res.id);
+          row.setAttribute("data-guests", res.guests);
+          row.setAttribute("data-status", res.status);
+          row.setAttribute("data-date", res.date_iso || "");
+          row.setAttribute("data-time", res.time_iso || "");
+          row.setAttribute("data-location", res.location || "");
+          row.setAttribute("data-email", res.email || "");
+
+          var notes = String(res.notes || "").trim();
+          var nameHtml = escapeHtml(res.name || "");
+          if (notes) {
+            nameHtml += '<div class="admin-res-notes">' + escapeHtml(truncateText(notes, 100)) + "</div>";
+          }
+
+          var actionsHtml = "";
+          if (res.status === "pending") {
+            actionsHtml += '<button type="button" class="admin-confirm-btn" data-id="' + res.id + '" aria-label="Confirm reservation">Confirm</button>';
+          }
+          actionsHtml += '<button type="button" class="admin-edit-row-btn" data-id="' + res.id + '" aria-label="Edit reservation">Edit</button>';
+
+          row.innerHTML =
+            "<td>" + nameHtml + "</td>" +
+            "<td>" + escapeHtml(res.phone || "") + "</td>" +
+            "<td>" + escapeHtml(res.guests || "") + "</td>" +
+            "<td>" + escapeHtml(res.location_display || "") + "</td>" +
+            "<td>" + escapeHtml(res.date || "") + "</td>" +
+            "<td>" + escapeHtml(res.time || "") + "</td>" +
+            '<td class="admin-notes-cell">' + escapeHtml(notes ? truncateText(notes, 80) : "—") + "</td>" +
+            '<td class="admin-status-cell"><span class="admin-status admin-status-' + escapeHtml(res.status) + '">' + escapeHtml(res.status_display || res.status || "") + "</span></td>" +
+            '<td class="admin-actions-cell">' + actionsHtml + "</td>";
+          return row;
+        }
+
+        function updateReservationsTable(reservations) {
+          if (!tbody || !Array.isArray(reservations)) return;
+          if (editModal && !editModal.hasAttribute("hidden")) return;
+
+          tbody.innerHTML = "";
+          if (!reservations.length) {
+            tbody.innerHTML = '<tr><td colspan="9">No recent or upcoming reservations</td></tr>';
+            return;
+          }
+
+          reservations.forEach(function (res) {
+            tbody.appendChild(buildReservationRow(res));
+          });
+
+          if (typeof window.applyReservationFilters === "function") window.applyReservationFilters();
+          if (typeof window.sortReservationsByDate === "function") window.sortReservationsByDate();
+        }
+
+        window.updateReservationsTable = updateReservationsTable;
 
         function fetchAndUpdate() {
           fetch("{% url 'main:admin_reservations_recent_json' %}", {
@@ -904,6 +977,9 @@
           })
             .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
             .then(function (data) {
+              if (Array.isArray(data.reservations)) {
+                updateReservationsTable(data.reservations);
+              }
               if (data.today) {
                 var t = data.today;
                 var totalEl = document.getElementById("admin-today-total");

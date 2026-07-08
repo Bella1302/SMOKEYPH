@@ -17,6 +17,7 @@ class Reservation(models.Model):
     STATUS_CHOICES = [
         ("pending", "Pending"),
         ("confirmed", "Confirmed"),
+        ("completed", "Completed"),
         ("cancelled", "Cancelled"),
     ]
 
