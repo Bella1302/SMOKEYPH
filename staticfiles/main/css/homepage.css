@@ -557,7 +557,6 @@ video {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.4rem;
-  margin-bottom: 2.2rem;
 }
 
 .review-card {
@@ -590,7 +589,7 @@ video {
 
 .review-form-wrapper {
   max-width: 540px;
-  margin: 0 auto;
+  margin: 0 auto 2.2rem;
   background: #181818;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);

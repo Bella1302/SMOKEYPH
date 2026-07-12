@@ -353,18 +353,6 @@
             </div>
           </header>
 
-          <div class="reviews-grid">
-            {% if reviews %}
-              {% for review in reviews %}
-                <article class="review-card">
-                  <p>"{{ review.comment }}"</p>
-                  <span class="review-name">- {{ review.email|cut:"@gmail.com" }}</span>
-                  <time class="review-time">{{ review.created_at|date:"M d, Y h:i A" }}</time>
-                </article>
-              {% endfor %}
-            {% endif %}
-          </div>
-
           <div class="review-form-wrapper">
             <h3 data-i18n="share_experience">Share your experience</h3>
             <form class="review-form" id="review-form" method="post" action="{% url 'main:submit_review' %}">
@@ -393,6 +381,18 @@
               </div>
               <button type="submit" class="btn review-submit" data-i18n="submit_review">Submit review</button>
             </form>
+          </div>
+
+          <div class="reviews-grid">
+            {% if reviews %}
+              {% for review in reviews %}
+                <article class="review-card">
+                  <p>"{{ review.comment }}"</p>
+                  <span class="review-name">- {{ review.email|cut:"@gmail.com" }}</span>
+                  <time class="review-time">{{ review.created_at|date:"M d, Y h:i A" }}</time>
+                </article>
+              {% endfor %}
+            {% endif %}
           </div>
         </div>
       </section>
