@@ -131,6 +131,13 @@
                 <button type="button" role="menuitem" data-value="4">4+</button>
               </div>
             </div>
+            <div class="admin-filter-dropdown">
+              <button type="button" class="admin-filter-btn" aria-haspopup="true" aria-expanded="false" data-filter="history">History &#9662;</button>
+              <div class="admin-filter-menu" role="menu" hidden>
+                <button type="button" role="menuitem" data-value="recent">Recent &amp; Upcoming</button>
+                <button type="button" role="menuitem" data-value="all">All Reservations</button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="admin-table-wrapper admin-table-wrapper-full">
@@ -763,6 +770,16 @@
 
         var filterStatus = "";
         var filterGuests = "";
+        var filterView = "recent";
+        window.adminReservationView = "recent";
+
+        function updateReservationHeading() {
+          var heading = document.getElementById("all-heading");
+          if (!heading) return;
+          heading.textContent = filterView === "all"
+            ? "All Reservations"
+            : "Recent & Upcoming Reservations";
+        }
 
         function getRowSortKey(row) {
           var date = row.getAttribute("data-date") || "";
@@ -879,6 +896,16 @@
               } else if (filterName === "guests") {
                 filterGuests = value;
                 updateLabel(value, value ? (value === "4" ? "4+" : value) : "Guests");
+              } else if (filterName === "history") {
+                filterView = value || "recent";
+                window.adminReservationView = filterView;
+                updateLabel(value, value === "all" ? "All Reservations" : "History");
+                updateReservationHeading();
+                if (filterView === "all") {
+                  if (typeof window.fetchAllReservations === "function") window.fetchAllReservations();
+                } else if (typeof window.refreshAdminRecentBoxes === "function") {
+                  window.refreshAdminRecentBoxes();
+                }
               }
               menu.setAttribute("hidden", "");
               btn.setAttribute("aria-expanded", "false");
@@ -951,13 +978,19 @@
           return row;
         }
 
-        function updateReservationsTable(reservations) {
+        function updateReservationsTable(reservations, emptyMessage) {
           if (!tbody || !Array.isArray(reservations)) return;
           if (editModal && !editModal.hasAttribute("hidden")) return;
 
+          var noRowsMessage = emptyMessage || (
+            window.adminReservationView === "all"
+              ? "No reservations found"
+              : "No recent or upcoming reservations"
+          );
+
           tbody.innerHTML = "";
           if (!reservations.length) {
-            tbody.innerHTML = '<tr><td colspan="9">No recent or upcoming reservations</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9">' + noRowsMessage + "</td></tr>";
             return;
           }
 
@@ -971,13 +1004,29 @@
 
         window.updateReservationsTable = updateReservationsTable;
 
+        function fetchAllReservations() {
+          fetch("{% url 'main:admin_reservations_all_json' %}", {
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+          })
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+            .then(function (data) {
+              if (window.adminReservationView !== "all") return;
+              if (Array.isArray(data.reservations)) {
+                updateReservationsTable(data.reservations, "No reservations found");
+              }
+            })
+            .catch(function () {});
+        }
+
+        window.fetchAllReservations = fetchAllReservations;
+
         function fetchAndUpdate() {
           fetch("{% url 'main:admin_reservations_recent_json' %}", {
             headers: { "X-Requested-With": "XMLHttpRequest" }
           })
             .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
             .then(function (data) {
-              if (Array.isArray(data.reservations)) {
+              if (window.adminReservationView !== "all" && Array.isArray(data.reservations)) {
                 updateReservationsTable(data.reservations);
               }
               if (data.today) {
@@ -1007,7 +1056,12 @@
         }
 
         fetchAndUpdate();
-        setInterval(fetchAndUpdate, STATS_POLL_INTERVAL);
+        setInterval(function () {
+          fetchAndUpdate();
+          if (window.adminReservationView === "all") {
+            fetchAllReservations();
+          }
+        }, STATS_POLL_INTERVAL);
 
         window.refreshAdminRecentBoxes = fetchAndUpdate;
       })();

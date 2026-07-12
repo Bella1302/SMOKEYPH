@@ -47,6 +47,11 @@ def _dashboard_reservations_queryset(today):
     return Reservation.objects.filter(date__gte=recent_cutoff).order_by('-date', '-time')
 
 
+def _all_reservations_queryset():
+    """All reservations for the admin history view."""
+    return Reservation.objects.order_by('-date', '-time')
+
+
 def _format_reservation_row(reservation):
     """Format a reservation for the admin dashboard table."""
     if isinstance(reservation, dict):
@@ -609,6 +614,20 @@ def admin_reservations_recent_json(request):
         'month': month_data,
         'notification': notification_data,
     })
+
+
+@login_required(login_url='main:logadmin')
+def admin_reservations_all_json(request):
+    """Return all reservations for the admin history list."""
+    from django.utils import timezone
+
+    today = timezone.localdate()
+    _auto_complete_past_reservations(today)
+    rows = [
+        _format_reservation_row(dict(r))
+        for r in _all_reservations_queryset().values(*_RESERVATION_ROW_FIELDS)
+    ]
+    return JsonResponse({'reservations': rows, 'total': len(rows)})
 
 
 def log_admin(request):
