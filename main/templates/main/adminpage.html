@@ -186,32 +186,6 @@
         </div>
       </section>
 
-      <div class="admin-stats-row">
-        <section class="admin-card admin-card-visits" aria-labelledby="visits-heading">
-          <h2 id="visits-heading" class="admin-card-title">Website visitors</h2>
-          <div class="admin-visits-summary">
-            <span class="admin-visits-number" aria-live="polite">{{ total_visits }}</span>
-            <p class="admin-visits-label">Total unique browser sessions that visited the site</p>
-          </div>
-        </section>
-
-        <section class="admin-card admin-card-monthly" aria-labelledby="monthly-heading">
-          <h2 id="monthly-heading" class="admin-card-title">Confirmed Reservations ({{ current_month_name }})</h2>
-          <div class="admin-visits-summary">
-            <span id="admin-month-total" class="admin-visits-number" aria-live="polite">{{ month_count }}</span>
-            <p class="admin-visits-label">Total confirmed reservations in {{ current_month_name }}</p>
-          </div>
-        </section>
-
-        <section class="admin-card admin-card-today-stat" aria-labelledby="today-heading">
-          <h2 id="today-heading" class="admin-card-title">Total Reservations (Transactions Today)</h2>
-          <div class="admin-visits-summary">
-            <span id="admin-today-total" class="admin-today-number" aria-live="polite">{{ today_count }}</span>
-            <p class="admin-visits-label">Reservations created today</p>
-          </div>
-        </section>
-      </div>
-
       <section class="admin-card admin-card-today" aria-labelledby="today-details-heading">
         <h2 id="today-details-heading" class="admin-card-title admin-sr-only">Today's reservation breakdown</h2>
         <div class="admin-today-summary-row">
@@ -1031,18 +1005,12 @@
               }
               if (data.today) {
                 var t = data.today;
-                var totalEl = document.getElementById("admin-today-total");
-                if (totalEl && typeof t.total === "number") totalEl.textContent = t.total;
                 var cEl = document.getElementById("admin-today-confirmed-count");
                 if (cEl && typeof t.confirmed === "number") cEl.textContent = t.confirmed;
                 var pEl = document.getElementById("admin-today-pending-count");
                 if (pEl && typeof t.pending === "number") pEl.textContent = t.pending;
                 var xEl = document.getElementById("admin-today-cancelled-count");
                 if (xEl && typeof t.cancelled === "number") xEl.textContent = t.cancelled;
-              }
-              if (data.month) {
-                var monthEl = document.getElementById("admin-month-total");
-                if (monthEl && typeof data.month.total === "number") monthEl.textContent = data.month.total;
               }
               if (data.notification) {
                 if (typeof window.updateNotifications === "function") {
@@ -1173,52 +1141,6 @@
             })
             .catch(function () { alert("Approve failed"); });
         });
-      })();
-    </script>
-    <script>
-      (function () {
-        function logStatsLayout(runId) {
-          var statsRow = document.querySelector(".admin-stats-row");
-          if (!statsRow) return;
-          var cards = statsRow.querySelectorAll(".admin-card");
-          var rowStyle = window.getComputedStyle(statsRow);
-          var todayInRow = !!statsRow.querySelector(".admin-card-today-stat");
-          var cardRects = Array.prototype.map.call(cards, function (card) {
-            var rect = card.getBoundingClientRect();
-            return { className: card.className, width: Math.round(rect.width), height: Math.round(rect.height), top: Math.round(rect.top) };
-          });
-          var payload = {
-            sessionId: "2950c9",
-            runId: runId,
-            hypothesisId: "A-B-C-D-E",
-            location: "adminpage.html:stats-layout",
-            message: "Admin stats row layout snapshot",
-            data: {
-              viewportWidth: window.innerWidth,
-              gridTemplateColumns: rowStyle.gridTemplateColumns,
-              display: rowStyle.display,
-              cardCount: cards.length,
-              todayStatInRow: todayInRow,
-              cards: cardRects.map(function (c) {
-                return Object.assign({}, c, {
-                  isSquare: Math.abs(c.width - c.height) <= 8,
-                  aspectRatio: c.height ? +(c.width / c.height).toFixed(2) : null
-                });
-              }),
-              sameRow: cardRects.length > 1 && Math.abs(cardRects[0].top - cardRects[cardRects.length - 1].top) < 8
-            },
-            timestamp: Date.now()
-          };
-          // #region agent log
-          fetch("http://127.0.0.1:7816/ingest/0d03ab45-eafd-41a7-9e18-92b3e48de016", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "2950c9" },
-            body: JSON.stringify(payload)
-          }).catch(function () {});
-          // #endregion
-        }
-        window.addEventListener("load", function () { logStatsLayout("pre-fix"); });
-        window.addEventListener("resize", function () { logStatsLayout("pre-fix-resize"); });
       })();
     </script>
   </body>
