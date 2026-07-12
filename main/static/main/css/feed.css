@@ -14,53 +14,7 @@
 }
 
 .feed-toolbar {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: start;
-  gap: 0.75rem 1rem;
   padding: 0.15rem 0 0.35rem;
-}
-
-.feed-toolbar-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  align-self: center;
-}
-
-.feed-add-yours-btn,
-.feed-add-album-btn {
-  padding: 0.5rem 0.85rem;
-  border-radius: 999px;
-  font-family: inherit;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-}
-
-.feed-add-yours-btn {
-  border: 1px solid rgba(244, 178, 95, 0.45);
-  background: rgba(244, 178, 95, 0.12);
-  color: #f2b46a;
-}
-
-.feed-add-yours-btn:hover {
-  background: rgba(244, 178, 95, 0.22);
-  border-color: rgba(244, 178, 95, 0.65);
-}
-
-.feed-add-album-btn {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.04);
-  color: #ddd;
-}
-
-.feed-add-album-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.35);
 }
 
 .feed-toolbar-title {
@@ -589,15 +543,6 @@
 @media (max-width: 600px) {
   .feed-main {
     padding-inline: 0.65rem;
-  }
-
-  .feed-toolbar {
-    grid-template-columns: 1fr;
-    gap: 0.55rem;
-  }
-
-  .feed-toolbar-actions {
-    justify-self: start;
   }
 
   .feed-toolbar-title {

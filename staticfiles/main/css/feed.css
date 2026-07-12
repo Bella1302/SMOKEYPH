@@ -14,32 +14,7 @@
 }
 
 .feed-toolbar {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: start;
-  gap: 0.75rem 1rem;
   padding: 0.15rem 0 0.35rem;
-}
-
-.feed-add-yours-btn {
-  align-self: center;
-  padding: 0.5rem 0.85rem;
-  border-radius: 999px;
-  border: 1px solid rgba(244, 178, 95, 0.45);
-  background: rgba(244, 178, 95, 0.12);
-  color: #f2b46a;
-  font-family: inherit;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-}
-
-.feed-add-yours-btn:hover {
-  background: rgba(244, 178, 95, 0.22);
-  border-color: rgba(244, 178, 95, 0.65);
 }
 
 .feed-toolbar-title {
@@ -479,15 +454,6 @@
 @media (max-width: 600px) {
   .feed-main {
     padding-inline: 0.65rem;
-  }
-
-  .feed-toolbar {
-    grid-template-columns: 1fr;
-    gap: 0.55rem;
-  }
-
-  .feed-add-yours-btn {
-    justify-self: start;
   }
 
   .feed-toolbar-title {
