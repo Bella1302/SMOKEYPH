@@ -694,6 +694,33 @@ body {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
 }
 
+.weekly-events {
+  max-width: 1120px;
+  margin: 1.75rem auto 0;
+  padding: 0 1.25rem;
+}
+
+.weekly-events-inner {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.weekly-events-card {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+  background: #111;
+}
+
+.weekly-events-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
 .dine-in-banner {
   max-width: 1120px;
   margin: 1.75rem auto 2.5rem;
@@ -1309,6 +1336,15 @@ body {
     padding-inline: 1rem;
   }
 
+  .weekly-events {
+    padding-inline: 1rem;
+  }
+
+  .weekly-events-inner {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
   .dine-in-inner {
     flex-direction: column;
   }
@@ -1471,6 +1507,10 @@ body {
   }
 
   .dine-in-banner {
+    padding-inline: 1.1rem;
+  }
+
+  .weekly-events {
     padding-inline: 1.1rem;
   }
 
