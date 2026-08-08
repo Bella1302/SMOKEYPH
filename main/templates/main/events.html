@@ -33,71 +33,113 @@
       <section class="events-list" aria-label="Live bands">
         <header class="events-list-header">
           <div class="events-divider"></div>
-          <h2 class="events-list-title" data-i18n="upcoming_bands">Live Bands</h2>
+          <h2 class="events-list-title" data-i18n="upcoming_bands">Weekly Schedule</h2>
           <div class="events-divider"></div>
         </header>
 
-        <div class="events-cards">
-          <article class="event-card">
-            <div class="event-card-image">
-              <img src="{% static 'main/img/slow-burning.png' %}" alt="Slow Burnin' at Smokey Peeks" />
-            </div>
-            <div class="event-card-body">
-              <h3 class="event-name">Slow Burnin'</h3>
-              <p class="event-meta">
-                Thursday Night
-              </p>
-            </div>
-            <div class="event-card-actions">
-              <a href="{% url 'main:reservation' %}" class="event-reserve-btn" data-i18n="reserve_btn">Reserve</a>
-            </div>
-          </article>
+        <div class="events-calendar">
+          <div class="calendar-grid">
 
-          <article class="event-card">
-            <div class="event-card-image">
-              <img src="{% static 'main/img/ladies-night.png' %}" alt="Ladies Night at Smokey Peeks" />
+            <div class="calendar-day calendar-day--quiet">
+              <div class="calendar-day-label">
+                <span class="calendar-dow">Mon</span>
+                <span class="calendar-full">Monday</span>
+              </div>
+              <p class="calendar-empty">Open for dining</p>
             </div>
-            <div class="event-card-body">
-              <h3 class="event-name">Ladies Night</h3>
-              <p class="event-meta">
-                Every Saturday Night
-              </p>
-            </div>
-            <div class="event-card-actions">
-              <a href="{% url 'main:reservation' %}" class="event-reserve-btn" data-i18n="reserve_btn">Reserve</a>
-            </div>
-          </article>
 
-          <article class="event-card">
-            <div class="event-card-image">
-              <img src="{% static 'main/img/angelica.png' %}" alt="Angelica &amp; Ariana live at Smokey Peeks" />
+            <div class="calendar-day calendar-day--quiet">
+              <div class="calendar-day-label">
+                <span class="calendar-dow">Tue</span>
+                <span class="calendar-full">Tuesday</span>
+              </div>
+              <p class="calendar-empty">Open for dining</p>
             </div>
-            <div class="event-card-body">
-              <h3 class="event-name">Angelica &amp; Ariana</h3>
-              <p class="event-meta">
-                Sunday Night
-              </p>
-            </div>
-            <div class="event-card-actions">
-              <a href="{% url 'main:reservation' %}" class="event-reserve-btn" data-i18n="reserve_btn">Reserve</a>
-            </div>
-          </article>
 
-          <article class="event-card">
-            <div class="event-card-image">
-              <img src="{% static 'main/img/acon.png' %}" alt="AEON live at Smokey Peeks" />
+            <div class="calendar-day calendar-day--quiet">
+              <div class="calendar-day-label">
+                <span class="calendar-dow">Wed</span>
+                <span class="calendar-full">Wednesday</span>
+              </div>
+              <p class="calendar-empty">Open for dining</p>
             </div>
-            <div class="event-card-body">
-              <h3 class="event-name">AEON</h3>
-              <p class="event-meta">
-                Time: 10:00 PM – 1:00 AM<br />
-                Sundays
-              </p>
+
+            <div class="calendar-day calendar-day--active">
+              <div class="calendar-day-label">
+                <span class="calendar-dow">Thu</span>
+                <span class="calendar-full">Thursday</span>
+              </div>
+              <div class="calendar-events">
+                <article class="calendar-event">
+                  <img src="{% static 'main/img/out-and-out.jpg' %}" alt="Out &amp; Out duo live at Smokey Peeks" />
+                  <div class="calendar-event-body">
+                    <h3 class="calendar-event-name">Out &amp; Out duo</h3>
+                    <p class="calendar-event-time">7:00 PM</p>
+                  </div>
+                  <a href="{% url 'main:reservation' %}" class="calendar-reserve-btn" data-i18n="reserve_btn">Reserve</a>
+                </article>
+                <article class="calendar-event">
+                  <img src="{% static 'main/img/slow-burning.png' %}" alt="Slow Burnin' at Smokey Peeks" />
+                  <div class="calendar-event-body">
+                    <h3 class="calendar-event-name">Slow Burnin'</h3>
+                    <p class="calendar-event-time">Thursday Night</p>
+                  </div>
+                  <a href="{% url 'main:reservation' %}" class="calendar-reserve-btn" data-i18n="reserve_btn">Reserve</a>
+                </article>
+              </div>
             </div>
-            <div class="event-card-actions">
-              <a href="{% url 'main:reservation' %}" class="event-reserve-btn" data-i18n="reserve_btn">Reserve</a>
+
+            <div class="calendar-day calendar-day--quiet">
+              <div class="calendar-day-label">
+                <span class="calendar-dow">Fri</span>
+                <span class="calendar-full">Friday</span>
+              </div>
+              <p class="calendar-empty">Open for dining</p>
             </div>
-          </article>
+
+            <div class="calendar-day calendar-day--active">
+              <div class="calendar-day-label">
+                <span class="calendar-dow">Sat</span>
+                <span class="calendar-full">Saturday</span>
+              </div>
+              <div class="calendar-events">
+                <article class="calendar-event">
+                  <img src="{% static 'main/img/ladies-night.png' %}" alt="Ladies Night at Smokey Peeks" />
+                  <div class="calendar-event-body">
+                    <h3 class="calendar-event-name">Ladies Night</h3>
+                    <p class="calendar-event-time">Every Saturday Night</p>
+                  </div>
+                  <a href="{% url 'main:reservation' %}" class="calendar-reserve-btn" data-i18n="reserve_btn">Reserve</a>
+                </article>
+              </div>
+            </div>
+
+            <div class="calendar-day calendar-day--active">
+              <div class="calendar-day-label">
+                <span class="calendar-dow">Sun</span>
+                <span class="calendar-full">Sunday</span>
+              </div>
+              <div class="calendar-events">
+                <article class="calendar-event">
+                  <img src="{% static 'main/img/angelica-ariana.png' %}" alt="Angelica &amp; Ariana live at Smokey Peeks" />
+                  <div class="calendar-event-body">
+                    <h3 class="calendar-event-name">Angelica &amp; Ariana</h3>
+                    <p class="calendar-event-time">Sunday Night</p>
+                  </div>
+                  <a href="{% url 'main:reservation' %}" class="calendar-reserve-btn" data-i18n="reserve_btn">Reserve</a>
+                </article>
+                <article class="calendar-event">
+                  <img src="{% static 'main/img/acon.png' %}" alt="AEON live at Smokey Peeks" />
+                  <div class="calendar-event-body">
+                    <h3 class="calendar-event-name">AEON</h3>
+                    <p class="calendar-event-time">10:00 PM – 1:00 AM</p>
+                  </div>
+                  <a href="{% url 'main:reservation' %}" class="calendar-reserve-btn" data-i18n="reserve_btn">Reserve</a>
+                </article>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
